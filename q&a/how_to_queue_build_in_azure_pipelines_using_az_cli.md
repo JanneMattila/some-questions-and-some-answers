@@ -13,5 +13,5 @@ az devops configure --defaults organization=https://dev.azure.com/YourOrganizati
 az devops configure --defaults project=YourProjectNameHere
 
 # Queue build
-az pipelines build queue --definition-name AbsolutelyEmpty-CI
+az pipelines build queue --definition-name AbsolutelyEmpty-CI -o table
 ```
