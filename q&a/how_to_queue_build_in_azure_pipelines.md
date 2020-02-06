@@ -18,7 +18,7 @@ az pipelines build queue --definition-name AbsolutelyEmpty-CI -o table
 
 ## How do I queue build in Azure Pipelines using PowerShell
 
-Here are the steps that you can use to queue build using P:
+Here are the steps that you can use to queue build using PowerShell:
 
 ```powershell
 $organization = "YourOrganizationNameHere"
