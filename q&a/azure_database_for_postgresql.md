@@ -4,8 +4,27 @@
 
 **TL;DR** Make sure that you have _at least_ these things set:
 
-1. Use [accelerated networking](https://docs.microsoft.com/en-us/azure/virtual-network/create-vm-accelerated-networking-cli) in your VM
-2. Use [PgBouncer](https://techcommunity.microsoft.com/t5/azure-database-for-postgresql/steps-to-install-and-setup-pgbouncer-connection-pooling-proxy/ba-p/730555) (or similar connection pooling proxy) to manage connections to the PostgreSQL
+1. Create resources to same region
+2. Use [accelerated networking](https://docs.microsoft.com/en-us/azure/virtual-network/create-vm-accelerated-networking-cli) in your VMs
+3. Use [PgBouncer](https://techcommunity.microsoft.com/t5/azure-database-for-postgresql/steps-to-install-and-setup-pgbouncer-connection-pooling-proxy/ba-p/730555) (or similar connection pooling proxy) to manage connections to the PostgreSQL
+
+You can do simple test for the latency using these commands.
+Replace `<yourusername>` and `<yourpostgresqlinstancename>` with correct ones and
+then connect to the local `pgbouncer` endpoint:
+
+```bash
+psql -h 127.0.0.1 -p 5432 -U <yourusername>@<yourpostgresqlinstancename>.postgres.database.azure.com -d postgres
+```
+
+Get timing from `SELECT` statement:
+
+```sql
+\timing
+SELECT;
+\watch 1
+```
+
+## Links
 
 Longer and much more detailed information can be found from these links:
 
@@ -18,3 +37,4 @@ Longer and much more detailed information can be found from these links:
 [Performance best practices for using Azure Database for PostgreSQL – Connection Pooling](https://azure.microsoft.com/en-us/blog/performance-best-practices-for-using-azure-database-for-postgresql-connection-pooling/)
 
 [Steps to install and setup PgBouncer connection pooling proxy with Azure DB for PostgreSQL](https://techcommunity.microsoft.com/t5/azure-database-for-postgresql/steps-to-install-and-setup-pgbouncer-connection-pooling-proxy/ba-p/730555)
+
