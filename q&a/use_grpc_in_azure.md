@@ -7,4 +7,10 @@ creating web apps or web backends. However, as of now (9th of February, 2020)
 App Service does not yet support gRPC. Read more about it
 [here](https://docs.microsoft.com/en-us/aspnet/core/tutorials/grpc/grpc-start?view=aspnetcore-3.1&tabs=visual-studio#grpc-not-supported-on-azure-app-service).
 
-**TO BE ADDED** Azure Container Instances (ACI), Azure Kubernetes Service (AKS), Virtual Machines, etc.
+Other options could be (but not limited to):
+
+- Azure Container Instances (ACI)
+- Azure Kubernetes Service (AKS)
+- Virtual Machines
+
+Example using Azure Container Instances (ACI) can be found here [WPF goes gRPC](https://github.com/JanneMattila/wpf-goes-grpc).
