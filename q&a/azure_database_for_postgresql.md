@@ -9,11 +9,11 @@
 3. Use [PgBouncer](https://techcommunity.microsoft.com/t5/azure-database-for-postgresql/steps-to-install-and-setup-pgbouncer-connection-pooling-proxy/ba-p/730555) (or similar connection pooling proxy) to manage connections to the PostgreSQL
 
 You can do simple test for the latency using these commands.
-Replace `<yourusername>` and `<yourpostgresqlinstancename>` with correct ones and
+Replace `<user>` and `<instance>` with correct ones and
 then connect to the local `pgbouncer` endpoint:
 
 ```bash
-psql -h 127.0.0.1 -p 5432 -U <yourusername>@<yourpostgresqlinstancename>.postgres.database.azure.com -d postgres
+psql -h 127.0.0.1 -p 5432 -U <user>@<instance>.postgres.database.azure.com -d postgres
 ```
 
 Get timing from `SELECT` statement:
