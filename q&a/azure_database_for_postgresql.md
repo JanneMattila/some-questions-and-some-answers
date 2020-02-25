@@ -28,6 +28,8 @@ SELECT;
 
 Longer and much more detailed information can be found from these links:
 
+[Azure Database for PostgreSQL - Checklist for Performance](https://techcommunity.microsoft.com/t5/azure-database-for-postgresql/azure-database-for-postgresql-checklist-for-performance/ba-p/1113378)
+
 [Performance best practices for using Azure Database for PostgreSQL](https://azure.microsoft.com/en-us/blog/performance-best-practices-for-using-azure-database-for-postgresql/)
 
 [Performance troubleshooting using new Azure Database for PostgreSQL features](https://azure.microsoft.com/en-us/blog/performance-troubleshooting-using-new-azure-database-for-postgresql-features/)
@@ -38,3 +40,4 @@ Longer and much more detailed information can be found from these links:
 
 [Steps to install and setup PgBouncer connection pooling proxy with Azure DB for PostgreSQL](https://techcommunity.microsoft.com/t5/azure-database-for-postgresql/steps-to-install-and-setup-pgbouncer-connection-pooling-proxy/ba-p/730555)
 
+[Taking Postgres's temperature with these 4 system metrics](https://techcommunity.microsoft.com/t5/azure-database-for-postgresql/taking-postgres-s-temperature-with-these-4-system-metrics/ba-p/1187969)
