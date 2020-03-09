@@ -24,6 +24,8 @@ SELECT;
 \watch 1
 ```
 
+**Note**: If you're using **Azure App Service** then please see this demo application for more details: [JanneMattila/328-webapp-pgbouncer](https://github.com/JanneMattila/328-webapp-pgbouncer).
+
 ## Links
 
 Longer and much more detailed information can be found from these links:
