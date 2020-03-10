@@ -26,6 +26,8 @@ SELECT;
 
 **Note**: If you're using **Azure App Service** then please see this demo application for more details: [JanneMattila/328-webapp-pgbouncer](https://github.com/JanneMattila/328-webapp-pgbouncer).
 
+**Note**: If you're using **Azure Kubernetes Service** then there is ready made [Pgbouncer Sidecar](https://hub.docker.com/_/microsoft-azure-oss-db-tools-pgbouncer-sidecar) for that.
+
 ## Links
 
 Longer and much more detailed information can be found from these links:
