@@ -9,8 +9,8 @@ you can use to test that:
 Param (
     [Parameter(Mandatory=$true)] [string] $Url,
     [int] $Delay = 10,
-	[int] $Count = 99999,
-	[int] $TimeoutValue = 99999
+    [int] $Count = 99999,
+    [int] $TimeoutValue = 99999
 )
 
 $ErrorActionPreference = "Stop"
@@ -18,9 +18,9 @@ $ProgressPreference = "SilentlyContinue"
 
 For ($i=0; $i -lt $Count; $i++)
 {
-	$startTime = Get-Date
-	try
-	{
+    $startTime = Get-Date
+    try
+    {
         $response = Invoke-WebRequest -Method GET -Uri $Url -DisableKeepAlive
         if ($response.StatusCode -ne 200)
         {
@@ -32,12 +32,12 @@ For ($i=0; $i -lt $Count; $i++)
             $executionTime = ($endTime - $startTime).TotalMilliseconds -as [int]
             Write-Output "$executionTime ($Delay)"
         }
-	}
-	catch
-	{
+    }
+    catch
+    {
         Write-Output "Request failed"
     }
-    
+
     if ([Console]::KeyAvailable)
     {
         $pressedKey = [Console]::ReadKey($true)
@@ -46,14 +46,14 @@ For ($i=0; $i -lt $Count; $i++)
         {
             $change = 1
         }
-        switch ($pressedKey.Key) 
+        switch ($pressedKey.Key)
         {
-            UpArrow 
-            { 
+            UpArrow
+            {
                 $Delay += $change
             }
-            DownArrow 
-            { 
+            DownArrow
+            {
                 $Delay -= $change
                 if (0 -gt $Delay)
                 {
@@ -64,7 +64,7 @@ For ($i=0; $i -lt $Count; $i++)
         }
     }
 
-	Start-Sleep -Milliseconds $Delay
+    Start-Sleep -Milliseconds $Delay
 }
 ```
 
