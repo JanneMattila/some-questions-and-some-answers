@@ -44,17 +44,74 @@ az ad app permission grant # Grant the delegated permissions
 az ad app owner # Manage application owners
 ```
 
-[Manage applications with AAD Graph](https://docs.microsoft.com/en-us/cli/azure/ad/app?view=azure-cli-latest)
+[Manage applications with Azure AD Graph API using CLI](https://docs.microsoft.com/en-us/cli/azure/ad/app?view=azure-cli-latest)
 
 **Tip**: If you have issues with your CLI scripting then use `--debug`
 flag to give you extra hints what's going on.
 
 Typically you need some permissions from these APIs:
 
-| Application ID   | Resource URI   | Name   |
+| Application ID | Resource URI | Name |
 |---|---|---|
-| 00000002-0000-0000-c000-000000000000 | https://graph.windows.net/ | AzureAD Graph API |
-| 00000003-0000-0000-c000-000000000000 | https://graph.microsoft.com/ | Microsoft Graph |
+| 00000002-0000-0000-c000-000000000000 | https://graph.windows.net/ | [Azure AD Graph API](https://docs.microsoft.com/en-us/azure/active-directory/develop/active-directory-graph-api) |
+| 00000003-0000-0000-c000-000000000000 | https://graph.microsoft.com/ | [Microsoft Graph](https://docs.microsoft.com/en-us/graph/overview) |
 
-Easiest way to get these is to create app manually in Azure Portal and then export
-manifest json and look for the actual `resourceAppId` values from the export file.
+You need to understand that many times different applications actually use `Azure AD Graph API` behind the
+covers even if you think that they are using `Microsoft Graph` (just like above).
+You should be extra careful with those ones and assign correct permissions to make things work
+(and not just blindly assign more and more permissions without any impact).
+
+Easiest way to get Application ID identifiers for different APIs
+is to create app manually in Azure Portal and
+then assign those required permissions manually to it. Then you can export
+manifest json and look for the actual `resourceAppId` values from the export content.
+
+**Tip**: In order try different Graph API endpoints you need access token for that.
+You can use following commands to get them:
+
+```bash
+# Get access token for Microsoft Graph API
+az account get-access-token --resource https://graph.microsoft.com/
+
+# Get access token for Azure AD Graph API
+az account get-access-token --resource https://graph.windows.net/
+```
+
+Then you can use e.g. Visual Studio Code with Rest client and try APIs out.
+
+Few examples about `Microsoft Graph API`:
+
+```http
+### Retrieve the properties and relationships of user object
+GET https://graph.microsoft.com/v1.0/me HTTP/1.1
+Content-Type: application/json; charset=utf-8
+Authorization: Bearer {{accestoken}}
+
+### Get groups and directory roles that the user is a direct member of
+GET https://graph.microsoft.com/v1.0/me/memberOf HTTP/1.1
+Content-Type: application/json; charset=utf-8
+Authorization: Bearer {{accestoken}}
+
+### Return all of the groups that this group is a member of
+POST https://graph.microsoft.com/v1.0/groups/{id}/getMemberObjects HTTP/1.1
+Content-Type: application/json; charset=utf-8
+Authorization: Bearer {{token}}
+
+{
+  "securityEnabledOnly": false
+}
+```
+
+Few examples about `Azure AD Graph API`:
+
+```http
+### Gets the signed-in user
+GET https://graph.windows.net/me?api-version=1.6 HTTP/1.1
+Content-Type: application/json; charset=utf-8
+Authorization: Bearer {{accestoken}}
+
+### Get groups and directory roles that the user is a direct member of
+GET https://graph.windows.net/me/$links/memberOf?api-version=1.6 HTTP/1.1
+Content-Type: application/json; charset=utf-8
+Authorization: Bearer {{accestoken}}
+```
