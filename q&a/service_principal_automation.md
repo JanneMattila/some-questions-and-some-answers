@@ -47,7 +47,7 @@ az ad app owner # Manage application owners
 [Manage applications with Azure AD Graph API using CLI](https://docs.microsoft.com/en-us/cli/azure/ad/app?view=azure-cli-latest)
 
 **Tip**: If you have issues with your CLI scripting then use `--debug`
-flag to give you extra hints what's going on.
+flag to give you extra hints what's going on. And yes typically they are permission related.
 
 Typically you need some permissions from these APIs:
 
@@ -82,20 +82,22 @@ Then you can use e.g. Visual Studio Code with Rest client and try APIs out.
 Few examples about `Microsoft Graph API`:
 
 ```http
+@accesstoken = put_here_token_you_got_from_cli
+
 ### Retrieve the properties and relationships of user object
 GET https://graph.microsoft.com/v1.0/me HTTP/1.1
 Content-Type: application/json; charset=utf-8
-Authorization: Bearer {{accestoken}}
+Authorization: Bearer {{accesstoken}}
 
 ### Get groups and directory roles that the user is a direct member of
 GET https://graph.microsoft.com/v1.0/me/memberOf HTTP/1.1
 Content-Type: application/json; charset=utf-8
-Authorization: Bearer {{accestoken}}
+Authorization: Bearer {{accesstoken}}
 
 ### Return all of the groups that this group is a member of
 POST https://graph.microsoft.com/v1.0/groups/{id}/getMemberObjects HTTP/1.1
 Content-Type: application/json; charset=utf-8
-Authorization: Bearer {{token}}
+Authorization: Bearer {{accesstoken}}
 
 {
   "securityEnabledOnly": false
@@ -105,13 +107,15 @@ Authorization: Bearer {{token}}
 Few examples about `Azure AD Graph API`:
 
 ```http
+@accesstoken = put_here_token_you_got_from_cli
+
 ### Gets the signed-in user
 GET https://graph.windows.net/me?api-version=1.6 HTTP/1.1
 Content-Type: application/json; charset=utf-8
-Authorization: Bearer {{accestoken}}
+Authorization: Bearer {{accesstoken}}
 
 ### Get groups and directory roles that the user is a direct member of
 GET https://graph.windows.net/me/$links/memberOf?api-version=1.6 HTTP/1.1
 Content-Type: application/json; charset=utf-8
-Authorization: Bearer {{accestoken}}
+Authorization: Bearer {{accesstoken}}
 ```
