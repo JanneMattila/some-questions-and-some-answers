@@ -37,6 +37,17 @@ Add-AzureADApplicationOwner
 
 [AzureAD & Applications](https://docs.microsoft.com/en-us/powershell/module/azuread/?view=azureadps-2.0#applications)
 
+*Important note*: Above command rely on `Azure AD Graph API` and there is also
+another set of [commands](https://docs.microsoft.com/en-us/powershell/azure/active-directory/ad-pshell-v2-version-history?view=azureadps-2.0#20276---general-availability-release-of-the-azuread-module) which in turn rely on `Microsoft Graph API`. They have `"MS"` in the name:
+
+```powershell
+Get-AzureADMSApplication
+New-AzureADMSApplication
+
+Get-AzureADMSApplicationOwner
+Add-AzureADMSApplicationOwner
+```
+
 You can also use `Az` PowerShell module for the automation.
 Example commands from that module are:
 
@@ -70,8 +81,7 @@ Typically you need some permissions from these APIs:
 | 00000002-0000-0000-c000-000000000000 | https://graph.windows.net/ | [Azure AD Graph API](https://docs.microsoft.com/en-us/azure/active-directory/develop/active-directory-graph-api) |
 | 00000003-0000-0000-c000-000000000000 | https://graph.microsoft.com/ | [Microsoft Graph](https://docs.microsoft.com/en-us/graph/overview) |
 
-You need to understand that many times different applications actually use `Azure AD Graph API` behind the
-covers even if you think that they are using `Microsoft Graph` (just like above).
+*Just to re-iterate*: You need to understand that many times different applications actually use `Azure AD Graph API` behind the covers even if you think that they are using `Microsoft Graph` (just like above).
 You should be extra careful with those ones and assign correct permissions to make things work
 (and not just blindly assign more and more permissions without any impact).
 
