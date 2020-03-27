@@ -1,6 +1,8 @@
-# Service Principal (SPN) Automation
+# Azure AD Automations
 
-Tons of good examples about SPN automation can be found
+## Service Principal (SPN) & App automations
+
+Tons of good examples about Azure AD and SPN automations can be found
 in GitHub. Here is one good reference:
 
 [Azure-Samples / active-directory-javascript-graphapi-v2](https://github.com/Azure-Samples/active-directory-javascript-graphapi-v2/tree/quickstart/AppCreationScripts)
@@ -34,6 +36,18 @@ Add-AzureADApplicationOwner
 ```
 
 [AzureAD & Applications](https://docs.microsoft.com/en-us/powershell/module/azuread/?view=azureadps-2.0#applications)
+
+You can also use `Az` PowerShell module for the automation.
+Example commands from that module are:
+
+```powershell
+New-AzADApplication
+New-AzADServicePrincipal
+
+Get-AzADApplication
+```
+
+[Az module and Active Directory](https://docs.microsoft.com/en-us/powershell/module/az.resources)
 
 Similarly for `Azure CLI` these are the most important commands:
 
