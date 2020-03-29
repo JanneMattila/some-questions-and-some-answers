@@ -5,7 +5,7 @@
 Few links to get you started in ARM templates:
 
 - [ARM template documentation](https://docs.microsoft.com/en-us/azure/azure-resource-manager/templates/)
-- [ARM template reference documentation](https://docs.microsoft.com/en-us/azure/templates/)
+- [ARM template reference documentation](https://docs.microsoft.com/en-us/azure/templates/) (left-hand side menu has references for different types)
 - [GitHub Azure Quickstart templates](https://github.com/Azure/azure-quickstart-templates)
 - [Visual Studio Code](https://code.visualstudio.com/) and [ARM Tools extension](https://marketplace.visualstudio.com/items?itemName=msazurermtools.azurerm-vscode-tools) ([Quickstart instructions](https://docs.microsoft.com/en-us/azure/azure-resource-manager/templates/quickstart-create-templates-use-visual-studio-code?tabs=CLI))
 - [Export template in portal](https://docs.microsoft.com/en-us/azure/azure-resource-manager/templates/export-template-portal)
