@@ -55,7 +55,7 @@ open up those dlls with it:
 
 ![Cdn models from dlls](https://user-images.githubusercontent.com/2357647/77843398-9fa2a380-71a5-11ea-9309-d4e1cbb7a074.png)
 
-Using functionaly of ILSpy you can easily navigate between different models and
+Using functionality of ILSpy you can easily navigate between different models and
 find what you're looking for:
 
 ![UrlRedirectActionParameters class in Cdn models](https://user-images.githubusercontent.com/2357647/77843428-d4165f80-71a5-11ea-92c1-2dc14eacb47c.png)
