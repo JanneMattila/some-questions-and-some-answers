@@ -25,3 +25,12 @@ There is video series about the resource kit in YouTube:
 ## Links
 
 [A library of useful resources about Azure API Management](https://aka.ms/apimlove)
+
+## How do I expose my on-premise Web Service based API via APIM?
+
+This is documented in separate repository. You can find it here:
+
+[JanneMattila/325-apim-sb-demo](https://github.com/JanneMattila/325-apim-sb-demo)
+
+In short: This demonstrates the use of Azure Relay and Hybrid Connections for
+exposing on-premises Web Service based API.
