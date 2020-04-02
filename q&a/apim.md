@@ -55,7 +55,18 @@ Then you have following code in your web app:
 </html>
 ```
 
-You still get CORS error with following error message:
+You still get CORS error with following error message with `fetch`:
+
+```bash
+Access to fetch at 'https://yourinstancenamehere.azure-api.net/api/coolapi'
+from origin 'http://localhost:3268' has been blocked by CORS policy:
+Response to preflight request doesn't pass access control check:
+No 'Access-Control-Allow-Origin' header is present on the requested resource.
+If an opaque response serves your needs, set the request's mode to
+'no-cors' to fetch the resource with CORS disabled.
+```
+
+Or following error message if your app uses `XMLHttpRequest`:
 
 ```bash
 Access to XMLHttpRequest at 'https://yourinstancenamehere.azure-api.net/api/coolapi'
