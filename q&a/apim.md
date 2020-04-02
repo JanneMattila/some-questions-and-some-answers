@@ -10,6 +10,8 @@ There is video series about the resource kit in YouTube:
 
 [How to build a CI/CD pipeline for API Management, Part 2](https://youtu.be/PDOXI2E6zYA)
 
+**Note**: For Developer Portal automation refer to this documentation: [Migrate portal between services](https://github.com/Azure/api-management-developer-portal/wiki/Migrate-portal-between-services).
+
 ## Policies
 
 [Azure API Management Policy Snippets](https://github.com/Azure/api-management-policy-snippets)
