@@ -95,9 +95,9 @@ passed in the header. It doesn't work since browser won't send custom subscripti
 and therefore APIM cannot know the target `Product` and thus cannot process CORS policy
 from that scope then.
 
-Fix is of course simple:
+Fix is of course pretty simple:
 
-- Either put policy to other scopes (`Global`, `API` or `API operation`)
+- Put CORS policy to other scope(s) (either `Global`, `API` or `API operation`)
 
 **or**
 
