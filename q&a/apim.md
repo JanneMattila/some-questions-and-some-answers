@@ -79,6 +79,12 @@ Underlying reason for this is the fact that browsers won't send custom
 headers with CORS preflight request. Preflight request is done as `OPTIONS` request
 ([Preflight request](https://developer.mozilla.org/en-US/docs/Glossary/Preflight_request)).
 
+Above of course means that CORS Policy cannot work on `Product` scope if it's
+passed in the header. And since browser won't send that custom header
+APIM cannot know what is that `Product` and cannot process that CORS policy.
+Fix of course is pretty simple: Either put policy to other scopes
+(Global, API or API operation) or then pass it in the url instead of the header.
+
 ## Policies
 
 [Azure API Management Policy Snippets](https://github.com/Azure/api-management-policy-snippets)
