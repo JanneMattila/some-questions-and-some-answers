@@ -14,7 +14,7 @@ There is video series about the resource kit in YouTube:
 
 ## I keep on getting CORS issues. Have I missed something?
 
-Lets imagine that you have enabled following CORS Policy in your API at `Product` scope:
+Lets assume that you have enabled following CORS Policy in your API at `Product` scope:
 
 ```xml
 <cors>
