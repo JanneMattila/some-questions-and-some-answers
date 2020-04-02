@@ -81,7 +81,7 @@ fetch(api + "?subscription-key=" + key, //  WORKS
   {
     method: "GET",
     headers: {
-      "Ocp-Apim-Subscription-Key": key // DOES NOT WORK etc.
+      "Ocp-Apim-Subscription-Key": key // DOES NOT WORK
     }
   })
 ```
