@@ -14,7 +14,7 @@ There is video series about the resource kit in YouTube:
 
 ## I keep on getting CORS issues. Have I missed something?
 
-Let imagine that you have enabled following CORS Policy in your API at Product scope:
+Lets imagine that you have enabled following CORS Policy in your API at `Product` scope:
 
 ```xml
 <cors>
@@ -27,7 +27,7 @@ Let imagine that you have enabled following CORS Policy in your API at Product s
 </cors>
 ```
 
-Then you have following code in your web app (of course simplified):
+Then you have following code in your web app:
 
 ```html
 <!DOCTYPE html>
@@ -55,13 +55,15 @@ Then you have following code in your web app (of course simplified):
 </html>
 ```
 
-It still fails for CORS error with something like this in error message:
+You still get CORS error with something like this in error message:
 
-```js
-Access to XMLHttpRequest at 'https://yourinstancenamehere.azure-api.net/api/coolapi' from origin 'http://localhost:3268' has been blocked by CORS policy: No 'Access-Control-Allow-Origin' header is present on the requested resource.
+```bash
+Access to XMLHttpRequest at 'https://yourinstancenamehere.azure-api.net/api/coolapi'
+from origin 'http://localhost:3268' has been blocked by CORS policy:
+No 'Access-Control-Allow-Origin' header is present on the requested resource.
 ```
 
-But if you change that from header to be at the url it works:
+But if you then change that subscription key from header to be at the url it suddenly works:
 
 ```js
 fetch(api + "?subscription-key=" + key, //  WORKS
@@ -74,7 +76,7 @@ fetch(api + "?subscription-key=" + key, //  WORKS
 ```
 
 Underlying reason for this is the fact that browsers won't send custom
-headers with CORS preflight request which is `OPTION` request
+headers with CORS preflight request. Preflight request is done as `OPTIONS` request
 ([Preflight request](https://developer.mozilla.org/en-US/docs/Glossary/Preflight_request)).
 
 ## Policies
