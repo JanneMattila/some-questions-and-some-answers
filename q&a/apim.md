@@ -14,7 +14,7 @@ There is video series about the resource kit in YouTube:
 
 ## I keep on getting CORS errors despite the CORS Policy. Have I missed something?
 
-Lets assume that you have enabled following CORS Policy in your API at `Product` scope:
+Lets assume that you have implemented following CORS Policy in your API at `Product` scope:
 
 ```xml
 <cors>
@@ -93,7 +93,7 @@ headers with CORS preflight request. Preflight request is done as `OPTIONS` requ
 Above of course means that CORS Policy cannot work on `Product` scope **if** it's
 passed in the header. It doesn't work since browser won't send custom subscription header
 and therefore APIM cannot know the target `Product` and thus cannot process CORS policy
-from that scope then.
+from that scope then. No CORS policy from APIM => CORS error at the browser.
 
 Fix is of course pretty simple:
 
