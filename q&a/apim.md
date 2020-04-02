@@ -55,7 +55,7 @@ Then you have following code in your web app:
 </html>
 ```
 
-You still get CORS error with something like this in error message:
+You still get CORS error with following error message:
 
 ```bash
 Access to XMLHttpRequest at 'https://yourinstancenamehere.azure-api.net/api/coolapi'
