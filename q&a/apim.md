@@ -95,11 +95,11 @@ passed in the header. It doesn't work since browser won't send custom subscripti
 and therefore APIM cannot know the target `Product` and thus cannot process CORS policy
 from that scope then.
 
-Fix of course is pretty simple: 
+Fix is of course simple:
 
-- Either put policy to other scopes (Global, API or API operation)
+- Either put policy to other scopes (`Global`, `API` or `API operation`)
 
-**or** 
+**or**
 
 - Pass subscription key in the url and not in the header
 
