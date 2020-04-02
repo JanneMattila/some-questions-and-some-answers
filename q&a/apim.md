@@ -12,6 +12,71 @@ There is video series about the resource kit in YouTube:
 
 **Note**: For Developer Portal automation refer to this documentation: [Migrate portal between services](https://github.com/Azure/api-management-developer-portal/wiki/Migrate-portal-between-services).
 
+## I keep on getting CORS issues. Have I missed something?
+
+Let imagine that you have enabled following CORS Policy in your API at Product scope:
+
+```xml
+<cors>
+    <allowed-origins>
+        <origin>http://localhost:3268</origin>
+    </allowed-origins>
+    <allowed-methods>
+        <method>GET</method>
+    </allowed-methods>
+</cors>
+```
+
+Then you have following code in your web app (of course simplified):
+
+```html
+<!DOCTYPE html>
+<html>
+<body>
+  <script>
+    fetch("https://yourinstancenamehere.azure-api.net/api/coolapi",
+      {
+        method: "GET",
+        headers: {
+          "Ocp-Apim-Subscription-Key": "1234567..." // Subscription key
+        }
+      })
+      .then(response => {
+        return response.json();
+      })
+      .then(data => {
+        console.log(data);
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  </script>
+</body>
+</html>
+```
+
+It still fails for CORS error with something like this in error message:
+
+```js
+Access to XMLHttpRequest at 'https://yourinstancenamehere.azure-api.net/api/coolapi' from origin 'http://localhost:3268' has been blocked by CORS policy: No 'Access-Control-Allow-Origin' header is present on the requested resource.
+```
+
+But if you change that from header to be at the url it works:
+
+```js
+fetch(api + "?subscription-key=" + key, //  WORKS
+  {
+    method: "GET",
+    headers: {
+      "Ocp-Apim-Subscription-Key": key // DOES NOT WORK etc.
+    }
+  })
+```
+
+Underlying reason for this is the fact that browsers won't send custom
+headers with CORS preflight request which is `OPTION` request
+([Preflight request](https://developer.mozilla.org/en-US/docs/Glossary/Preflight_request)).
+
 ## Policies
 
 [Azure API Management Policy Snippets](https://github.com/Azure/api-management-policy-snippets)
