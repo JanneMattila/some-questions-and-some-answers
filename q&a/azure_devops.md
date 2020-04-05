@@ -1,6 +1,15 @@
-# Azure Pipelines
+# Azure DevOps
 
-## How do I queue build in Azure Pipelines using Az CLI
+## Azure DevOps Rest API usage
+
+Look for example Single-page application (SPA) that
+connect to Azure DevOps Rest APIs to create git repository,
+fills it with few files etc. You can find source repository
+here [JanneMattila/azure-devops-simple-content-generator](https://github.com/JanneMattila/azure-devops-simple-content-generator).
+
+## Azure Pipelines
+
+### How do I queue build in Azure Pipelines using Az CLI
 
 Here are the steps that you can use to queue build named `AbsolutelyEmpty-CI`:
 
@@ -16,7 +25,7 @@ az devops configure --defaults project=YourProjectNameHere
 az pipelines build queue --definition-name AbsolutelyEmpty-CI -o table
 ```
 
-## How do I queue build in Azure Pipelines using PowerShell
+### How do I queue build in Azure Pipelines using PowerShell
 
 Here are the steps that you can use to queue build using PowerShell:
 
