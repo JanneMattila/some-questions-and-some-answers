@@ -3,9 +3,9 @@
 ## Azure DevOps Rest API usage
 
 Look for example Single-page application (SPA) that
-connect to Azure DevOps Rest APIs to create git repository,
+connect to [Azure DevOps Rest APIs](https://docs.microsoft.com/en-us/rest/api/azure/devops/?view=azure-devops-rest-5.1) to [create git repository](https://docs.microsoft.com/en-us/rest/api/azure/devops/git/repositories/create?view=azure-devops-rest-5.1),
 fills it with few files etc. You can find source repository
-here [JanneMattila/azure-devops-simple-content-generator](https://github.com/JanneMattila/azure-devops-simple-content-generator).
+of the example here [JanneMattila/azure-devops-simple-content-generator](https://github.com/JanneMattila/azure-devops-simple-content-generator).
 
 ## Azure Pipelines
 
