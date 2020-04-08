@@ -3,11 +3,12 @@
 ## Service Principal (SPN) & App automations
 
 Tons of good examples about Azure AD and SPN automations can be found
-in GitHub. Here is one good reference:
+in GitHub. Here are few:
 
-[Azure-Samples / active-directory-javascript-graphapi-v2](https://github.com/Azure-Samples/active-directory-javascript-graphapi-v2/tree/quickstart/AppCreationScripts)
+- [Azure-Samples / active-directory-javascript-graphapi-v2](https://github.com/Azure-Samples/active-directory-javascript-graphapi-v2/tree/quickstart/AppCreationScripts)
+- [cradle77 / Blazor.Msal](https://github.com/cradle77/Blazor.Msal/blob/master/src/AppCreationScripts/Create.ps1) example scripts
+- [microsoftgraph / powershell-intune-samples](https://github.com/microsoftgraph/powershell-intune-samples/blob/master/ManagedDevices/ManagedDevices_Get.ps1)
 
-This repository contains `PowerShell` examples of the automation.
 To quickly summarize the key pieces:
 
 ```powershell
