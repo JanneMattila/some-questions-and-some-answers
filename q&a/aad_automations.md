@@ -49,7 +49,7 @@ Add-AzureADMSApplicationOwner
 ```
 
 **Note about Azure Pipelines**: If you're using Azure Pipelines
-in your deployments and want to re-use "Azure PowerShell" task in your
+in your deployments and want to re-use credentials from "Azure PowerShell" task in your
 automations then you still need to separately use `Connect-AzureAD`.
 There are examples how to get access token from Azure PowerShell
 session:
@@ -62,7 +62,7 @@ session:
 following issues if you use PowerShell and you have different
 versions of the `Microsoft.IdentityModel.Clients.ActiveDirectory`
 assemblies loaded (especially in your local machine but of course does not
-apply to Hosted build agent). Error message can be something like this:
+apply to Hosted build agent the same way). Error message can be something like this:
 
 ```powershell
 Connect-AzureAD: Could not load file or assembly 'Microsoft.IdentityModel.Clients.ActiveDirectory,
