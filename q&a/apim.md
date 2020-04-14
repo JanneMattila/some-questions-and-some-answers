@@ -103,6 +103,9 @@ Fix is of course pretty simple:
 
 - Pass subscription key in the url and not in the header
 
+See also [I'm getting a CORS error when using the interactive console](https://aka.ms/apimdocs/portal/cors)
+for more information.
+
 ## Policies
 
 [Azure API Management Policy Snippets](https://github.com/Azure/api-management-policy-snippets)
