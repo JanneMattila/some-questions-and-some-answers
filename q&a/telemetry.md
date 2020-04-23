@@ -1,5 +1,183 @@
 # Application Insights & Telemetry
 
+## Rest API
+
+You can study Application Insights [Bond schemas](https://microsoft.github.io/bond/)
+for more
+[details](https://github.com/microsoft/ApplicationInsights-Home/tree/master/EndpointSpecs/Schemas/Bond)
+and
+[endpoint protocol](https://github.com/microsoft/ApplicationInsights-Home/blob/master/EndpointSpecs/ENDPOINT-PROTOCOL.md)
+but below are some examples that make it more concrete.
+
+**Note**: Get yourself [Visual Studio Code](https://code.visualstudio.com/)
+and [REST Client](https://marketplace.visualstudio.com/items?itemName=humao.rest-client) extension and save
+below snippet to e.g. `AppInsights.http`. Then you can more easily
+test those APIs by pressing "Send Request":
+
+![Send Request in rest client](https://user-images.githubusercontent.com/2357647/80068327-17b37d80-8548-11ea-8995-832c9e830c53.png)
+
+```rest
+@endpoint = https://dc.services.visualstudio.com/v2/track
+@ikey = your_intrumentation_key_from_azure_portal
+@roleInstance = myserver
+@sdk = mydemo:1.0.0
+
+### Post single event:
+# Matching .NET code:
+#   var client = new TelemetryClient
+#   {
+#     InstrumentationKey = "key"
+#   };
+#   client.TrackEvent("PageView");
+POST {{endpoint}} HTTP/1.1
+Content-Type: application/json
+
+{
+  "name": "Event",
+  "time": "{{$datetime iso8601}}",
+  "iKey": "{{ikey}}",
+  "tags": {
+    "ai.cloud.roleInstance": "{{roleInstance}}",
+    "ai.internal.sdkVersion": "{{sdk}}"
+  },
+  "data": {
+    "baseType": "EventData",
+    "baseData": {
+      "ver":2,
+      "name": "PageView"
+    }
+  }
+}
+
+### Post single event with additional properties:
+# Matching .NET code:
+#   client.TrackEvent("PageView",
+#     new Dictionary<string, string>()
+#     {
+#       { "Server", "ABC123" },
+#       { "Service", "SVC12345" }
+#     });
+POST {{endpoint}} HTTP/1.1
+Content-Type: application/json
+
+{
+  "name": "Event",
+  "time": "{{$datetime iso8601}}",
+  "iKey": "{{ikey}}",
+  "tags": {
+    "ai.cloud.roleInstance": "{{roleInstance}}",
+    "ai.internal.sdkVersion": "{{sdk}}"
+  },
+  "data": {
+    "baseType": "EventData",
+    "baseData": {
+      "ver":2,
+      "name": "PageView",
+      "properties": {
+        "Server": "ABC123",
+        "Service": "SVC12345"
+      }
+    }
+  }
+}
+
+### Post single event with additional properties and metrics:
+# Matching .NET code:
+#   client.TrackEvent("PageView",
+#     new Dictionary<string, string>()
+#     {
+#       { "Server", "ABC123" },
+#       { "Service", "SVC12345" }
+#     },
+#     new Dictionary<string, double>()
+#     {
+#       { "Level", level }
+#     });
+POST {{endpoint}} HTTP/1.1
+Content-Type: application/json
+
+{
+  "name": "Event",
+  "time": "{{$datetime iso8601}}",
+  "iKey": "{{ikey}}",
+  "tags": {
+    "ai.cloud.roleInstance": "{{roleInstance}}",
+    "ai.internal.sdkVersion": "{{sdk}}"
+  },
+  "data": {
+    "baseType": "EventData",
+    "baseData": {
+      "ver":2,
+      "name": "PageView",
+      "properties": {
+        "Server": "ABC123",
+        "Service": "SVC12345"
+      },
+      "measurements": {
+        "Level": 62.49
+      }
+    }
+  }
+}
+
+### Post single exception with properties:
+# Matching .NET code:
+#   var ex = new ContosoRetailBackendException(
+#    "Retail SBT Backend is not responding. " +
+#    "Please follow these instructions next: " +
+#    "https://bit.ly/ContosoITRetailSBTBackend");
+#   client.TrackException(ex, new Dictionary<string, string>()
+#   {
+#     { "DataKey", "ABCDEF" },
+#     { "NodeKey", "1234567890" }
+#   });
+POST {{endpoint}} HTTP/1.1
+Content-Type: application/json
+
+{
+  "name": "Exception",
+  "time": "{{$datetime iso8601}}",
+  "iKey": "{{ikey}}",
+  "tags": {
+    "ai.cloud.roleInstance": "{{roleInstance}}",
+    "ai.internal.sdkVersion": "{{sdk}}"
+  },
+  "data": {
+    "baseType": "ExceptionData",
+    "baseData": {
+      "ver":2,
+      "exceptions":
+      [
+        {
+          "id": 9799115,
+          "outerId":0,
+          "typeName": "ContosoRetailBackendException",
+          "message": "Retail SBT Backend is not responding. Please follow these instructions next: https://bit.ly/ContosoITRetailSBTBackend",
+          "hasFullStack": true
+        }
+      ],
+      "properties": {
+        "DataKey": "ABCDEF",
+        "NodeKey": "1234567890"
+      }
+    }
+  }
+}
+
+### Post multiple events using line-delimited json:
+# Matching .NET code:
+#   client.TrackEvent("PageView");
+#   client.TrackEvent("PageView");
+#   client.TrackEvent("PageView");
+#   client.Flush();
+POST {{endpoint}} HTTP/1.1
+Content-Type: x-json-stream
+
+{"name":"Event","time":"{{$datetime iso8601}}","iKey":"{{ikey}}","tags":{"ai.cloud.roleInstance":"{{roleInstance}}","ai.internal.sdkVersion":"{{sdk}}"},"data":{"baseType":"EventData","baseData":{"ver":2,"name":"PageView"}}}
+{"name":"Event","time":"{{$datetime iso8601}}","iKey":"{{ikey}}","tags":{"ai.cloud.roleInstance":"{{roleInstance}}","ai.internal.sdkVersion":"{{sdk}}"},"data":{"baseType":"EventData","baseData":{"ver":2,"name":"PageView"}}}
+{"name":"Event","time":"{{$datetime iso8601}}","iKey":"{{ikey}}","tags":{"ai.cloud.roleInstance":"{{roleInstance}}","ai.internal.sdkVersion":"{{sdk}}"},"data":{"baseType":"EventData","baseData":{"ver":2,"name":"PageView"}}}
+```
+
 ## How can I pass additional information to Ops or Support teams in case of failure?
 
 Scenario: In your application code you have hard dependency
