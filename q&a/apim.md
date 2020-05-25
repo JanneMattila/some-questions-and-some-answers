@@ -118,6 +118,50 @@ for more information.
 
 [Web API design](https://docs.microsoft.com/en-us/azure/architecture/best-practices/api-design)
 
+## Performance testing
+
+You can use [artillery.io](https://artillery.io/) for your load testing.
+Follow the instructions at the website to get it installed and then create your configuration file:
+
+```yaml
+config:
+  target: "https://yourinstancenamehere.azure-api.net"
+  phases:
+    - duration: 10
+      arrivalRate: 20
+  defaults:
+    headers:
+      Ocp-Apim-Subscription-Key: yourkeyhere
+      Content-Type: application/json; charset=utf-8
+scenarios:
+  - flow:
+    - post:
+        url: "/api/coolapi"
+        json:
+          type: "PerfTest"
+          content: 
+            id: 123
+            name: "example data"
+```
+
+Above configuration will `POST` following payload to your api:
+
+```json
+{
+  "type":"PerfTest",
+  "content": {
+    "id":123,
+    "name":"example data"
+  }
+}
+```
+
+Execute the tests:
+
+```bash
+artillery run yourfile.yaml
+```
+
 ## Links
 
 [A library of useful resources about Azure API Management](https://aka.ms/apimlove)
