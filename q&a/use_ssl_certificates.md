@@ -1,6 +1,23 @@
-# SSL for Free
+# SSL certificates
 
 ## How do I test my apps with SSL certificates?
+
+### Option 1: Let's Encrypt
+
+Use these instructions to [setup certbot WSL](https://gist.github.com/bluearth/aebde23076e8a15981886a616cac81ba).
+You can then generate wildcard certificates using this command:
+
+```bash
+sudo certbot certonly --manual --preferred-challenges dns -d *.youraddresshere.com
+```
+
+Convert them to pfx format:
+
+```bash
+openssl pkcs12 -export -out "certificate.pfx" -inkey "privkey1.pem" -in "cert1.pem"
+```
+
+### Option 2: SSL For Free
 
 You can use [SSL For Free](https://www.sslforfree.com/) for creating your certificates.
 You can create even wildcard certificates (e.g. `*.yourdomainnamehere.com`) with that.
