@@ -55,3 +55,38 @@ Resources
 "@
 $result | Format-Table
 ```
+
+### Storing scanning results to Table storage
+
+Note: This requires `AzTable` (To install run: `Install-Module AzTable`).
+
+```powershell
+$storageResourceGroup = "rg-automation"
+$storageName = "yourautomationstoragedemo"
+$storage = Get-AzStorageAccount -ResourceGroupName $storageResourceGroup -Name $storageName
+$ctx = $storage.Context
+
+$reportTableName = "reports"
+New-AzStorageTable -Name $reportTableName -Context $ctx -ErrorAction Continue
+
+$reportTable = (Get-AzStorageTable -Name $reportTableName -Context $ctx).CloudTable
+
+# Take example rows from above result set:
+$rows = $result.Results | select -First 10
+
+# Upload all data to same partition per day
+$partitionKey = [DateTime]::UtcNow.ToString("yyyy-MM-dd")
+$rowNumbering = 1000000
+for($r = 0; $r -lt $rows.length; $r++) {
+  $row = $rows[$r]
+  $rowKey = ($rowNumbering + $r)
+  $properties = @{}
+  $row.psobject.properties | Foreach { $properties[$_.Name] = $_.Value }
+  $properties = $row | ConvertTo-Json | ConvertFrom-Json -AsHashTable
+  Add-AzTableRow `
+    -Table $reportTable `
+    -PartitionKey $partitionKey `
+    -RowKey $rowKey `
+    -Property $properties
+}
+```
