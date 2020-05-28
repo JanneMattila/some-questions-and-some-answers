@@ -17,6 +17,7 @@ Write-Host "Found $($subscriptions.length) subscriptions"
 
 for($i = 0; $i -lt $subscriptions.length; $i++) {
   $subscription = $subscriptions[$i]
+  Select-AzSubscription -SubscriptionObject $subscription
   Write-Host "Processing subscription $($i + 1) / $($subscriptions.length) - $($subscription.name)"
   
   # Example: Look for Log Analytics workspaces
