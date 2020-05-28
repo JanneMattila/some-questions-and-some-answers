@@ -12,6 +12,15 @@ There is video series about the resource kit in YouTube:
 
 **Note**: For Developer Portal automation refer to this documentation: [Migrate portal between services](https://github.com/Azure/api-management-developer-portal/wiki/Migrate-portal-between-services).
 
+Resource kit contains tooling for extracting templates out from existing APIM.
+Git clone the repo (or download it from releases) and then execute:
+
+```powershell
+dotnet run extract --extractorConfig extractorparams.json
+```
+
+See documentation about [Running the Extractor](https://github.com/Azure/azure-api-management-devops-resource-kit/blob/master/src/APIM_ARMTemplate/README.md#running-the-extractor).
+
 ## I keep on getting CORS errors despite the CORS Policy. Have I missed something?
 
 Lets assume that you have implemented following CORS Policy in your API at `Product` scope:
