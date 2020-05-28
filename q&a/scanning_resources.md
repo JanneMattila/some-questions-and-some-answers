@@ -82,7 +82,6 @@ for($r = 0; $r -lt $rows.length; $r++) {
   $rowKey = ($rowNumbering + $r)
   $properties = @{}
   $row.psobject.properties | Foreach { $properties[$_.Name] = $_.Value }
-  $properties = $row | ConvertTo-Json | ConvertFrom-Json -AsHashTable
   Add-AzTableRow `
     -Table $reportTable `
     -PartitionKey $partitionKey `
