@@ -31,7 +31,7 @@ for($i = 0; $i -lt $subscriptions.length; $i++) {
   Write-Host "Processing subscription $($i + 1) / $($subscriptions.length) - $($subscription.name)"
   
   # Example: Look for Log Analytics workspaces
-  $workspaces = [array] (Get-AzOperationalInsightsWorkspace)
+  $workspaces = [array](Get-AzOperationalInsightsWorkspace)
   Write-Host "Found $($workspaces.length) workspaces"
   for($j = 0; $j -lt $workspaces.length; $j++) {
     $workspace = $workspaces[$j]
@@ -39,7 +39,7 @@ for($i = 0; $i -lt $subscriptions.length; $i++) {
     $result = Invoke-AzOperationalInsightsQuery `
       -Workspace $workspace `
       -Query $query `
-      -Wait (60*10)`
+      -Wait (60*10) `
       -Timespan (New-TimeSpan -Hours 24)
     $result.Results | Format-Table
 
@@ -84,15 +84,14 @@ New-AzStorageTable -Name $reportTableName -Context $ctx -ErrorAction Continue
 
 $reportTable = (Get-AzStorageTable -Name $reportTableName -Context $ctx).CloudTable
 
-# Take example rows from above result set:
-$rows = $result.Results | select -First 10
+# For testing take example rows from above result set:
+# $rows = $result.Results | select -First 10
+$rows = $result.Results
 
 # Upload all data to same partition per day
 $partitionKey = [DateTime]::UtcNow.ToString("yyyy-MM-dd")
-$rowNumbering = 1000000
-for($r = 0; $r -lt $rows.length; $r++) {
-  $row = $rows[$r]
-  $rowKey = ($rowNumbering + $r)
+foreach($row in $rows){
+  $rowKey = $row.Computer
   $properties = @{}
   $row.psobject.properties | Foreach { $properties[$_.Name] = $_.Value }
   Add-AzTableRow `
@@ -102,3 +101,7 @@ for($r = 0; $r -lt $rows.length; $r++) {
     -Property $properties
 }
 ```
+
+Here's example of the collected data:
+
+![collected data in table storage](https://user-images.githubusercontent.com/2357647/83232491-f290db00-a195-11ea-9bcd-fe61dc1e126f.png)
