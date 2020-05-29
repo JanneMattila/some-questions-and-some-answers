@@ -5,10 +5,20 @@
 ```powershell
 # Note: https://docs.microsoft.com/en-us/azure/azure-monitor/insights/vminsights-ga-release-faq#what-should-i-do-about-the-performance-counters-in-my-workspace-if-i-install-the-vminsights-solution
 $query = @"
+let UsageDisk =
 InsightsMetrics
-| where Namespace in ("Processor", "Memory", "LogicalDisk")
-| order  by TimeGenerated desc
-| distinct Computer, Namespace, Name, Val
+| where Namespace=="LogicalDisk" and Name=="FreeSpaceMB"
+| summarize min(Val) by Computer
+| project Computer, FreeSpaceMB=min_Val;
+let UsageCPU =
+InsightsMetrics
+| where Namespace=="Processor" and Name=="UtilizationPercentage"
+| summarize max(Val) by Computer
+| project Computer, CPU=max_Val;
+UsageDisk
+| join (UsageCPU) 
+on Computer
+| project Computer, FreeSpaceMB, CPU
 "@
 
 $subscriptions = [array](Get-AzSubscription)
@@ -32,6 +42,9 @@ for($i = 0; $i -lt $subscriptions.length; $i++) {
       -Wait (60*10)`
       -Timespan (New-TimeSpan -Hours 24)
     $result.Results | Format-Table
+
+    # Note: To analyze data in grid view use this
+    # $result.Results | Out-GridView
 
     # For further filtering e.g.
     # $result.Results | `
