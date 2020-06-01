@@ -8,17 +8,24 @@ $query = @"
 let UsageDisk =
 InsightsMetrics
 | where Namespace=="LogicalDisk" and Name=="FreeSpaceMB"
-| summarize min(Val) by Computer
-| project Computer, FreeSpaceMB=min_Val;
+| summarize min(Val), min(todouble(parse_json(Tags).["vm.azm.ms/diskSizeMB"])) by Computer
+| project Computer, FreeSpaceMB=min_Val, DiskspaceMB=['min_Tags_vm.azm.ms/diskSizeMB'];
 let UsageCPU =
 InsightsMetrics
 | where Namespace=="Processor" and Name=="UtilizationPercentage"
-| summarize max(Val) by Computer
-| project Computer, CPU=max_Val;
+| summarize max(Val), max(todouble(parse_json(Tags).["vm.azm.ms/totalCpus"])) by Computer
+| project Computer, CPUUtilization=max_Val, CPUCount=['max_Tags_vm.azm.ms/totalCpus'];
+let UsageMemory =
+InsightsMetrics
+| where Namespace=="Memory" and Name=="AvailableMB"
+| summarize min(Val), max(todouble(parse_json(Tags).["vm.azm.ms/memorySizeMB"])) by Computer
+| project Computer, MemoryAvailableMB=min_Val, MemorySizeMB=['max_Tags_vm.azm.ms/memorySizeMB'];
 UsageDisk
 | join (UsageCPU) 
 on Computer
-| project Computer, FreeSpaceMB, CPU
+| join (UsageMemory)
+on Computer
+| project Computer, FreeSpaceMB, DiskspaceMB, CPUUtilization, CPUCount, MemoryAvailableMB, MemorySizeMB
 "@
 
 $subscriptions = [array](Get-AzSubscription)
