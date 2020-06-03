@@ -80,6 +80,10 @@ Resources
 $result | Format-Table
 ```
 
+Here's example of the data:
+
+![resource graph licenses query output](https://user-images.githubusercontent.com/2357647/83683000-5b8cae80-a5ed-11ea-8cb9-b93df300ec12.png)
+
 ### Storing scanning results to Table storage
 
 Note: This requires `AzTable` (To install run: `Install-Module AzTable`).
