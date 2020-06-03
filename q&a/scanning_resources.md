@@ -67,11 +67,15 @@ for($i = 0; $i -lt $subscriptions.length; $i++) {
 
 Note: This requires `Az.ResourceGraph` (To install run: `Install-Module -Name Az.ResourceGraph`).
 
+Here's example query to find all the used license types of VMs and SQL databases:
+
 ```powershell
 $result = Search-AzGraph -Query @"
 Resources
-| where type =~ "microsoft.compute/virtualmachines"
-| project name, vmSize=tostring(properties.hardwareProfile.vmSize)
+| where type == "microsoft.compute/virtualmachines" or type == "microsoft.sql/servers/databases"
+| project license = properties.licenseType, type
+| summarize Count=count() by tostring(license), type
+| sort by Count desc
 "@
 $result | Format-Table
 ```
