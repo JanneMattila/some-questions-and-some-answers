@@ -10,8 +10,6 @@ There is video series about the resource kit in YouTube:
 
 [How to build a CI/CD pipeline for API Management, Part 2](https://youtu.be/PDOXI2E6zYA)
 
-**Note**: For Developer Portal automation refer to this documentation: [Migrate portal between services](https://github.com/Azure/api-management-developer-portal/wiki/Migrate-portal-between-services).
-
 Resource kit contains tooling for extracting templates out from existing APIM.
 Git clone the repo (or download it from releases) and then execute:
 
@@ -20,6 +18,17 @@ dotnet run extract --extractorConfig extractorparams.json
 ```
 
 See documentation about [Running the Extractor](https://github.com/Azure/azure-api-management-devops-resource-kit/blob/master/src/APIM_ARMTemplate/README.md#running-the-extractor).
+
+**Note**: For Developer Portal automation refer to this documentation: [Migrate portal between services](https://github.com/Azure/api-management-developer-portal/wiki/Migrate-portal-between-services).
+For alternative worklow based on PowerShell checkout this
+[example](https://github.com/JanneMattila/329-azure-api-management-developer-portal)
+for more details.
+
+Here are other APIM ARM template examples:
+
+- [APIM with 4 different APIs](https://github.com/JanneMattila/329-azure-api-management)
+- [APIM and custom domain and sertificate](https://github.com/JanneMattila/329-azure-api-management-custom-domain)
+- [APIM with Logic App backend](https://github.com/JanneMattila/329-azure-api-management-logic-app)
 
 ## I keep on getting CORS errors despite the CORS Policy. Have I missed something?
 
