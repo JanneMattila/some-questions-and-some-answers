@@ -54,7 +54,7 @@ the environment without too much knowledge about the underlying infrastructure c
 This is exactly the reason why programming languages have known entry points. You know where
 it all starts.
 
-- You can also implement additional logic inside the `deploy.ps1` as part of you deployment in `PowerShell` or `az` CLI (e.g. [enable static hosting for storage account](https://github.com/JanneMattila/amazerrr/blob/master/deploy/deploy.ps1#L69) or change any other deployment detail based on whatever you like)
+- You can also implement additional logic inside the `deploy.ps1` as part of you deployment in `PowerShell` or `az` CLI (e.g. [enable static hosting for storage account](https://github.com/JanneMattila/amazerrr/blob/4959415fd9fe482b7928e7875a48ae276187f28b/deploy/deploy.ps1#L89) or change any other deployment detail based on whatever you like)
 
 - Use exactly the same code in your pipelines and when you're working locally
 with your infrastructure (Yes, again I refer to my 2016 [posts](https://docs.microsoft.com/en-us/archive/blogs/jannemattila/enhance-arm-deployments-with-powershell)). Only difference is the identity: when working locally it's developers identity and in your pipelines you use [service principal](https://docs.microsoft.com/en-us/azure/devops/pipelines/library/connect-to-azure?view=azure-devops).
