@@ -84,6 +84,9 @@ Here's example of the data:
 
 ![resource graph licenses query output](https://user-images.githubusercontent.com/2357647/83683000-5b8cae80-a5ed-11ea-8cb9-b93df300ec12.png)
 
+If you want to convert license type you can follow these
+[instructions](https://docs.microsoft.com/en-us/azure/virtual-machines/windows/hybrid-use-benefit-licensing).
+
 ### Storing scanning results to Table storage
 
 Note: This requires `AzTable` (To install run: `Install-Module AzTable`).
