@@ -87,7 +87,7 @@ Here's example of the data:
 If you want to convert license type you can follow these
 [instructions](https://docs.microsoft.com/en-us/azure/virtual-machines/windows/hybrid-use-benefit-licensing).
 
-Another example query - Find all used locations by type:
+### Example: Find all used locations by type
 
 ```sql
 Resources
