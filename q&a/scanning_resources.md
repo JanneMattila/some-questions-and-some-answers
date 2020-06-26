@@ -87,6 +87,16 @@ Here's example of the data:
 If you want to convert license type you can follow these
 [instructions](https://docs.microsoft.com/en-us/azure/virtual-machines/windows/hybrid-use-benefit-licensing).
 
+Another example query - Find all used locations by type:
+
+```sql
+Resources
+| summarize Count=count() by location, type
+| sort by Count desc
+```
+
+![Azure resources by location by type](https://user-images.githubusercontent.com/2357647/85825305-89978580-b78a-11ea-8362-8d6168eddbdd.png)
+
 ### Storing scanning results to Table storage
 
 Note: This requires `AzTable` (To install run: `Install-Module AzTable`).
