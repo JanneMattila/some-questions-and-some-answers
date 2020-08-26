@@ -54,3 +54,130 @@ $parameters = @{
 }
 Invoke-RestMethod @parameters
 ```
+
+## Pipelines
+
+### Mixing and matching CLI and PowerShell
+
+If you encapsulate your deployments to `deploy.ps1` and
+use that in your pipelines, you typically use `Azure Pipelines` task.
+However, if you need to add additional `az` CLI calls inside that
+same context then you need to share the credentials between these two.
+
+Easiest way to achieve that is to use [Azure CLI Task](https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/deploy/azure-cli?view=azure-devops). It enables two things:
+
+- You can continue to use PowerShell script in your deployment pipeline
+- It provides access to the service principal so that you can use that to login to Azure
+
+Here are two examples how you can use it:
+
+Example: Minimal `deploy.ps1` to show this in action:
+
+```powershell
+Write-Host "Here is az cli context:"
+az account show -o table
+az group list -o table
+
+$clientPassword = ConvertTo-SecureString $env:servicePrincipalKey -AsPlainText -Force
+$credentials = New-Object System.Management.Automation.PSCredential($env:servicePrincipalId, $clientPassword)
+
+Install-Module Az -Scope CurrentUser -Force -AllowClobber -AcceptLicense
+Login-AzAccount -Credential $credentials -ServicePrincipal -TenantId $env:tenantId
+
+Write-Host "Here is Az module context:"
+Get-AzContext
+Get-AzResourceGroup | Format-Table
+```
+
+Example: `deploy.ps1` with some basic deployment patterns implemented:
+
+```powershell
+Param (
+  [Parameter(HelpMessage = "Deployment target resource group")] 
+  [string] $ResourceGroupName = "rg-myapp-local",
+
+  [Parameter(HelpMessage = "Deployment target resource group location")] 
+  [string] $Location = "North Europe",
+
+  [Parameter(Mandatory = $true, HelpMessage = "Example additional parameter")]
+  [string] $AdditionalParameters,
+
+  [string] $Template = "$PSScriptRoot\azuredeploy.json",
+  [string] $TemplateParameters = "$PSScriptRoot\azuredeploy.parameters.json"
+)
+
+$ErrorActionPreference = "Stop"
+
+$date = (Get-Date).ToString("yyyy-MM-dd-HH-mm-ss")
+$deploymentName = "Local-$date"
+
+if ([string]::IsNullOrEmpty($env:BUILD_BUILDNUMBER)) {
+  Write-Host (@"
+Not executing inside Azure DevOps Release Management.
+Make sure you have correct contexts set.
+"@)
+}
+else {
+  $deploymentName = $env:BUILD_BUILDNUMBER
+
+  # Process Azure PowerShell login
+  $clientPassword = ConvertTo-SecureString $env:servicePrincipalKey -AsPlainText -Force
+  $credentials = New-Object System.Management.Automation.PSCredential($env:servicePrincipalId, $clientPassword)
+
+  $installedModule = Get-Module -Name Az -ListAvailable
+  if ($null -eq $installedModule) {
+    Write-Host "Installing Az module..."
+    Install-Module Az -Scope CurrentUser -Force -AllowClobber -AcceptLicense
+  }
+  else {
+    Import-Module Az
+  }
+  Login-AzAccount -Credential $credentials -ServicePrincipal -TenantId $env:tenantId
+}
+
+if ($null -eq (Get-AzResourceGroup -Name $ResourceGroupName -Location $Location -ErrorAction SilentlyContinue)) {
+  Write-Warning "Resource group '$ResourceGroupName' doesn't exist and it will be created."
+  New-AzResourceGroup -Name $ResourceGroupName -Location $Location -Verbose
+}
+
+# Additional parameters that we pass to the template deployment
+$additionalParameters = New-Object -TypeName hashtable
+$additionalParameters['additionalParameters'] = $AdditionalParameters
+
+$result = New-AzResourceGroupDeployment `
+  -DeploymentName $deploymentName `
+  -ResourceGroupName $ResourceGroupName `
+  -TemplateFile $Template `
+  -TemplateParameterFile $TemplateParameters `
+  @additionalParameters `
+  -Mode Complete -Force `
+  -Verbose
+
+if ($null -eq $result.Outputs.webAppName) {
+  Throw "Template deployment didn't return web app information correctly and therefore deployment is cancelled."
+}
+
+$result
+
+$webAppName = $result.Outputs.webAppName.value
+
+# Here you can inject 'az' CLI activities:
+az webapp show -n $webAppName -g $ResourceGroupName
+
+# Publish variable to the Azure DevOps agents so that they
+# can be used in follow-up tasks such as application deployment
+Write-Host "##vso[task.setvariable variable=Custom.WebAppName;]$webAppName"
+```
+
+Actual step configuration in pipeline would be then:
+
+```yaml
+steps:
+- task: AzureCLI@2
+  displayName: 'Azure deployment'
+  inputs:
+    azureSubscription: 'AzureSubscription'
+    scriptType: pscore
+    scriptPath: '$(Pipeline.Workspace)/deploy/deploy.ps1'
+    addSpnToEnvironment: true
+```
