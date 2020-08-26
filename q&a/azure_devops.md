@@ -57,7 +57,7 @@ Invoke-RestMethod @parameters
 
 ## Pipelines
 
-### Mixing and matching Azure CLI and Azure PowerShell
+### Mixing Azure CLI and Azure PowerShell
 
 If you encapsulate your deployments to `deploy.ps1` and
 use that in your pipelines, you typically use `Azure Pipelines` task.
