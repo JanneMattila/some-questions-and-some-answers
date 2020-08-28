@@ -54,3 +54,24 @@ AzureMetrics
 | project Max=max_Maximum, TimeGenerated
 | render timechart
 ```
+
+Combining multiple metrics to single chart can be done in following manner:
+
+```sql
+let MaxLatency=
+AzureMetrics 
+| where ResourceProvider == "MICROSOFT.LOGIC"
+| where MetricName == "ActionLatency"
+| project Maximum, TimeGenerated, MetricName=strcat("Max ", MetricName)
+| summarize max(Maximum) by bin(TimeGenerated, 1m), MetricName
+| project Value=max_Maximum, TimeGenerated, MetricName;
+let MinLatency=
+AzureMetrics 
+| where ResourceProvider == "MICROSOFT.LOGIC"
+| where MetricName == "ActionLatency"
+| project Minimum, TimeGenerated, MetricName=strcat("Min ", MetricName)
+| summarize min(Minimum) by bin(TimeGenerated, 1m), MetricName
+| project Value=min_Minimum, TimeGenerated, MetricName;
+union MinLatency, MaxLatency
+| render timechart
+```
