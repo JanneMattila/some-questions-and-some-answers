@@ -75,3 +75,27 @@ AzureMetrics
 union MinLatency, MaxLatency
 | render timechart
 ```
+
+You can also combine metrics with different timespans.
+Notice that `| where TimeGenerated > ago(14d)` filter has been added:
+
+```sql
+let MaxLatency=
+AzureMetrics 
+| where ResourceProvider == "MICROSOFT.LOGIC"
+| where TimeGenerated > ago(14d)
+| where MetricName == "ActionLatency"
+| project Maximum, TimeGenerated, MetricName=strcat("Max ", MetricName)
+| summarize max(Maximum) by bin(TimeGenerated, 1m), MetricName
+| project Value=max_Maximum, TimeGenerated, MetricName;
+let MinLatency=
+AzureMetrics 
+| where ResourceProvider == "MICROSOFT.LOGIC"
+| where TimeGenerated > ago(7d)
+| where MetricName == "ActionLatency"
+| project Minimum, TimeGenerated, MetricName=strcat("Min ", MetricName)
+| summarize min(Minimum) by bin(TimeGenerated, 1m), MetricName
+| project Value=min_Minimum, TimeGenerated, MetricName;
+union MinLatency, MaxLatency
+| render timechart
+```
