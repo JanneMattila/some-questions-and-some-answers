@@ -99,3 +99,41 @@ AzureMetrics
 union MinLatency, MaxLatency
 | render timechart
 ```
+
+## External data
+
+You can also query external data using KQL [externaldata](https://docs.microsoft.com/en-us/azure/data-explorer/kusto/query/externaldata-operator) operator.
+
+Let's use this on following CSV file:
+
+```csv
+ID,Name,Description
+1,Car,This is description of car
+2,Bicycle,It has two wheels
+3,House,It's large building
+```
+
+Here's example query for that data:
+
+```sql
+let CSV = externaldata(ID:int, Name:string, Description:string)
+[
+  h@"https://raw.githubusercontent.com/JanneMattila/329-azure-api-management-functions/master/doc/data.csv"
+]
+with(format="csv");
+CSV
+| where ID < 4
+```
+
+Here's the output in Azure Portal:
+
+![example csv query output](https://user-images.githubusercontent.com/2357647/94178181-6f616680-fea3-11ea-98d2-3587c59a3a45.png)
+
+
+Following [data formats](https://docs.microsoft.com/en-us/azure/data-explorer/kusto/query/externaldata-operator) are supported.
+
+You can of course...
+
+- Use multiple files in the array
+- Host the files in storage account and just append the url with SAS token
+- Use `multijson` to analyze e.g. App Insights export files
