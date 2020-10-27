@@ -202,8 +202,9 @@ Now you want to limit these API Operations to two buckets:
 - `users-write` = `POST` and `DELETE`
 
 **And** you don't want to implement any changes to the backend APIs.
-You want to fully manage this in API Management. Backend trust
-that if API Management forwards request to `DELETE` then it's valid request.
+You want to fully manage this in API Management. Backend trusts APIM,
+so if API Management forwards request to `DELETE` resource
+then it's valid request for the backend.
 
 We can create `product` based on the above name but if we want to use same
 method for other APIs as well then we can further use `groups` for these
