@@ -192,3 +192,57 @@ This is documented in separate repository. You can find it here:
 
 In short: This demonstrates the use of Azure Relay and Hybrid Connections for
 exposing on-premises Web Service based API.
+
+## How can I limit certain API operations?
+
+Scenario: You have API e.g. `users` which has 3 API Operations `GET`, `POST` and `DELETE`.
+Now you want to limit these API Operations to two buckets: 
+
+- `users-read` = `GET`
+- `users-write` = `POST` and `DELETE`
+
+We can create `product` based on the above name but if we want to use same
+method for other APIs as well then we can further use `groups` for these
+kind of assignments. If we create groups for the above name we can
+further assign these to `product` and `user`.
+Using these assignments we can then validate if any of the conditions as true.
+
+Here is example policy for validating if `users-write` is allowed:
+
+```xml
+<policies>
+  <inbound>
+    <base />
+    <!-- 
+      Check if current operation is allowed:
+      - Is current product "users-write"?
+      - Has product group "users-write"?
+      - Has user group "users-write"?
+      If *any*  of the above is true then this operation is allowed
+    -->
+    <set-variable name="IsOperationAllowed" value="@(
+      (context.Product != null && context.Product.Id =="users-write") ||
+      (context.Product != null && context.Product.Groups.FirstOrDefault(g => g.Id =="users-write") != null) ||
+      (context.User != null && context.User.Groups.FirstOrDefault(g => g.Id =="users-write") != null))" />
+    <trace source="IsOperationAllowed" severity="verbose">
+      <message>@(context.Variables.GetValueOrDefault<bool>("IsOperationAllowed").ToString())</message>
+    </trace>
+    <choose>
+      <when condition="@(!context.Variables.GetValueOrDefault<bool>("IsOperationAllowed"))">
+        <return-response>
+          <set-status code="403" />
+        </return-response>
+      </when>
+    </choose>
+  </inbound>
+  <backend>
+    <base />
+  </backend>
+  <outbound>
+    <base />
+  </outbound>
+  <on-error>
+    <base />
+  </on-error>
+</policies>
+```
