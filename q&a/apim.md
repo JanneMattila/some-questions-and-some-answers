@@ -207,7 +207,8 @@ kind of assignments. If we create groups for the above name we can
 further assign these to `product` and `user`.
 Using these assignments we can then validate if any of the conditions as true.
 
-Here is example policy for validating if `users-write` is allowed:
+Here is example policy for validating if `users-write` is allowed.
+This kind of policy you would use in `POST` and `DELETE` operations:
 
 ```xml
 <policies>
