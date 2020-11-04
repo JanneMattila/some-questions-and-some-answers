@@ -132,10 +132,10 @@ flag to give you extra hints what's going on. And yes typically they are permiss
 
 Typically you need some permissions from these APIs:
 
-| Application ID | Resource URI | Name |
-|---|---|---|
-| 00000002-0000-0000-c000-000000000000 | https://graph.windows.net/ | [Azure AD Graph API](https://docs.microsoft.com/en-us/azure/active-directory/develop/active-directory-graph-api) |
-| 00000003-0000-0000-c000-000000000000 | https://graph.microsoft.com/ | [Microsoft Graph](https://docs.microsoft.com/en-us/graph/overview) |
+| Application ID                       | Resource URI                 | Name                                                                                                             |
+|--------------------------------------|------------------------------|------------------------------------------------------------------------------------------------------------------|
+| 00000002-0000-0000-c000-000000000000 | https://graph.windows.net/   | [Azure AD Graph API](https://docs.microsoft.com/en-us/azure/active-directory/develop/active-directory-graph-api) |
+| 00000003-0000-0000-c000-000000000000 | https://graph.microsoft.com/ | [Microsoft Graph](https://docs.microsoft.com/en-us/graph/overview)                                               |
 
 *Just to re-iterate*: You need to understand that many times different applications actually use `Azure AD Graph API` behind the covers even if you think that they are using `Microsoft Graph` (just like above).
 You should be extra careful with those ones and assign correct permissions to make things work
@@ -198,4 +198,28 @@ Authorization: Bearer {{accesstoken}}
 GET https://graph.windows.net/me/$links/memberOf?api-version=1.6 HTTP/1.1
 Content-Type: application/json; charset=utf-8
 Authorization: Bearer {{accesstoken}}
+```
+
+## Login as service principal
+
+Using PowerShell:
+
+```powershell
+$tenantId = "<your tenant id>"
+$clientID = "<your service principal Application (client) ID>"
+$clientSecret = "<your service principal secret>"
+$clientPassword = ConvertTo-SecureString $clientSecret -AsPlainText -Force
+$credentials = New-Object System.Management.Automation.PSCredential($clientID, $clientPassword)
+
+Login-AzAccount -Credential $credentials -ServicePrincipal -TenantId $tenantId
+```
+
+Using Azure CLI:
+
+```bash
+tenantId="<your tenant id>"
+clientID="<your service principal Application (client) ID>"
+clientSecret="<your service principal secret>"
+
+az login --service-principal --username $clientID --password $clientSecret --tenant $tenantId
 ```
