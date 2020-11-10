@@ -137,3 +137,16 @@ You can of course...
 - Use multiple files in the array
 - Host the files in storage account and just append the url with SAS token
 - Use `multijson` to analyze e.g. App Insights export files
+
+## Cosmos DB
+
+Plot chart about Cosmos DB service availability:
+
+```sql
+AzureMetrics
+| where ResourceProvider == "MICROSOFT.DOCUMENTDB"
+| where MetricName == "ServiceAvailability"
+| where Resource == "<your account name>"
+| project TimeGenerated, Minimum, MetricName
+| render timechart
+```
