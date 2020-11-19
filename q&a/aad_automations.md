@@ -223,3 +223,46 @@ clientSecret="<your service principal secret>"
 
 az login --service-principal --username $clientID --password $clientSecret --tenant $tenantId
 ```
+
+## Testing authentication and claims
+
+If you have created new Azure AD app registration
+for your web application and you want to test it,
+easiest way is to hand craft test login url.
+
+First set the redirect url to be `https://jws.ms`
+so that we can better analyze the token content.
+
+Here is example url if you have multi-tenant
+app (tenant = `common`). You just need to update
+`client_id` from your newly created app registration:
+
+```curl
+https://login.microsoftonline.com/common/oauth2/v2.0/authorize
+  ?client_id=f6e62627-60f2-40d7-b2eb-355a1d0f922d
+  &redirect_uri=https%3A%2F%2Fjwt.ms
+  &response_mode=fragment
+  &response_type=id_token
+  &scope=openid
+  &nonce=dummy
+  &state=12345
+```
+
+Here is similar example for you sigle tenant
+application. Update `client_id` and `<tenant_id>`
+to match your app registration:
+
+```curl
+https://login.microsoftonline.com/<tenant_id>/oauth2/v2.0/authorize
+  ?client_id=f6e62627-60f2-40d7-b2eb-355a1d0f922d
+  &redirect_uri=https%3A%2F%2Fjwt.ms
+  &response_mode=fragment
+  &response_type=id_token
+  &scope=openid
+  &nonce=dummy
+  &state=12345
+```
+
+## Service Principals and `Application.ReadWrite.OwnedBy`
+
+TBD
