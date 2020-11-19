@@ -12,9 +12,9 @@ Let's look at the following architecture:
 Above architecture can be split in half:
 
 - Left: User authentication using Azure AD B2C and for connecting to the backend api
-    - Uses `Delegated permissions`
+  - Uses `Delegated permissions`
 - Right: Backend api does further operations using Microsoft Graph
-    - Uses `Application permissions`
+  - Uses `Application permissions`
 
 Explanation for this split is following. B2C application permission view:
 

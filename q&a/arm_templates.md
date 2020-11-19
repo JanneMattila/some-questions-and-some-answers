@@ -11,6 +11,43 @@ Few links to get you started in ARM templates:
 - [Export template in portal](https://docs.microsoft.com/en-us/azure/azure-resource-manager/templates/export-template-portal)
 - [resources.azure.com](https://resources.azure.com)
 
+## Sharing templates
+
+[Template specs](https://docs.microsoft.com/en-us/azure/azure-resource-manager/templates/template-specs?tabs=azure-powershell)
+is new resource type in Azure that enables you to share templates with other people in your organization.
+
+However, you can achieve similar solution by sharing these templates in centralized git repository and using
+[linked templates](https://docs.microsoft.com/en-us/azure/azure-resource-manager/templates/linked-templates) to use them.
+Similarly you can re-use shared template by connecting to the shared git repository in your deployment pipelines.
+
+Here's example how you would use template spec in your own template (re-use existing template):
+
+```json
+{
+  "name": "[variables('demoTemplate').name]",
+  "type": "Microsoft.Resources/deployments",
+  "apiVersion": "2020-06-01",
+  "properties": {
+    "mode": "Incremental",
+    "templateLink": {
+      "id": "[resourceId(parameters('templateSpecsResourceGroupName'), 
+             'Microsoft.Resources/templateSpecs/versions', 
+             variables('demoTemplate').name, variables
+             ('demoTemplate').version)]"
+    },
+    "parameters": {
+      "location": {
+        "value": "[parameters('location')]"
+      }
+    }
+  }
+}
+```
+
+This can enable also other possibilities such as:
+
+- In highly controlled environment you might want to validate that you only use e.g. template specs
+
 ## Advanced scenario
 
 In case you're working on implementing something in ARM templates
