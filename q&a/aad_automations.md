@@ -276,7 +276,7 @@ https://login.microsoftonline.com/<tenant_id>/oauth2/v2.0/authorize
   &state=12345
 ```
 
-## `Application.ReadWrite.OwnedBy`
+## `Application.ReadWrite.OwnedBy` permission
 
 If you need to create automation that creates new app registrations
 and manages their information (such as secrets etc.), then you'll
