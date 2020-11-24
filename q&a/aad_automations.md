@@ -196,6 +196,7 @@ Authorization: Bearer {{accesstoken}}
 
 More information about the required Microsoft Graph API permissions per API can be found in here:
 [Microsoft Graph REST API reference](https://docs.microsoft.com/en-us/graph/api/overview)
+(and similarly for [Azure AD Graph API reference](https://docs.microsoft.com/en-us/previous-versions/azure/ad/graph/api/api-catalog)).
 
 Few examples about `Azure AD Graph API`:
 
