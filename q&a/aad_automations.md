@@ -114,7 +114,7 @@ New-AzADServicePrincipal
 Get-AzADApplication
 ```
 
-[Az module and Active Directory](https://docs.microsoft.com/en-us/powershell/module/az.resources)
+Read more: [Az module and Active Directory](https://docs.microsoft.com/en-us/powershell/module/az.resources)
 
 Similarly for `Azure CLI` these are the most important commands:
 
@@ -125,7 +125,7 @@ az ad app permission grant # Grant the delegated permissions
 az ad app owner # Manage application owners
 ```
 
-[Manage applications with Azure AD Graph API using CLI](https://docs.microsoft.com/en-us/cli/azure/ad/app?view=azure-cli-latest)
+Read more: [Manage applications with Azure AD Graph API using CLI](https://docs.microsoft.com/en-us/cli/azure/ad/app?view=azure-cli-latest)
 
 **Tip**: If you have issues with your CLI scripting then use `--debug`
 flag to give you extra hints what's going on. And yes typically they are permission related.
@@ -193,6 +193,9 @@ Authorization: Bearer {{accesstoken}}
   "securityEnabledOnly": false
 }
 ```
+
+More information about the required Microsoft Graph API permissions per API can be found in here:
+[Microsoft Graph REST API reference](https://docs.microsoft.com/en-us/graph/api/overview)
 
 Few examples about `Azure AD Graph API`:
 
