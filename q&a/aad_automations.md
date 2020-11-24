@@ -284,3 +284,9 @@ need to use `Application.ReadWrite.OwnedBy` permission in
 your application.
 
 Read more about [application permissions](https://docs.microsoft.com/en-us/graph/permissions-reference#application-permissions-4).
+
+## Links
+
+[What is the Microsoft identity platform?](https://docs.microsoft.com/en-us/azure/active-directory/develop/v2-overview)
+
+[Relationship between application objects and service principals](https://github.com/JanneMattila/some-questions-and-some-answers/blob/master/q%26a/aad_automations.md)
