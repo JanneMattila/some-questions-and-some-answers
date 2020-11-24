@@ -147,7 +147,7 @@ then assign those required permissions manually to it. Then you can export
 manifest json and look for the actual `resourceAppId` values from the export content.
 
 **Tip**: In order try different Graph API endpoints you need access token for that.
-You can use following commands to get them:
+You can use following commands to get them in Azure CLI:
 
 ```bash
 # Get access token for Microsoft Graph API
@@ -155,6 +155,16 @@ az account get-access-token --resource https://graph.microsoft.com/
 
 # Get access token for Azure AD Graph API
 az account get-access-token --resource https://graph.windows.net/
+```
+
+Or in PowerShell:
+
+```powershell
+# Get access token for Microsoft Graph API
+Get-AzAccessToken -ResourceUrl https://graph.microsoft.com/
+
+# Get access token for Azure AD Graph API
+Get-AzAccessToken -ResourceUrl https://graph.windows.net/
 ```
 
 Then you can use e.g. Visual Studio Code with Rest client and try APIs out.
