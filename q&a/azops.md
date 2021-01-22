@@ -37,14 +37,18 @@ $azStateDirectory
 # https://github.com/Azure/Enterprise-Scale/blob/main/docs/EnterpriseScale-Setup-azure.md
 $tenantId = "<your tenant id>"
 $clientID = "<your app id>" # azops
+#region $clientSecret = "..."
 $clientSecret = "<your secret>"
+Clear-Host
+#endregion
 
 $clientPassword = ConvertTo-SecureString $clientSecret -AsPlainText -Force
 $credentials = New-Object System.Management.Automation.PSCredential($clientID, $clientPassword)
 Login-AzAccount -Credential $credentials -ServicePrincipal -TenantId $tenantId
 
-mkdir $azStateDirectory
+New-Item -Path $azStateDirectory -ItemType Directory -Force | Out-Null
 $env:AZOPS_IGNORE_CONTEXT_CHECK = 1 # If set to 1, skip AAD tenant validation == 1
+$env:AZOPS_SKIP_RESOURCE_GROUP = 1
 $env:AZOPS_STATE = $azStateDirectory
 
 # Prepare and validate global variables
@@ -55,8 +59,8 @@ Initialize-AzOpsGlobalVariables -Verbose
 Initialize-AzOpsRepository -Verbose -SkipResourceGroup -Force
 
 # Azure -> Git
-Invoke-AzOpsGitPull -Verbose -SkipResourceGroup -Force
+Invoke-AzOpsGitPull -Verbose
 
 # Git -> Azure
-Invoke-AzOpsGitPush -Verbose -SkipResourceGroup -Force
+Invoke-AzOpsGitPush -Verbose
 ```
