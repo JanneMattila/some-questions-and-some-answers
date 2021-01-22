@@ -14,8 +14,14 @@
 
 ## How can I do local development?
 
+### Pre-reqs
+
+Install [GitHub CLI](https://cli.github.com/)
+
+### Instructions
+
 One easy way is to create PowerShell file and use Visual Studio Code
-with PowerShell extension and use `Ctrl + Enter` (or `Shift + Enter` depending your setup) to execute
+with PowerShell extension and use `Shift + Enter` (or `Ctrl + Enter` depending your setup) to execute
 line one-by-one.
 
 Here's example local development file:
@@ -37,8 +43,9 @@ $azStateDirectory
 # https://github.com/Azure/Enterprise-Scale/blob/main/docs/EnterpriseScale-Setup-azure.md
 $tenantId = "<your tenant id>"
 $clientID = "<your app id>" # azops
-#region $clientSecret = "..."
+#region $clientSecret = "..." and $env:GITHUB_TOKEN = "..."
 $clientSecret = "<your secret>"
+$env:GITHUB_TOKEN = "<your token>"
 Clear-Host
 #endregion
 
@@ -46,10 +53,15 @@ $clientPassword = ConvertTo-SecureString $clientSecret -AsPlainText -Force
 $credentials = New-Object System.Management.Automation.PSCredential($clientID, $clientPassword)
 Login-AzAccount -Credential $credentials -ServicePrincipal -TenantId $tenantId
 
-New-Item -Path $azStateDirectory -ItemType Directory -Force | Out-Null
 $env:AZOPS_IGNORE_CONTEXT_CHECK = 1 # If set to 1, skip AAD tenant validation == 1
 $env:AZOPS_SKIP_RESOURCE_GROUP = 1
 $env:AZOPS_STATE = $azStateDirectory
+$env:GITHUB_HEAD_REF = "main"
+$env:GITHUB_BASE_REF = "main"
+$env:GITHUB_COMMENTS = "Update AzOps"
+$env:GITHUB_PULL_REQUEST = "Azure has been updated outside process"
+$env:GITHUB_REPOSITORY = "<your account>/<your repo>"
+$env:GITHUB_API_URL = "https://api.github.com"
 
 # Prepare and validate global variables
 Initialize-AzOpsGlobalVariables -Verbose
@@ -59,6 +71,9 @@ Initialize-AzOpsGlobalVariables -Verbose
 Initialize-AzOpsRepository -Verbose -SkipResourceGroup -Force
 
 # Azure -> Git
+# - Creates PR if there are changes in Azure
+#   Title: $env:GITHUB_PULL_REQUEST
+#   Body: $env:GITHUB_COMMENTS
 Invoke-AzOpsGitPull -Verbose
 
 # Git -> Azure
