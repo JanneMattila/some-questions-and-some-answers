@@ -58,7 +58,6 @@ $env:AZOPS_SKIP_RESOURCE_GROUP = 1
 $env:AZOPS_STATE = $azStateDirectory
 $env:GITHUB_HEAD_REF = "main"
 $env:GITHUB_BASE_REF = "main"
-$env:GITHUB_COMMENTS = "Update AzOps"
 $env:GITHUB_PULL_REQUEST = "Azure has been updated outside process"
 $env:GITHUB_REPOSITORY = "<your account>/<your repo>"
 $env:GITHUB_API_URL = "https://api.github.com"
@@ -72,10 +71,11 @@ Initialize-AzOpsRepository -Verbose -SkipResourceGroup -Force
 
 # Azure -> Git
 # - Creates PR if there are changes in Azure
-#   Title: $env:GITHUB_PULL_REQUEST
-#   Body: $env:GITHUB_COMMENTS
+#   Comment: $env:GITHUB_PULL_REQUEST
 Invoke-AzOpsGitPull -Verbose
 
 # Git -> Azure
+# - Push git changes to Azures
+$env:GITHUB_HEAD_REF = "patch-1"
 Invoke-AzOpsGitPush -Verbose
 ```
