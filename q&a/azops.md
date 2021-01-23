@@ -77,5 +77,7 @@ Invoke-AzOpsGitPull -Verbose
 # Git -> Azure
 # - Push git changes to Azures
 $env:GITHUB_HEAD_REF = "patch-1"
+$env:AZOPS_STRICT_MODE = 1 # If set to 1 *and* there is diff between 'main' and Azure then it stops and updates comment.
+$env:GITHUB_COMMENTS = "https://github.com/<your account>/<your repo>/pull/<example pull request number>"
 Invoke-AzOpsGitPush -Verbose
 ```
