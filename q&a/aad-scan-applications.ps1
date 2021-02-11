@@ -12,9 +12,7 @@ $ErrorActionPreference = "Stop"
 $token = (Get-AzAccessToken -ResourceUrl "https://graph.microsoft.com/").Token
 $bearerToken = ConvertTo-SecureString -String $token -AsPlainText
 
-$url = "https://graph.microsoft.com/v1.0/applications/?" +
-"`$select=displayName,id,appId,info,createdDateTime,keyCredentials,passwordCredentials,deletedDateTime&" +
-"&`$count=true"
+$url = "https://graph.microsoft.com/v1.0/applications/?`$select=displayName,id,appId,info,createdDateTime,keyCredentials,passwordCredentials,deletedDateTime"
 
 $now = [System.DateTime]::UtcNow
 $invalidCount = 0
