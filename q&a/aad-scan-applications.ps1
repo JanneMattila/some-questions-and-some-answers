@@ -41,7 +41,7 @@ do {
             }
         }
 
-        if ($hasInvalidKey -or $hasInvalidPassword) {
+        if ($hasInvalidKey -and $hasInvalidPassword) {
             # Print out the invalid
             if ($OutputInvalidItems) {
                 $item
