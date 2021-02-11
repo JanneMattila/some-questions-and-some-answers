@@ -286,6 +286,10 @@ your application.
 
 Read more about [application permissions](https://docs.microsoft.com/en-us/graph/permissions-reference#application-permissions-4).
 
+## Scan Azure AD Application in PowerShell
+
+See example [scan applications](aad-scan-applications.ps1) written in PowerShell.
+
 ## Links
 
 [What is the Microsoft identity platform?](https://docs.microsoft.com/en-us/azure/active-directory/develop/v2-overview)
