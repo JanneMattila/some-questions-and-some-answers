@@ -42,7 +42,7 @@ do {
         }
 
         if ($hasInvalidKey -and $hasInvalidPassword) {
-            # Print out the invalid
+            # Print out the invalid app
             if ($OutputInvalidItems) {
                 $item
             }
@@ -50,7 +50,7 @@ do {
             $invalidCount++
         }
         else {
-            # Print out then valid
+            # Print out the valid app
             # $item
         }
     }
