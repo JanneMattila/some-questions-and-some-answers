@@ -1,5 +1,5 @@
 Param (
-    [Parameter(HelpMessage = "IP address to check if it's part of the know Azure Datacenter IP ranges.")]
+    [Parameter(HelpMessage = "Maximum number of invalid apps found before stops the scan.")]
     [ValidateRange("Positive")]
     [int] $MaxInvalidCount = 200,
 
