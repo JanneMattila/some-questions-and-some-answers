@@ -157,7 +157,7 @@ public static IActionResult Run(HttpRequest req, ClaimsPrincipal principal)
 }
 ```
 
-This enables you to do following mapping for roles and permissions:
+This enables you to do following mapping for APIs and roles:
 
 `/api/sales` => `Sales.Read`
 
