@@ -14,25 +14,25 @@ Scenario:
 We can implement above scenario using following steps:
 
 1. Register backend application: `CloudBackend`
-  - Application ID URI: `api://cloudbackend`
+    - Application ID URI: `api://cloudbackend`
 2. Add application role to `CloudBackend` which you can assign to your client application
-  - Display name: `Writers`
-  - Allower member types: `Both`
-  - Value: `Task.Write`
-  - Description Task.Write
+    - Display name: `Writers`
+    - Allower member types: `Both`
+    - Value: `Task.Write`
+    - Description Task.Write
 3. Require user assignment to this application
-  - Under "Enterprise Application" open up `CloudBackend`
-  - Under properties set `User assignment required?` to `Yes`
+    - Under "Enterprise Application" open up `CloudBackend`
+    - Under properties set `User assignment required?` to `Yes`
 4. Register client application: `CloudBackend Client`
 5. Configure API permissions for `CloudBackend Client`
-  - Add `CloudBackend` - `Task.Write`
+    - Add `CloudBackend` - `Task.Write`
 6. API permission is `Type: Application` and therefore admin consent is required
-  - You can delegate the consent management to users
-  in Azure AD built-in role [Cloud Application Administrator](https://docs.microsoft.com/en-us/azure/active-directory/roles/permissions-reference#cloud-application-administrator) (or role with similar permissions)
+    - You can delegate the consent management to users
+      in Azure AD built-in role [Cloud Application Administrator](https://docs.microsoft.com/en-us/azure/active-directory/roles/permissions-reference#cloud-application-administrator) (or role with similar permissions)
 7. Use `CloudBackend` in app service authentication settings
-  - Client ID = `CloudBackend` application (client) ID
-  - Issuer Url = `https://sts.windows.net/{{tenant}}/`
-  - Allowed Token Audiences = `CloudBackend` application ID URI (`api://cloudbackend`)
+    - Client ID = `CloudBackend` application (client) ID
+    - Issuer Url = `https://sts.windows.net/{{tenant}}/`
+    - Allowed Token Audiences = `CloudBackend` application ID URI (`api://cloudbackend`)
 
 Lets see how this works in action. Here are the variables:
 
