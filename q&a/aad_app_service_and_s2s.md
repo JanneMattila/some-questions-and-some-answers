@@ -17,7 +17,7 @@ We can implement above scenario using following steps:
     - Application ID URI: `api://cloudbackend`
 2. Add application role to `CloudBackend` (which we can later assign to our client application)
     - Display name: `Writers`
-    - Allower member types: `Both (Users/Groups + Applications)`
+    - Allower member types: either `Applications` or `Both (Users/Groups + Applications)`
     - Value: `Task.Write`
     - Description: `Task.Write description text`
 3. Require user assignment to this application
