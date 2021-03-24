@@ -1,9 +1,9 @@
 # App Service authentication and service-to-service integration
 
 Scenario:
-- You have backend API and you want to secure it using app service authentication
-- You have one or more client application using that backend API
-- Developers creating the actual code can run their implementation
+- You have backend API in app service and you want to secure it using Azure AD authentication
+- You have one or more daemon services using that backend API
+- Developers creating the actual backend code can run their implementation
   locally without authentication setup
 - You want to separate the responsibilities between
   developers and admins who grant access between
