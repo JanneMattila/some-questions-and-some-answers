@@ -15,17 +15,17 @@ We can implement above scenario using following steps:
 
 1. Register backend application: `CloudBackend`
     - Application ID URI: `api://cloudbackend`
-2. Add application role to `CloudBackend` which you can assign to your client application
+2. Add application role to `CloudBackend` (which we can later assign to our client application)
     - Display name: `Writers`
-    - Allower member types: `Both`
+    - Allower member types: `Both (Users/Groups + Applications)`
     - Value: `Task.Write`
-    - Description Task.Write
+    - Description: `Task.Write description text`
 3. Require user assignment to this application
-    - Under "Enterprise Application" open up `CloudBackend`
+    - Under *"Enterprise Application"* blade find `CloudBackend`
     - Under properties set `User assignment required?` to `Yes`
 4. Register client application: `CloudBackend Client`
 5. Configure API permissions for `CloudBackend Client`
-    - Add `CloudBackend` - `Task.Write`
+    - Add `CloudBackend` -> `Task.Write`
 6. API permission is `Type: Application` and therefore admin consent is required
     - You can delegate the consent management to users
       in Azure AD built-in role [Cloud Application Administrator](https://docs.microsoft.com/en-us/azure/active-directory/roles/permissions-reference#cloud-application-administrator) (or role with similar permissions)
