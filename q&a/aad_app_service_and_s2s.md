@@ -163,7 +163,7 @@ This enables you to do following mapping for roles and permissions:
 
 `/api/products` => `Products.Read`
 
-This lets you do very fine-grained access management.
+This lets you do very fine-grained authorization.
 
 ### Links
 
