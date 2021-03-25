@@ -34,6 +34,18 @@ We can implement above scenario using following steps:
     - Issuer Url = `https://sts.windows.net/{{tenant}}/`
     - Allowed Token Audiences = `CloudBackend` application ID URI (`api://cloudbackend`)
 
+![App Service authentication and service-to-service integration](https://user-images.githubusercontent.com/2357647/112526297-74e42e80-8daa-11eb-8fef-479f08177e60.png)
+
+Steps in above diagram:
+
+(1). `Daemon app #1` tries to acquire token from Azure AD to the target resource
+
+(2). Azure AD validates request and app assignment and returns valid token
+
+(3). App connects to the backend successfully using the `access_token`
+
+(A). `Daemon app #2` cannot acquire token since application does not have assignment to target application
+
 Lets see how this works in action. Here are the variables:
 
 - `clientID` = `CloudBackend Client` application (client) ID
@@ -136,6 +148,8 @@ It's important to understand how [authentication and authorization in Azure App 
 If you expose multiple APIs from the same backend application, and your want to
 limit API usage per API specific role(s), then you need validate the claims
 inside the APIs:
+
+![validate tokens inside your backend application](https://user-images.githubusercontent.com/2357647/112527449-baedc200-8dab-11eb-801b-64a31d0cd343.png)
 
 [Access user claims](https://docs.microsoft.com/en-us/azure/app-service/app-service-authentication-how-to#access-user-claims)
 
