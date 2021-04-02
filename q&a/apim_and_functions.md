@@ -9,7 +9,7 @@ Client  | API  |     | AZURE |
         \------/     \-------/
 ```
 
-In above scenario you might have timeouts in following steps:
+In above scenario you might have following timeouts:
 
 - Client request timeout against the API Management
 - API Management request timeout againts backend API
@@ -29,28 +29,29 @@ static public class WaiterFunction
 {
   [FunctionName("WaiterFunction")]
   static public IActionResult Run(
-    [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "waiter/{timeout}")]
+    [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "waiter/{time}")]
     HttpRequest req,
     ILogger log,
-    int timeout)
+    int time)
   {
-    log.LogInformation("C# HTTP trigger function processed a request.");
+    log.LogInformation("Processing request for {Time} seconds.", time);
     var start = DateTime.UtcNow;
-    var end = DateTime.UtcNow.AddSeconds(timeout);
+    var end = DateTime.UtcNow.AddSeconds(time);
     while (DateTime.UtcNow < end &&
           !req.HttpContext.RequestAborted.IsCancellationRequested)
     {
       Thread.SpinWait(1_000_000);
     }
     
-    log.LogInformation($"OK: {timeout} - {(DateTime.UtcNow - start).TotalSeconds} - {req.HttpContext.RequestAborted.IsCancellationRequested}");
-    return new OkObjectResult($"OK: {timeout} - {(DateTime.UtcNow - start).TotalSeconds} - {req.HttpContext.RequestAborted.IsCancellationRequested}");
+    var totalSeconds = (DateTime.UtcNow - start).TotalSeconds;
+    log.LogInformation("OK: {Time} - {TotalSeconds} - {IsCancellationRequested}", time, totalSeconds, req.HttpContext.RequestAborted.IsCancellationRequested);
+    return new OkObjectResult($"OK: {time} - {totalSeconds} - {req.HttpContext.RequestAborted.IsCancellationRequested}");
   }
 }
 ```
 
-It just waits in `SpinWait` for the duration that has been requested from it. 
-It also returns waited time and if [request has been aborted](https://docs.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.http.httpcontext.requestaborted) (client has disconnected).
+It just waits in [SpinWait](https://docs.microsoft.com/en-us/dotnet/api/system.threading.thread.spinwait?view=net-5.0) for the duration that has been requested. 
+It then returns waited time and if [request has been aborted](https://docs.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.http.httpcontext.requestaborted) (client has disconnected).
 
 Then we expose this Function using Azure API Management and set following [forward-request](https://docs.microsoft.com/en-us/azure/api-management/api-management-advanced-policies#ForwardRequest) policy to it:
 
