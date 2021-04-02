@@ -8,7 +8,8 @@
 	"extensions": {
 		"recommendations": [
 			"ms-vscode.powershell",
-			"humao.rest-client"
+			"humao.rest-client",
+			"takumii.markdowntable"
 		]
 	}
 }
