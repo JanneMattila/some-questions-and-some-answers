@@ -7,21 +7,21 @@ $uri
 $targetServer = (Invoke-RestMethod -DisableKeepAlive -Uri $uri/api/healthcheck).server
 "Health check target server: $targetServer"
 
-$livenessDelay = 5
+$livenessDelay = 50
 $livenessDelayIncrement = 15
-$totalMilliseconds = 1000 * 60 * 10 # 10 minutes
 
 while ($livenessDelay -lt 200) {
     "Started new round: delay $livenessDelay seconds"
+    $totalMilliseconds = 1000 * 60 * 10 # 10 minutes
     $roundStartTime = Get-Date
     $servers = @{}
 
     # Change health check response delay time for our target server
     while ($true) {
         $json = @{
-            liveness              = $true # Health check is 👍
+            liveness              = $true # Health check return 200
             livenessDelay         = $livenessDelay # Delay in health check response
-            condition             = $targetServer
+            condition             = $targetServer # We only adjust target server
         }
 
         $body = ConvertTo-Json $json
@@ -53,7 +53,7 @@ while ($livenessDelay -lt 200) {
         }
 
         Start-Sleep -Seconds 1
-        $totalMilliseconds -= 1000 # 5 seconds
+        $totalMilliseconds -= 1000 # 1 second
     }
 
     $livenessDelay += $livenessDelayIncrement
