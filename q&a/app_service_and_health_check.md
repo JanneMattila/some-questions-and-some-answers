@@ -177,7 +177,7 @@ Output of the query:
 ```
 OperationName: ContainerLogs
 Level: Warning
-Message: Container for healthcheckgoeswild_0_1921a084 site healthcheckgoeswild is unhealthy, recycling site.
+Message: Container for healthcheck000001_0_1921a084 site healthcheck000001 is unhealthy, recycling site.
 ContainerId: 4e6e602ffcfc60bcb5c28c547adfb6b4b228869f1feda3c54daaea5bbd78e8d7
 Host: lw1sdlwk0000E0
 SourceSystem: Azure
