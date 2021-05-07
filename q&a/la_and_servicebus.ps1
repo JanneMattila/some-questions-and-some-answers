@@ -34,5 +34,5 @@ for ($i = 0; $i -lt $count; $i++) {
         -Method "POST" `
         -Authentication Bearer `
         -Token $accessToken `
-        -Uri $url    
+        -Uri $url
 }

@@ -1,5 +1,26 @@
 # Logic Apps and Service Bus
 
+Example message payload:
+
+```json
+{
+  "type": "ERP.Sales.Order.Created",     
+  "specversion": "1.0",
+  "source": "/mycontext",
+  "subject": null,
+  "id": "C1234-1234-1234",
+  "datacontenttype": "application/json", 
+  "time": "2021-05-07T10:15:51.1165304Z",
+  "data": {
+    "appinfoC": true,
+    "appinfoA": "abc",
+    "appinfoB": 1
+  }
+}
+```
+
+![Service Bus trigger](https://user-images.githubusercontent.com/2357647/117443282-9c4d2000-af40-11eb-8363-07b4185fbb5f.png)
+
 ```json
 {
   "inputs": {
@@ -23,6 +44,8 @@
 }
 ```
 
+![Post message echo service](https://user-images.githubusercontent.com/2357647/117443515-e930f680-af40-11eb-97ec-f5a3b880d812.png)
+
 ```json
 {
   "inputs": {
@@ -37,22 +60,7 @@
 }
 ```
 
-```json
-{
-  "type": "ERP.Sales.Order.Created",     
-  "specversion": "1.0",
-  "source": "/mycontext",
-  "subject": null,
-  "id": "C1234-1234-1234",
-  "datacontenttype": "application/json", 
-  "time": "2021-05-07T10:15:51.1165304Z",
-  "data": {
-    "appinfoC": true,
-    "appinfoA": "abc",
-    "appinfoB": 1
-  }
-}
-```
+![Parse message content](https://user-images.githubusercontent.com/2357647/117443653-24cbc080-af41-11eb-8d2c-dca61d6629fc.png)
 
 ```json
 {
@@ -99,6 +107,8 @@
   }
 }
 ```
+
+![Has message been processed successfully](https://user-images.githubusercontent.com/2357647/117443822-5775b900-af41-11eb-8d2f-d93cc51318dc.png)
 
 ```json
 {
