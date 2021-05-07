@@ -60,6 +60,39 @@ Example message payload:
 }
 ```
 
+```json
+{
+  "ContentData": "ew0KICAidHlwZSI6ICJFUlAuU2FsZXMuT3JkZXIuQ3JlYXRlZCIsDQogICJzcGVjdmVyc2lvbiI6ICIxLjAiLA0KICAic291cmNlIjogIi9teWNvbnRleHQiLA0KICAic3ViamVjdCI6IG51bGwsDQogICJpZCI6ICJDMTIzNC0xMjM0LTEyMzQiLA0KICAiZGF0YWNvbnRlbnR0eXBlIjogImFwcGxpY2F0aW9uL2pzb24iLA0KICAidGltZSI6ICIyMDIxLTA1LTA3VDEwOjE1OjUxLjExNjUzMDRaIiwNCiAgImRhdGEiOiB7DQogICAgImFwcGluZm9DIjogdHJ1ZSwNCiAgICAiYXBwaW5mb0EiOiAiYWJjIiwNCiAgICAiYXBwaW5mb0IiOiAxDQogIH0NCn0=",
+  "ContentType": "application/atom+xml; type=entry; charset=utf-8",
+  "ContentTransferEncoding": "Base64",
+  "Properties": {
+    "DeliveryCount": "2",
+    "EnqueuedSequenceNumber": "0",
+    "EnqueuedTimeUtc": "2021-05-07T11:39:35Z",
+    "ExpiresAtUtc": "2021-05-08T11:39:35Z",
+    "LockedUntilUtc": "2021-05-07T11:40:50Z",
+    "LockToken": "a0d68bc0-6df2-4780-a2f1-0ab37369b7ae",
+    "MessageId": "5a0eca6c8f2349e0a2f8d756249e3d92",
+    "ScheduledEnqueueTimeUtc": "0001-01-01T00:00:00Z",
+    "SequenceNumber": "242",
+    "Size": "496",
+    "State": "Active",
+    "TimeToLive": "864000000000"
+  },
+  "MessageId": "5a0eca6c8f2349e0a2f8d756249e3d92",
+  "To": null,
+  "ReplyTo": null,
+  "ReplyToSessionId": null,
+  "Label": null,
+  "ScheduledEnqueueTimeUtc": "0001-01-01T00:00:00Z",
+  "SessionId": null,
+  "CorrelationId": null,
+  "SequenceNumber": 242,
+  "LockToken": "a0d68bc0-6df2-4780-a2f1-0ab37369b7ae",
+  "TimeToLive": "864000000000"
+}
+```
+
 ![Parse message content](https://user-images.githubusercontent.com/2357647/117443653-24cbc080-af41-11eb-8d2c-dca61d6629fc.png)
 
 ```json
