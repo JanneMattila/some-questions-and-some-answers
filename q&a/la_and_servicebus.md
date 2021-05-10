@@ -29,7 +29,7 @@ our data to the service. Here's example message payload:
 }
 ```
 
-Our processing start from [Service Bus trigger](https://docs.microsoft.com/en-us/connectors/servicebus/#when-one-or-more-messages-arrive-in-a-queue-(peek-lock)):
+Our processing starts from [Service Bus trigger](https://docs.microsoft.com/en-us/connectors/servicebus/#when-one-or-more-messages-arrive-in-a-queue-(peek-lock)):
 
 ![Service Bus trigger](https://user-images.githubusercontent.com/2357647/117443282-9c4d2000-af40-11eb-8363-07b4185fbb5f.png)
 
@@ -102,6 +102,9 @@ In our demo scenario, our integration is just calling external echo service:
   "operationOptions": "SuppressWorkflowHeaders"
 }
 ```
+
+**Note**: We add extra header `SB-DeliveryCount` to the echo request,
+just to make it easier to analyze the current delivery count of the message.
 
 This is the data posted into the echo service:
 
@@ -251,18 +254,18 @@ in the actual payload (in this case in `appinfoB` property):
 }
 ```
 
-If `DeliveryCount >= appinfoB`, then message is completed and thus removed from the queue.
+If `appinfoB < DeliveryCount`, then message is completed and removed from the queue.
 
-If you abandon the message then it will be picked up by sub-sequent processing.
+Otherwise, message will be abandoned and it will be picked up again in by sub-sequent processing.
 
-Example screenshot from echo service after single message
+Example screenshot from echo service with single message
 when `appinfoB` has been set to `10` and
 Service Bus Queue `max delivery count` is also set to `10`:
 
 ![Echo](https://user-images.githubusercontent.com/2357647/117630995-731cd180-b184-11eb-9aea-df6963a51070.gif)
 
-As you can see from above animation, Logic Apps continues to pick up the message again and again,
-and tries to successfully process that integration. There is no delay in starting
+As you can see from above animation, Logic App continues to pick up the message again and again,
+and tries to successfully process the integration. There is no delay in starting
 the processing after previous processing has failed.
 
 Above scenario means that test message will land into Dead-Letter Queue (DLQ).
