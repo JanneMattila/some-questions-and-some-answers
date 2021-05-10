@@ -1,6 +1,16 @@
 # Logic Apps and Service Bus
 
-Example message payload:
+Let's go through following demo integration:
+
+![Logic Apps](https://user-images.githubusercontent.com/2357647/117446661-0f589580-af45-11eb-9437-55e4a7896d25.png)
+
+Above Logic App reads messages from Service Bus queue and uses the incoming message
+(in this case just posts it to echo service), and then based on the
+success of the processing it either completes the message or abandons the
+message from queue. 
+
+In this demo, we'll use [CloudEvents](https://cloudevents.io/) format for sending
+our data to the service. Here's example message payload:
 
 ```json
 {
@@ -19,7 +29,19 @@ Example message payload:
 }
 ```
 
+Our processing start from [Service Bus trigger](https://docs.microsoft.com/en-us/connectors/servicebus/#when-one-or-more-messages-arrive-in-a-queue-(peek-lock)):
+
 ![Service Bus trigger](https://user-images.githubusercontent.com/2357647/117443282-9c4d2000-af40-11eb-8363-07b4185fbb5f.png)
+
+**Important**❗ Please read more detailed information about the Service Bus Connectors [here](https://docs.microsoft.com/en-us/azure/connectors/connectors-create-api-servicebus).
+
+Especially these are important items to understand:
+
+- All Service Bus triggers are long-polling triggers
+- Understand maximum message coun` setting
+- Understand concurrency settings
+
+Here's example configuration of the above trigger:
 
 ```json
 {
