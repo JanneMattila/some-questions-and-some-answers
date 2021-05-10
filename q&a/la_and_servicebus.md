@@ -66,6 +66,25 @@ Here's example configuration of the above trigger:
 }
 ```
 
+*Note*: You can use [Run](https://docs.microsoft.com/en-us/rest/api/logic/workflowtriggers/run)
+API to invoke the trigger:
+
+```powershell
+$subscriptionId = (az account show --query id -o TSV)
+$resourceGroup = "rg-servicebus-logicapp"
+$logicApp = "la-sb1"
+$triggerName = "When_one_or_more_messages_arrive_in_a_queue_(peek-lock)"
+$accessToken = ConvertTo-SecureString -AsPlainText -String (az account get-access-token --resource https://management.azure.com --query accessToken -o TSV)
+$uri = "https://management.azure.com/subscriptions/$subscriptionId/resourceGroups/$resourceGroup/providers/Microsoft.Logic/workflows/$logicApp/triggers/$triggerName/run?api-version=2016-06-01"
+
+Invoke-RestMethod `
+    -Body $body `
+    -Method "POST" `
+    -Authentication Bearer `
+    -Token $accessToken `
+    -Uri $uri
+```
+
 ![Post message echo service](https://user-images.githubusercontent.com/2357647/117443515-e930f680-af40-11eb-97ec-f5a3b880d812.png)
 
 ```json
