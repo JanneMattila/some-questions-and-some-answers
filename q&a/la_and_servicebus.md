@@ -37,9 +37,9 @@ Our processing start from [Service Bus trigger](https://docs.microsoft.com/en-us
 
 Especially these are important items to understand:
 
-- All Service Bus triggers are long-polling triggers
-- Understand maximum message coun` setting
-- Understand concurrency settings
+- Long-polling triggers
+- Maximum message count setting
+- Concurrency settings
 
 Here's example configuration of the above trigger:
 
@@ -85,6 +85,8 @@ Invoke-RestMethod `
     -Uri $uri
 ```
 
+In our demo scenario, our integration is just calling external echo service:
+
 ![Post message echo service](https://user-images.githubusercontent.com/2357647/117443515-e930f680-af40-11eb-97ec-f5a3b880d812.png)
 
 ```json
@@ -100,6 +102,8 @@ Invoke-RestMethod `
   "operationOptions": "SuppressWorkflowHeaders"
 }
 ```
+
+This is the data posted into the echo service:
 
 ```json
 {
@@ -133,6 +137,8 @@ Invoke-RestMethod `
   "TimeToLive": "864000000000"
 }
 ```
+
+Next we parse that message content:
 
 ![Parse message content](https://user-images.githubusercontent.com/2357647/117443653-24cbc080-af41-11eb-8d2c-dca61d6629fc.png)
 
@@ -181,6 +187,10 @@ Invoke-RestMethod `
   }
 }
 ```
+
+In order to simulate the message re-processing logic, we'll
+abanbon message if we haven't re-processed it as many times we have defined
+in the actual payload (in this case in `appinfoB` property):
 
 ![Has message been processed successfully](https://user-images.githubusercontent.com/2357647/117443822-5775b900-af41-11eb-8d2f-d93cc51318dc.png)
 
@@ -240,3 +250,23 @@ Invoke-RestMethod `
   }
 }
 ```
+
+If `DeliveryCount >= appinfoB`, then message is completed and thus removed from the queue.
+
+If you abandon the message then it will be picked up by sub-sequent processing.
+
+Example screenshot from echo service after single message
+when `appinfoB` has been set to `10` and
+Service Bus Queue `max delivery count` is also set to `10`:
+
+![Echo](https://user-images.githubusercontent.com/2357647/117630995-731cd180-b184-11eb-9aea-df6963a51070.gif)
+
+As you can see from above animation, Logic Apps continues to pick up the message again and again,
+and tries to successfully process that integration. There is no delay in starting
+the processing after previous processing has failed.
+
+Above scenario means that test message will land into Dead-Letter Queue (DLQ).
+Using [Service Bus Explorer](https://github.com/paolosalvatori/ServiceBusExplorer) you can
+easily see that and purge or move messages back to your main queues:
+
+![Service Bus Explorer](https://user-images.githubusercontent.com/2357647/117631393-dd357680-b184-11eb-9985-e640656073f5.png)
