@@ -257,3 +257,10 @@ Remove-AzStorageAccountNetworkRule `
   name: RemoveNetworkRule
   condition: always()
 ```
+
+If above is not acceptable from security perspective
+or you have many services that would require network
+rule change that it's not even practical, then use [Self-hosted agents](https://docs.microsoft.com/en-us/azure/devops/pipelines/agents/agents#install).
+
+**Note**: You need to have PAT when you register the agent but
+further communication will use [tokens in the communication](https://docs.microsoft.com/en-us/azure/devops/pipelines/agents/agents#communication).
