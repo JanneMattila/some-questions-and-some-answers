@@ -201,7 +201,7 @@ using these steps:
 1. Pre-deployment task: Add network exception
 2. Actual deployment task
 3. Post-deployment task: Remove network exception
-    - You run this step regardless of the success of step 2.
+    - You run this step regardless of the success of step 2
 
 Here's example about creating network exception to storage account:
 
@@ -216,7 +216,7 @@ Add-AzStorageAccountNetworkRule `
   -IPAddressOrRange $ip
 
 # Publish the IP to agent as variable
-Write-Host "##vso[task.setvariable variable=Custom.IP;]$ip"
+Write-Host "##vso[task.setvariable variable=IP_RULE_ADDED;isoutput=true]$ip"
 ```
 
 At the end you can remove the network rule exception:
@@ -226,5 +226,5 @@ At the end you can remove the network rule exception:
 Remove-AzStorageAccountNetworkRule `
   -ResourceGroupName $resourceGroup `
   -AccountName $storageName `
-  -IPAddressOrRange $ip
+  -IPAddressOrRange $env:SETVARS_IP_RULE_ADDED
 ```
