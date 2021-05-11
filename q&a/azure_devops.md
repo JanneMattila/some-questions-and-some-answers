@@ -216,7 +216,25 @@ Add-AzStorageAccountNetworkRule `
   -IPAddressOrRange $ip
 
 # Publish the IP to agent as variable
-Write-Host "##vso[task.setvariable variable=IP_RULE_ADDED;isoutput=true]$ip"
+Write-Host "##vso[task.setvariable variable=IPADDRESS;isoutput=true]$ip"
+```
+
+You can use above in following task:
+
+```yaml
+- pwsh: |
+    # Grab IP address of self-hosted agent
+    $ip = Invoke-RestMethod -Uri "https://api.ipify.org/"
+    
+    # Add temporary access control to the target resource
+    Add-AzStorageAccountNetworkRule `
+      -ResourceGroupName $resourceGroup `
+      -AccountName $storageName `
+      -IPAddressOrRange $ip
+    
+    # Publish the IP to agent as variable
+    Write-Host "##vso[task.setvariable variable=IPADDRESS;isoutput=true]$ip"
+  name: AddNetworkRule
 ```
 
 At the end you can remove the network rule exception:
@@ -226,5 +244,16 @@ At the end you can remove the network rule exception:
 Remove-AzStorageAccountNetworkRule `
   -ResourceGroupName $resourceGroup `
   -AccountName $storageName `
-  -IPAddressOrRange $env:SETVARS_IP_RULE_ADDED
+  -IPAddressOrRange $env:ADDNETWORKRULE_IPADDRESS
+```
+
+```yaml
+- pwsh: |
+    # Remove temporary access
+    Remove-AzStorageAccountNetworkRule `
+      -ResourceGroupName $resourceGroup `
+      -AccountName $storageName `
+      -IPAddressOrRange $env:ADDNETWORKRULE_IPADDRESS
+  name: RemoveNetworkRule
+  condition: always()
 ```
