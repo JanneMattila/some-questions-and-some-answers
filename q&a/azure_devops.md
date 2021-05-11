@@ -186,7 +186,7 @@ If you need to access network restricted resource e.g,
 Azure Storage Account or Azure SQL from your pipeline,
 then you pretty much have two options:
 
-1. Use Microsoft hosted agent and temporarely change network rules
+1. Use Microsoft hosted agent and temporarily change network rules
 2. Use Self-hosted agent from network that has access to target resource
 
 If you're interested in option 1. then there are couple of additional
@@ -196,12 +196,12 @@ and [helper](https://github.com/microsoft/azure-pipelines-tasks/blob/acc64cc7292
 class. 
 
 Similarly, you can implement something similar yourself
-using something along these lines:
+using these steps:
 
 1. Pre-deployment task: Add network exception
 2. Actual deployment task
 3. Post-deployment task: Remove network exception
-  - You run this step regardles of the success of step 2.
+    - You run this step regardless of the success of step 2.
 
 Here's example about creating network exception to storage account:
 
