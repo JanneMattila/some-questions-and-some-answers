@@ -55,8 +55,6 @@ $parameters = @{
 Invoke-RestMethod @parameters
 ```
 
-## Pipelines
-
 ### Mixing Azure CLI and Azure PowerShell
 
 If you encapsulate your deployments to `deploy.ps1` and
@@ -180,4 +178,53 @@ steps:
     scriptType: pscore
     scriptPath: '$(Pipeline.Workspace)/deploy/deploy.ps1'
     addSpnToEnvironment: true
+```
+
+### How do I access network restricted resource from pipeline
+
+If you need to access network restricted resource e.g,
+Azure Storage Account or Azure SQL from your pipeline,
+then you pretty much have two options:
+
+1. Use Microsoft hosted agent and temporarely change network rules
+2. Use Self-hosted agent from network that has access to target resource
+
+If you're interested in option 1. then there are couple of additional
+topics to study. Here are examples from Azure DevOps Agent Task library
+for [SQL task](https://github.com/microsoft/azure-pipelines-tasks/blob/f65985e174a41c5a694a1c246ee4cae26829f4c8/Tasks/SqlAzureDacpacDeploymentV1/SqlAzureActions.ps1#L397-L436)
+and [helper](https://github.com/microsoft/azure-pipelines-tasks/blob/acc64cc7292c98597908325e53af9f898a896189/Tasks/Common/VstsAzureRestHelpers_/VstsAzureRestHelpers_.psm1#L873-L942)
+class. 
+
+Similarly, you can implement something similar yourself
+using something along these lines:
+
+1. Pre-deployment task: Add network exception
+2. Actual deployment task
+3. Post-deployment task: Remove network exception
+  - You run this step regardles of the success of step 2.
+
+Here's example about creating network exception to storage account:
+
+```powershell
+# Grab IP address of self-hosted agent
+$ip = Invoke-RestMethod -Uri "https://api.ipify.org/"
+
+# Add temporary access control to the target resource
+Add-AzStorageAccountNetworkRule `
+  -ResourceGroupName $resourceGroup `
+  -AccountName $storageName `
+  -IPAddressOrRange $ip
+
+# Publish the IP to agent as variable
+Write-Host "##vso[task.setvariable variable=Custom.IP;]$ip"
+```
+
+At the end you can remove the network rule exception:
+
+```powershell
+# Remove temporary access
+Remove-AzStorageAccountNetworkRule `
+  -ResourceGroupName $resourceGroup `
+  -AccountName $storageName `
+  -IPAddressOrRange $ip
 ```
