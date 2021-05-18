@@ -140,6 +140,21 @@ X-MS-CLIENT-PRINCIPAL-IDP: aad
 X-MS-CLIENT-PRINCIPAL: eyJhdXR...oX3R5cCI6ImFh
 ```
 
+In order to require user assignment to this application
+    - Under *"Enterprise Application"* blade find `authdemo000001`
+    - Under properties set `User assignment required?` to `Yes`
+    - Under Users and groups add correct role assignment
+
+Now you can test the login again and you should see claim in your token:
+
+```json
+...
+  "roles": [
+    "Calendars.ReadWrite"
+  ],
+...
+```
+
 After testing you can remove all the created resources:
 
 ```powershell
