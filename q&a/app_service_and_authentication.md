@@ -4,7 +4,8 @@
 
 Scenario:
 - You have app in app service and you want to secure it using Azure AD authentication
-- You have one or more roles set for each end users
+- You want to assign one or more business roles for each end user
+- You want to protect different application views using these business roles
 - You want to control as much as possible in Azure (and not in custom code)
 
 Our goal is to enable
