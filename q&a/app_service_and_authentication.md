@@ -121,7 +121,7 @@ az webapp auth update --name $appServiceName --resource-group $resourceGroup `
   --aad-token-issuer-url https://sts.windows.net/$tenantId/ `
   --aad-client-id $appid `
   --token-store true `
-  --runtime-version "~2"
+  --runtime-version "~1"
 ```
 
 Interesting urls to test after deployment:
