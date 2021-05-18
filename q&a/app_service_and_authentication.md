@@ -9,7 +9,8 @@ Scenario:
 - You want to control as much as possible in Azure (and not in custom code)
 
 Our goal is to enable
-[App Service Authentication](https://docs.microsoft.com/en-us/azure/app-service/overview-authentication-authorization).
+[App Service Authentication](https://docs.microsoft.com/en-us/azure/app-service/overview-authentication-authorization)
+and leverage Azure AD for these role management tasks.
 
 We do that in following steps:
 
