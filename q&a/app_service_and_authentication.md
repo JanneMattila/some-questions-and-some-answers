@@ -17,9 +17,9 @@ We do that in following steps:
 1. Create Azure AD App Registration
     - Includes Microsoft Graph `User.Read` API permission to enable login using Azure AD
     - Includes definition for each application role that you need
-        - In this example only roles are defined: `Calendar Administrator` and `Calendar User`
+        - In this example only two roles are defined: `Calendar Administrator` and `Calendar User`
 2. Create App Service and enable authentication using the newly registered application
-3. Assign users to the role in Azure AD Enterprise Applications
+3. Assign users to the roles in Azure AD Enterprise Applications
 
 Example `app_service_and_authentication-appRoles.json` for our demo roles:
 
@@ -142,10 +142,12 @@ X-MS-CLIENT-PRINCIPAL-IDP: aad
 X-MS-CLIENT-PRINCIPAL: eyJhdXR...oX3R5cCI6ImFh
 ```
 
-In order to require user assignment to this application
-    - Under *"Enterprise Application"* blade find `authdemo000001`
-    - Under properties set `User assignment required?` to `Yes`
-    - Under Users and groups add correct role assignment
+In order to require user assignment in order to access this application:
+
+- Under *"Enterprise Application"* blade find `authdemo000001`
+- Under properties set `User assignment required?` to `Yes`
+- Under Users and groups add correct role assignment
+    - Add example: `Calendar Administrator` role to yourself
 
 Now you can test the login again and you should see claim in your token:
 
