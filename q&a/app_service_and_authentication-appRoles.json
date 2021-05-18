@@ -4,18 +4,18 @@
       "User"
     ],
     "id": "03c0d74b-c5c0-44e4-9838-7df3aeb0e844",
-    "displayName": "Calendars.ReadWrite",
-    "description": "Have full access to user calendars",
+    "displayName": "Calendar Administrator",
+    "description": "Have full access to all calendars",
     "isEnabled": true,
-    "value": "Calendars.ReadWrite"
+    "value": "Calendars.ReadWrite.All"
   },
   {
     "allowedMemberTypes": [
       "User"
     ],
     "id": "597bc035-e239-442d-abc0-4a234d7fce47",
-    "displayName": "Calendars.Read",
-    "description": "Read user calendars",
+    "displayName": "Calendar User",
+    "description": "Read calendars",
     "isEnabled": true,
     "value": "Calendars.Read"
   }

@@ -2,9 +2,24 @@
 
 ## App Service Authentication and app roles
 
-[App Service Authentication](https://docs.microsoft.com/en-us/azure/app-service/overview-authentication-authorization)
+Scenario:
+- You have app in app service and you want to secure it using Azure AD authentication
+- You have one or more roles set for each end users
+- You want to control as much as possible in Azure (and not in custom code)
 
-Example `app_service_and_authentication-appRoles.json`:
+Our goal is to enable
+[App Service Authentication](https://docs.microsoft.com/en-us/azure/app-service/overview-authentication-authorization).
+
+We do that in following steps:
+
+1. Create Azure AD App Registration
+    - Includes Microsoft Graph `User.Read` API permission to enable login using Azure AD
+    - Includes definition for each application role that you need
+        - In this example only roles are defined: `Calendar Administrator` and `Calendar User`
+2. Create App Service and enable authentication using the newly registered application
+3. Assign users to the role in Azure AD Enterprise Applications
+
+Example `app_service_and_authentication-appRoles.json` for our demo roles:
 
 ```json
 [
@@ -13,25 +28,26 @@ Example `app_service_and_authentication-appRoles.json`:
       "User"
     ],
     "id": "03c0d74b-c5c0-44e4-9838-7df3aeb0e844",
-    "displayName": "Calendars.ReadWrite",
-    "description": "Have full access to user calendars",
+    "displayName": "Calendar Administrator",
+    "description": "Have full access to all calendars",
     "isEnabled": true,
-    "value": "Calendars.ReadWrite"
+    "value": "Calendars.ReadWrite.All"
   },
   {
     "allowedMemberTypes": [
       "User"
     ],
     "id": "597bc035-e239-442d-abc0-4a234d7fce47",
-    "displayName": "Calendars.Read",
-    "description": "Read user calendars",
+    "displayName": "Calendar User",
+    "description": "Read calendars",
     "isEnabled": true,
     "value": "Calendars.Read"
   }
 ]
 ```
 
-Example `app_service_and_authentication-requiredResourceAccess.json`:
+Example `app_service_and_authentication-requiredResourceAccess.json` for defining the required
+API accesses:
 
 ```json
 [
@@ -49,6 +65,8 @@ Example `app_service_and_authentication-requiredResourceAccess.json`:
 
 Above definition is for Microsoft Graph and `User.Read` API permission,
 which enables `Sign in and read user profile` access. 
+
+Here's example script how you can automate the above:
 
 ```powershell
 $appServiceName="authdemo000001"
@@ -104,7 +122,7 @@ az webapp auth update --name $appServiceName --resource-group $resourceGroup `
   --runtime-version "~2"
 ```
 
-Interesting urls to test:
+Interesting urls to test after deployment:
 
 ```powershell
 https://$appServiceName.azurewebsites.net/.auth/me
@@ -122,11 +140,15 @@ X-MS-CLIENT-PRINCIPAL-IDP: aad
 X-MS-CLIENT-PRINCIPAL: eyJhdXR...oX3R5cCI6ImFh
 ```
 
+After testing you can remove all the created resources:
+
 ```powershell
 # Wipe out the resources
 az group delete --name $resourceGroup -y
 az ad app delete --id $appid
 ```
+
+### Links
 
 [Restrict your Azure AD app to a set of users in an Azure AD tenant](https://docs.microsoft.com/en-us/azure/active-directory/develop/howto-restrict-your-app-to-a-set-of-users)
 
