@@ -169,8 +169,8 @@ az ad app delete --id $appid
 
 ## App Service Authentication Headers
 
-App Service authenticatin add headers that you can easily access
-in your applications. Here are example of them:
+App Service authentication adds headers that you can easily access
+in your applications. Here's example headers:
 
 ```
 X-MS-CLIENT-PRINCIPAL-NAME: john.doe@contoso.com
