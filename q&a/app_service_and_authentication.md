@@ -186,62 +186,62 @@ X-MS-CLIENT-PRINCIPAL is base64 encoded json (my test example was 1984 character
 
 ```json
 {
-	"auth_typ" : "aad",
-	"claims" : [{
-			"typ" : "aud",
-			"val" : "fe42b4d1-fed9-41f2-b923-e0508a570e89"
-		}, {
-			"typ" : "iss",
-			"val" : "https:\/\/login.microsoftonline.com\/884b819a-cecd-470b-ac1b-c746cafa6d7c\/v2.0"
-		}, {
-			"typ" : "iat",
-			"val" : "1623162657"
-		}, {
-			"typ" : "nbf",
-			"val" : "1623162657"
-		}, {
-			"typ" : "exp",
-			"val" : "1623166557"
-		}, {
-			"typ" : "aio",
-			"val" : "AWQAm\/8TAAAAjbik0mvEvN93HX3y1kRcrmBvxCCE8wP5dDYS1\/Hmjbgxq6d6YcQr0z4NOGjvk2EYkrg8fwGnsNZXn\/U8LPNImeuJ7OXnr5QJevoHGGBLqNk++CYojE71z4K69YEJGuTX"
-		}, {
-			"typ" : "c_hash",
-			"val" : "g9aFiYD2j7duJWKoU5Uqpw"
-		}, {
-			"typ" : "http:\/\/schemas.xmlsoap.org\/ws\/2005\/05\/identity\/claims\/emailaddress",
-			"val" : "john.doe@contoso.com"
-		}, {
-			"typ" : "name",
-			"val" : "John Doe"
-		}, {
-			"typ" : "nonce",
-			"val" : "9b6140e205694202b1e7b8f144315539_20210608144053"
-		}, {
-			"typ" : "http:\/\/schemas.microsoft.com\/identity\/claims\/objectidentifier",
-			"val" : "d44dfc56-9d5a-4940-90b7-efe774408c30"
-		}, {
-			"typ" : "preferred_username",
-			"val" : "johndoe@contoso.com"
-		}, {
-			"typ" : "rh",
-			"val" : "0.ARoAv4j5cvGGr0GRqy180BHbR7yZIkRzh9pptY2C97hyC1oaALE."
-		}, {
-			"typ" : "http:\/\/schemas.xmlsoap.org\/ws\/2005\/05\/identity\/claims\/nameidentifier",
-			"val" : "rR6NQYg3olb7a8ym7A1PNUnOMQBY9eLwgqTtq6y2g9E"
-		}, {
-			"typ" : "http:\/\/schemas.microsoft.com\/identity\/claims\/tenantid",
-			"val" : "884b819a-cecd-470b-ac1b-c746cafa6d7c"
-		}, {
-			"typ" : "uti",
-			"val" : "qEX96JcvnkeKZx4HqoXqAA"
-		}, {
-			"typ" : "ver",
-			"val" : "2.0"
-		}
-	],
-	"name_typ" : "http:\/\/schemas.xmlsoap.org\/ws\/2005\/05\/identity\/claims\/emailaddress",
-	"role_typ" : "http:\/\/schemas.microsoft.com\/ws\/2008\/06\/identity\/claims\/role"
+ "auth_typ" : "aad",
+ "claims" : [{
+   "typ" : "aud",
+   "val" : "fe42b4d1-fed9-41f2-b923-e0508a570e89"
+  }, {
+   "typ" : "iss",
+   "val" : "https:\/\/login.microsoftonline.com\/884b819a-cecd-470b-ac1b-c746cafa6d7c\/v2.0"
+  }, {
+   "typ" : "iat",
+   "val" : "1623162657"
+  }, {
+   "typ" : "nbf",
+   "val" : "1623162657"
+  }, {
+   "typ" : "exp",
+   "val" : "1623166557"
+  }, {
+   "typ" : "aio",
+   "val" : "AWQAm\/8TAAAAjbik0mvEvN93HX3y1kRcrmBvxCCE8wP5dDYS1\/Hmjbgxq6d6YcQr0z4NOGjvk2EYkrg8fwGnsNZXn\/U8LPNImeuJ7OXnr5QJevoHGGBLqNk++CYojE71z4K69YEJGuTX"
+  }, {
+   "typ" : "c_hash",
+   "val" : "g9aFiYD2j7duJWKoU5Uqpw"
+  }, {
+   "typ" : "http:\/\/schemas.xmlsoap.org\/ws\/2005\/05\/identity\/claims\/emailaddress",
+   "val" : "john.doe@contoso.com"
+  }, {
+   "typ" : "name",
+   "val" : "John Doe"
+  }, {
+   "typ" : "nonce",
+   "val" : "9b6140e205694202b1e7b8f144315539_20210608144053"
+  }, {
+   "typ" : "http:\/\/schemas.microsoft.com\/identity\/claims\/objectidentifier",
+   "val" : "d44dfc56-9d5a-4940-90b7-efe774408c30"
+  }, {
+   "typ" : "preferred_username",
+   "val" : "johndoe@contoso.com"
+  }, {
+   "typ" : "rh",
+   "val" : "0.ARoAv4j5cvGGr0GRqy180BHbR7yZIkRzh9pptY2C97hyC1oaALE."
+  }, {
+   "typ" : "http:\/\/schemas.xmlsoap.org\/ws\/2005\/05\/identity\/claims\/nameidentifier",
+   "val" : "rR6NQYg3olb7a8ym7A1PNUnOMQBY9eLwgqTtq6y2g9E"
+  }, {
+   "typ" : "http:\/\/schemas.microsoft.com\/identity\/claims\/tenantid",
+   "val" : "884b819a-cecd-470b-ac1b-c746cafa6d7c"
+  }, {
+   "typ" : "uti",
+   "val" : "qEX96JcvnkeKZx4HqoXqAA"
+  }, {
+   "typ" : "ver",
+   "val" : "2.0"
+  }
+ ],
+ "name_typ" : "http:\/\/schemas.xmlsoap.org\/ws\/2005\/05\/identity\/claims\/emailaddress",
+ "role_typ" : "http:\/\/schemas.microsoft.com\/ws\/2008\/06\/identity\/claims\/role"
 }
 ```
 
