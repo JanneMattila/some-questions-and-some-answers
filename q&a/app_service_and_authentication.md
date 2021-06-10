@@ -360,8 +360,8 @@ X-MS-TOKEN-AAD-ID-TOKEN decoded token (my test example token was 1420 characters
 In above request example the App Service authentication headers were 6292 characters.
 
 In case you run into HTTP status 431 `Request Header Fields Too Large` see more details in below links
-about using `WEBSITE_AUTH_DISABLE_IDENTITY_FLOW` = `true` app setting for removing .NET specific header
-from the request:
+about using `WEBSITE_AUTH_DISABLE_IDENTITY_FLOW` = `true` app setting for removing large
+header which is typically used only in .NET apps:
 
 [Advanced Application Settings](https://github.com/cgillum/easyauth/wiki/Advanced-Application-Settings)
 
