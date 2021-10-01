@@ -53,11 +53,11 @@ Few things to highlight from above documentation:
 
 > Global database account CNAME always points to a valid write region. During server-side failover of write region, Cosmos DB updates global database account CNAME to point to new region. If application can't handle traffic rerouting after failover, it should use global database account DNS CNAME.
 
-Cosmos DB SDKs have support for settting up application region. Here's C# example of that:
+Cosmos DB SDKs have support for settting up application region. Here's C# example:
 
 ```csharp
 var cosmosClient = new CosmosClient(
-      "<your-account-connnection-string",
+      "<your-account-connnection-string>",
       new CosmosClientOptions()
       {
           ApplicationRegion = Regions.EastUS2,
