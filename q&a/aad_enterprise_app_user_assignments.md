@@ -107,6 +107,8 @@ You can do the owner assignment using these steps:
 az account get-access-token --resource https://graph.microsoft.com/ --query accessToken -o tsv
 ```
 
+3. Add `Maintainer App` to be owner of `Target App`
+
 ```
 ### Search "Maintainer App" servicePrincipal
 # @name maintainerServicePrincipalList
