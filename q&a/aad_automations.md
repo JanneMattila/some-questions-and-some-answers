@@ -294,6 +294,10 @@ See example [scan applications](aad-scan-applications.ps1) written in PowerShell
 
 See example [App Service authentication and service-to-service integration](aad_app_service_and_s2s.md).
 
+## Scenario: Maintain Enterprise application user assignments automatically
+
+See example [Maintain Enterprise application user assignments automatically](aad_enterprise_app_user_assignments.md).
+
 ## Links
 
 [What is the Microsoft identity platform?](https://docs.microsoft.com/en-us/azure/active-directory/develop/v2-overview)
