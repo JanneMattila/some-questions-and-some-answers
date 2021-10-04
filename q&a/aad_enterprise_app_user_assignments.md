@@ -12,8 +12,7 @@ We can implement above scenario using following steps:
 - Add following `Application` permissions: `Application.ReadWrite.OwnedBy` and `Directory.Read.All`
 - [Application.ReadWrite.OwnedBy](aad_automations.md#applicationreadwriteownedby-permission) is
 required for managing applications that this applications owns
-- [Directory.Read.All](https://docs.microsoft.com/en-us/graph/permissions-reference#application-permissions-21) is required because this application has to find users
-and groups from the directory
+- [Directory.Read.All](https://docs.microsoft.com/en-us/graph/permissions-reference#application-permissions-21) is required because this application has to find users and groups from the directory (or alternatively `User.Read.All` and/or `Group.Read.All` depending on your requirements)
 
 2. Grant admin consent for above permissions
 
