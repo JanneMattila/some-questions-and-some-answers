@@ -15,7 +15,7 @@ required for managing applications that this applications owns
 - Replace `<Resource>.Read.All` from above with required permissions of your app scenario
   - You can use `User.Read.All` and/or `Group.Read.All` to limit the permission scope
 if that fulfills your requirements
-    - Thess are typically required since application has to find users and groups from the directory
+    - Both are typically required since application has to find users and groups from the directory
   - Higher level permission [Directory.Read.All](https://docs.microsoft.com/en-us/graph/permissions-reference#application-permissions-21) might be needeed if you implement more complex
   integration scenarios
 
