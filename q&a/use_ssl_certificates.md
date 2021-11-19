@@ -14,7 +14,24 @@ sudo certbot certonly --manual --preferred-challenges dns -d *.youraddresshere.c
 Convert them to pfx format:
 
 ```bash
-openssl pkcs12 -export -out "certificate.pfx" -inkey "privkey1.pem" -in "cert1.pem"
+sudo openssl pkcs12 -export -out "certificate.pfx" -inkey "privkey1.pem" -in "cert1.pem"
+```
+
+Example:
+
+```bash
+domainName="jannemattila.com"
+
+sudo certbot certonly --manual --preferred-challenges dns -d "*.$domainName"
+# Or register *unsafely* without email
+sudo certbot certonly --manual --preferred-challenges dns -d "*.$domainName" --register-unsafely-without-email
+
+# Deploy DNS TXT Record as instructed by certbot
+
+# After successful cert creation you can convert it to .pfx
+sudo openssl pkcs12 -export -out "certificate.pfx" -inkey "/etc/letsencrypt/live/$domainName/privkey.pem" -in "/etc/letsencrypt/live/$domainName/fullchain.pem"
+
+# Enjoy your "certificate.pfx"!
 ```
 
 ### Option 2: SSL For Free

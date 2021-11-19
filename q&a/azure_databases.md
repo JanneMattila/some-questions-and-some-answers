@@ -28,7 +28,7 @@ More detailed explanations can be found here:
 [Connect to Azure SQL Database V12 via Redirection](https://techcommunity.microsoft.com/t5/datacat/connect-to-azure-sql-database-v12-via-redirection/ba-p/305362)
 
 Article summary:
-- Use SQL Server driver version that supports TDS 7.4 or above (ADO.Net 4.5, JDBC 4.2 [latest](https://docs.microsoft.com/en-us/sql/connect/jdbc/download-microsoft-jdbc-driver-for-sql-server), ODBC 11, or above)
+- Use SQL Server driver version that supports TDS 7.4 or above (ADO.Net 4.5, JDBC 4.2 ([latest](https://docs.microsoft.com/en-us/sql/connect/jdbc/download-microsoft-jdbc-driver-for-sql-server)), ODBC 11, or above)
 - Make outbound TCP ports open on the application instance: 1433, 11000-11999 and 14000-14999
 
 [High availability in Azure Database for PostgreSQL – Single Server](https://docs.microsoft.com/en-us/azure/postgresql/concepts-high-availability)
