@@ -149,7 +149,7 @@ Timeout:
   at forward-request
 ```
 
-Here are few screenshots from Applicaiton Insights:
+Here are few screenshots from Application Insights:
 
 - when process ran successfully
 
