@@ -298,6 +298,10 @@ See example [App Service authentication and service-to-service integration](aad_
 
 See example [Maintain Enterprise application user assignments automatically](aad_enterprise_app_user_assignments.md).
 
+## Scenario: List assigned roles for users for given resource group
+
+See example [list assigned roles](azure-list-permissions-per-user.ps1) written in PowerShell.
+
 ## Links
 
 [What is the Microsoft identity platform?](https://docs.microsoft.com/en-us/azure/active-directory/develop/v2-overview)
