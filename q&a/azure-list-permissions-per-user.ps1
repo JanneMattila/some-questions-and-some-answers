@@ -27,7 +27,7 @@ else {
 
 Write-Host "Connecting to Microsoft Graph..."
 $accessToken = Get-AzAccessToken -ResourceTypeName MSGraph -TenantId $tenant
-Connect-MgGraph -AccessToken $accessToken.Token
+Connect-MgGraph -AccessToken $accessToken.Token | Out-Null
 
 $list = New-Object Collections.Generic.List[UserAssignedRole]
 $roleAssignments = Get-AzRoleAssignment -ResourceGroupName $ResourceGroup
