@@ -302,6 +302,10 @@ See example [Maintain Enterprise application user assignments automatically](aad
 
 See example [list assigned roles](azure-list-permissions-per-user.ps1) written in PowerShell.
 
+## Scenario: Use Azure AD based authentication and on-behalf-of flow
+
+See [on-behalf-of flow](https://github.com/JanneMattila/api-examples/blob/master/azure/azure-ad-on-behalf-of.http) example.
+
 ## Links
 
 [What is the Microsoft identity platform?](https://docs.microsoft.com/en-us/azure/active-directory/develop/v2-overview)
