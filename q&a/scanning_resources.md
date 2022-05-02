@@ -97,6 +97,20 @@ Resources
 
 ![Azure resources by location by type](https://user-images.githubusercontent.com/2357647/85825305-89978580-b78a-11ea-8362-8d6168eddbdd.png)
 
+### Example: List AKS Clusters and their scale related fields
+
+Authored by [pemsft](https://github.com/pemsft):
+
+```sql
+Resources
+| join kind=leftouter (ResourceContainers | where type=='microsoft.resources/subscriptions' | project subscriptionName=name, subscriptionId) on subscriptionId
+| where type == "microsoft.containerservice/managedclusters"
+| extend properties.agentPoolProfiles
+| project name, subscriptionName, pool = (properties.agentPoolProfiles),subscriptionId, location, resourceGroup
+| mv-expand pool
+| project Subscription = subscriptionName, resourceGroup, AKScluster = name, scaleDownMode = pool.scaleDownMode, autoScaling = pool.enableAutoScaling, pool.mode, nodeSize = pool.vmSize, count = pool.['count'], location, subscriptionId
+```
+
 ### Storing scanning results to Table storage
 
 Note: This requires `AzTable` (To install run: `Install-Module AzTable`).
