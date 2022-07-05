@@ -1,0 +1,202 @@
+@function_app_endpoint = {{$dotenv function_app_endpoint}}
+@logic_app_sync_endpoint = {{$dotenv logic_app_sync_endpoint}}
+@logic_app_async_endpoint = {{$dotenv logic_app_async_endpoint}}
+
+### Call Function App directly:
+# @name funcAppResponse
+GET {{function_app_endpoint}}
+  &time=2
+
+# Response:
+# ---------
+# OK: 2 - 2.0167238 - False
+
+### Call Logic App sync endpoint:
+# @name logicAppSyncResponse1
+POST {{logic_app_sync_endpoint}}
+Content-Type: application/json
+
+{
+  "time": 2
+}
+
+# Response:
+# ---------
+# HTTP/1.1 200 OK
+# Cache-Control: no-cache
+# Pragma: no-cache
+# Transfer-Encoding: chunked
+# Content-Type: application/json; charset=utf-8
+# Content-Encoding: gzip
+# Expires: -1
+# Vary: Accept-Encoding
+# Strict-Transport-Security: max-age=31536000; includeSubDomains
+# Date: Tue, 05 Jul 2022 04:25:13 GMT
+# Connection: close
+# 
+# {
+#   "body": "OK: 2 - 2.0161342 - False",
+#   "id": "Done!"
+# }
+#
+# Important parts:
+# - HTTP response status: 200 OK
+# - Payload contains response content
+
+### Call Logic App async endpoint:
+# @name logicAppAsyncResponse1
+POST {{logic_app_async_endpoint}}
+Content-Type: application/json
+
+{
+  "time": 20
+}
+
+# Response:
+# ---------
+# HTTP/1.1 202 Accepted
+# Cache-Control: no-cache
+# Pragma: no-cache
+# Content-Type: application/json; charset=utf-8
+# Expires: -1
+# Location: https://prod-25.westcentralus.logic.azure.com/workflows/...bVXw
+# Retry-After: 10
+# Strict-Transport-Security: max-age=31536000; includeSubDomains
+# Date: Tue, 05 Jul 2022 04:28:25 GMT
+# Connection: close
+# Content-Length: 1910
+# 
+# {
+#   "id": "/workflows/81043f56dc0340f395b1d8a5d40865f2/runs/08585446115797761906620946332CU31",
+#   "name": "08585446115797761906620946332CU31",
+#   "type": "Microsoft.Logic/workflows/runs"
+#   "properties": {
+#     "waitEndTime": "2022-07-05T04:28:25.7020367Z",
+#     "startTime": "2022-07-05T04:28:25.7020367Z",
+#     "status": "Running",
+#     "correlation": {
+#       "clientTrackingId": "08585446115797761906620946332CU31"
+#     },
+#     "workflow": {
+#       "id": "/workflows/81043f56dc0340f395b1d8a5d40865f2/versions/08585446115855468637",
+#       "name": "08585446115855468637",
+#       "type": "Microsoft.Logic/workflows/versions"
+#     },
+#     "trigger": {
+#       "name": "manual",
+#       "inputsLink": {
+#         "uri": "https://prod-25.westcentralus.logic.azure.com:443/workflows/...U8",
+#         "contentVersion": "rmc+DGEJG6J1YZoaZE2oDQ==",
+#         "contentSize": 69,
+#         "contentHash": {
+#           "algorithm": "md5",
+#           "value": "rmc+DGEJG6J1YZoaZE2oDQ=="
+#         }
+#       },
+#       "outputsLink": {
+#         "uri": "https://prod-25.westcentralus.logic.azure.com:443/workflows/...TY",
+#         "contentVersion": "SJhOmcD2r6H0/kaIuPf4Nw==",
+#         "contentSize": 221,
+#         "contentHash": {
+#           "algorithm": "md5",
+#           "value": "SJhOmcD2r6H0/kaIuPf4Nw=="
+#         }
+#       },
+#       "startTime": "2022-07-05T04:28:25.6917995Z",
+#       "endTime": "2022-07-05T04:28:25.6917995Z",
+#       "originHistoryName": "08585446115797761906620946332CU31",
+#       "correlation": {
+#         "clientTrackingId": "08585446115797761906620946332CU31"
+#       },
+#       "status": "Succeeded"
+#     },
+#     "outputs": {},
+#     "response": {
+#       "startTime": "2022-07-05T04:28:25.6917995Z",
+#       "correlation": {},
+#       "status": "Waiting"
+#     }
+#   }
+# }
+#
+# Important parts:
+# - HTTP response status: 202 Accepted
+# - Payload contains information about workflow status
+# - Location header contains url to poll for status updates
+# - Retry-After header hints you about the polling frequency
+
+### Call Logic App async response:
+GET {{logicAppAsyncResponse1.response.headers.Location}}
+Content-type: application/json
+
+# Response:
+# ---------
+# HTTP/1.1 200 OK
+# Cache-Control: no-cache
+# Pragma: no-cache
+# Transfer-Encoding: chunked
+# Content-Type: application/json; charset=utf-8
+# Content-Encoding: gzip
+# Expires: -1
+# Vary: Accept-Encoding
+# Strict-Transport-Security: max-age=31536000; includeSubDomains
+# Date: Tue, 05 Jul 2022 04:32:12 GMT
+# Connection: close
+# 
+# {
+#   "body": "OK: 20 - 20.0277669 - False",
+#   "id": "Done!"
+# }
+#
+# Important parts:
+# - You might get two different HTTP response statuses back
+#   - 202 Accepted => Workflow is still running and
+#     response is in same format as when you first
+#     initiated workflow
+#   - 200 OK => Workflow has completed and
+#     response contains output (similar to sync call)
+
+### Call Logic App async endpoint but with too long running process:
+# @name logicAppAsyncResponse2
+POST {{logic_app_async_endpoint}}
+Content-Type: application/json
+
+{
+  // This request is *longer* than allowed timeout
+  // https://docs.microsoft.com/en-us/azure/logic-apps/logic-apps-limits-and-config?tabs=azure-portal#timeout-duration
+  "time": 130
+}
+
+# Response:
+# ---------
+# HTTP/1.1 202 Accepted
+# (same as in above success scenario)
+
+### Call Logic App async response:
+GET {{logicAppAsyncResponse2.response.headers.Location}}
+Content-type: application/json
+
+# Response:
+# ---------
+# HTTP/1.1 502 Bad Gateway
+# Cache-Control: no-cache
+# Pragma: no-cache
+# Content-Type: application/json; charset=utf-8
+# Expires: -1
+# x-ms-failure-cause: Trigger
+# Strict-Transport-Security: max-age=31536000; includeSubDomains
+# Date: Tue, 05 Jul 2022 04:53:44 GMT
+# Connection: close
+# Content-Length: 163
+# 
+# {
+#   "error": {
+#     "code": "NoResponse",
+#     "message": "The server did not receive a response from an upstream server. Request tracking id '08585446107499041520852653664CU23'."
+#   }
+# }
+#
+# Important parts:
+# - After timeout (which might differ from your
+#   expectation due to "Retry Policy" in HTTP Action)
+#   you should see HTTP status 502 Bad Gateway
