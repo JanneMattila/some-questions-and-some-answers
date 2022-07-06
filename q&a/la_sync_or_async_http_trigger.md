@@ -1,16 +1,13 @@
 # Logic Apps and Sync or Async HTTP Trigger
 
-> **Warning**
-> This example is work in progress.
-
 ## Introduction
 
-Understand better HTTP Trigger behavior with Consumption (multi-tenant) Logic Apps
+Understand HTTP Response Action behavior with Consumption (multi-tenant) Logic Apps
 
 ## Demo setup
 
-Similar implementation to [Azure API Management and Azure Functions](./q&a/apim_and_functions.md)
-for our backend Azure Functions App:
+Implementation for our backend Azure Functions App
+(similar to [Azure API Management and Azure Functions](./q&a/apim_and_functions.md)):
 
 ```csharp
 using System.Threading;
@@ -32,7 +29,7 @@ public static IActionResult Run(HttpRequest req, ILogger log)
 }
 ```
 
-Idea is to be able to mimic `long running process` in the backend.
+Idea is to be able to mimic `long running process` with our backend.
 
 Testing the Function App:
 
@@ -104,8 +101,9 @@ sequenceDiagram
     Note right of Client: 200 OK<br/><br/>{ "body": "OK: 20 - 20.03" }
 ```
 
-Asynchronous response allows a Logic App to respond with a 202 (Accepted) to indicate the request
-has been accepted for processing. A location header will be provided to retrieve the final state. 
+> Asynchronous response allows a Logic App to respond with a 202 (Accepted) to indicate the request
+> has been accepted for processing. A location header will be provided to retrieve the final state. 
+
 Here are example headers:
 
 ```bash
@@ -183,3 +181,9 @@ Example with `100` as parameter after processing has finished:
 **Note**: 120 seconds of processing time is still the limit. 
 In order to support longer processing times,
 then you need to use alternative way of returning the processed data to the client.
+
+## Links
+
+See HTTP Rest example for [more details](./q&a/la_sync_or_async_http_trigger.http).
+
+[Receive and respond to inbound HTTPS requests in Azure Logic Apps](https://docs.microsoft.com/en-us/azure/connectors/connectors-native-reqres)
