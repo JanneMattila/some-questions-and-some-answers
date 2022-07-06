@@ -7,7 +7,7 @@ Understand HTTP Response Action behavior with Consumption (multi-tenant) Logic A
 ## Demo setup
 
 Implementation for our backend Azure Functions App
-(similar to [Azure API Management and Azure Functions](./q&a/apim_and_functions.md)):
+(similar to [Azure API Management and Azure Functions](apim_and_functions.md)):
 
 ```csharp
 using System.Threading;
@@ -184,6 +184,6 @@ then you need to use alternative way of returning the processed data to the clie
 
 ## Links
 
-See HTTP Rest example for [more details](./q&a/la_sync_or_async_http_trigger.http).
+See HTTP Rest example for [more details](la_sync_or_async_http_trigger.http).
 
 [Receive and respond to inbound HTTPS requests in Azure Logic Apps](https://docs.microsoft.com/en-us/azure/connectors/connectors-native-reqres)
