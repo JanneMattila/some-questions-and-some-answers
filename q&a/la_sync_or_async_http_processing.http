@@ -9,7 +9,7 @@ GET {{function_app_endpoint}}
 
 # Response:
 # ---------
-# OK: 2 - 2.0167238 - False
+# OK: 2 - 2.0167238
 
 ### Call Logic App sync endpoint:
 # @name logicAppSyncResponse1
@@ -35,8 +35,7 @@ Content-Type: application/json
 # Connection: close
 # 
 # {
-#   "body": "OK: 2 - 2.0161342 - False",
-#   "id": "Done!"
+#   "body": "OK: 2 - 2.0161342"
 # }
 #
 # Important parts:
@@ -144,8 +143,7 @@ Content-type: application/json
 # Connection: close
 # 
 # {
-#   "body": "OK: 20 - 20.0277669 - False",
-#   "id": "Done!"
+#   "body": "OK: 20 - 20.0277669"
 # }
 #
 # Important parts:

@@ -1,4 +1,4 @@
-# Logic Apps and Sync or Async HTTP Trigger
+# Logic Apps and Sync or Async HTTP Processing
 
 ## Introduction
 
@@ -184,6 +184,6 @@ then you need to use alternative way of returning the processed data to the clie
 
 ## Links
 
-See HTTP Rest example for [more details](la_sync_or_async_http_trigger.http).
+See HTTP Rest example for [more details](la_sync_or_async_http_processing.http).
 
 [Receive and respond to inbound HTTPS requests in Azure Logic Apps](https://docs.microsoft.com/en-us/azure/connectors/connectors-native-reqres)
