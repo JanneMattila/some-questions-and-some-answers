@@ -1,0 +1,185 @@
+# Logic Apps and Sync or Async HTTP Trigger
+
+> **Warning**
+> This example is work in progress.
+
+## Introduction
+
+Understand better HTTP Trigger behavior with Consumption (multi-tenant) Logic Apps
+
+## Demo setup
+
+Similar implementation to [Azure API Management and Azure Functions](./q&a/apim_and_functions.md)
+for our backend Azure Functions App:
+
+```csharp
+using System.Threading;
+using Microsoft.AspNetCore.Mvc;
+
+public static IActionResult Run(HttpRequest req, ILogger log)
+{
+  int time = Convert.ToInt32(req.Query["time"]);
+  log.LogInformation("Processing request for {Time} seconds.", time);
+  var start = DateTime.UtcNow;
+  var end = DateTime.UtcNow.AddSeconds(time);
+  while (DateTime.UtcNow < end)
+  {
+    Thread.SpinWait(1_000_000);
+  }
+  
+  var totalSeconds = (DateTime.UtcNow - start).TotalSeconds;
+  return new OkObjectResult($"OK: {time} - {totalSeconds}");
+}
+```
+
+Idea is to be able to mimic `long running process` in the backend.
+
+Testing the Function App:
+
+```bash
+> curl "https://funcapp.azurewebsites.net/api/Waiter?code=<key>&time=2"
+OK: 2 - 2.0162216
+```
+
+## Synchronous processing
+
+```mermaid
+sequenceDiagram
+    Client->>+Logic App: Invoke
+    Note right of Client: { "time": 2 }
+    Logic App->>+Functions App: Invoke
+    Note right of Logic App: GET https://...&time=2
+    loop
+        Functions App-->>+Functions App: Wait until<br/>"time" has passed
+    end
+    Functions App->>+Logic App: Return result
+    Note right of Logic App: OK: 2 - 2.03
+    Logic App->>+Client: Return result
+    Note right of Client: { "body": "OK: 2 - 2.03" }
+```
+
+Logic App when called with `2`, `20` and `125` parameters:
+
+```bash
+> curl "https://prod-25.westcentralus.logic.azure.com:443/workflows/..." --data "{ 'time': 2 }" -H "Content-Type: application/json" | jq
+{
+  "body": "OK: 2 - 2.0057726"
+}
+
+> curl "https://prod-25.westcentralus.logic.azure.com:443/workflows/..." --data "{ 'time': 20 }" -H "Content-Type: application/json" | jq
+{
+  "body": "OK: 20 - 20.0379424"
+}
+
+> curl "https://prod-25.westcentralus.logic.azure.com:443/workflows/..." --data "{ 'time': 125 }" -H "Content-Type: application/json" | jq
+{
+  "error": {
+    "code": "ResponseTimeout",
+    "message": "The server did not receive a timely response from the upstream server. Request tracking id '0858544674707'."
+  }
+}
+```
+
+## Asynchronous processing
+
+```mermaid
+sequenceDiagram
+    Client->>+Logic App: Invoke
+    Note right of Client: { "time": 20 }
+    Logic App->>+Functions App: Invoke
+    Note right of Logic App: GET https://...&time=20
+    Logic App->>+Client: Return async status
+    Note left of Logic App: 202 Accepted<br/>Headers:<br/>Location: <uri><br/>Retry-After: 10
+    Client->>+Logic App: Check status
+    Logic App->>+Client: Return async status
+    Note left of Logic App: 202 Accepted<br/>Headers:<br/>Location: <uri><br/>Retry-After: 10
+
+    loop
+        Functions App-->>+Functions App: Wait until<br/>"time" has passed
+    end
+    Functions App->>+Logic App: Return result
+    Note right of Logic App: OK: 20 - 20.03
+    Client->>+Logic App: Check status
+    Logic App->>+Client: Return result
+    Note right of Client: 200 OK<br/><br/>{ "body": "OK: 20 - 20.03" }
+```
+
+Asynchronous response allows a Logic App to respond with a 202 (Accepted) to indicate the request
+has been accepted for processing. A location header will be provided to retrieve the final state. 
+Here are example headers:
+
+```bash
+Location: https://prod-25.westcentralus.logic.azure.com/workflows/...
+Retry-After: 10
+```
+
+You can poll that location url to get the current status:
+
+```bash
+> curl -s "https://prod-25.westcentralus.logic.azure.com/workflows/..." | jq
+{
+  "properties": {
+    "waitEndTime": "2022-07-05T04:08:18.8194351Z",
+    "startTime": "2022-07-05T04:08:18.8194351Z",
+    "status": "Running",
+    "correlation": {
+      "clientTrackingId": "08585446127866592984843882569CU21"
+    },
+    "workflow": {
+      "id": "/workflows/81043f56dc0340f395b1d8a5d40865f2/versions/08585446707563414689",
+      "name": "08585446707563414689",
+      "type": "Microsoft.Logic/workflows/versions"
+    },
+    "trigger": {
+      "name": "manual",
+      "inputsLink": {
+        "uri": "https://prod-25.westcentralus.logic.azure.com:443/workflows/...",
+        "contentVersion": "rmc+DGEJG6J1YZoaZE2oDQ==",
+        "contentSize": 69,
+        "contentHash": {
+          "algorithm": "md5",
+          "value": "rmc+DGEJG6J1YZoaZE2oDQ=="
+        }
+      },
+      "outputsLink": {
+        "uri": "https://prod-25.westcentralus.logic.azure.com:443/workflows/...",
+        "contentVersion": "GN/lz84DzeB+N9uwxvFaGA==",
+        "contentSize": 319,
+        "contentHash": {
+          "algorithm": "md5",
+          "value": "GN/lz84DzeB+N9uwxvFaGA=="
+        }
+      },
+      "startTime": "2022-07-05T04:08:18.8162386Z",
+      "endTime": "2022-07-05T04:08:18.8162386Z",
+      "originHistoryName": "08585446127866592984843882569CU21",
+      "correlation": {
+        "clientTrackingId": "08585446127866592984843882569CU21"
+      },
+      "status": "Succeeded"
+    },
+    "outputs": {},
+    "response": {
+      "startTime": "2022-07-05T04:08:18.8162386Z",
+      "correlation": {},
+      "status": "Waiting"
+    }
+  },
+  "id": "/workflows/81043f56dc0340f395b1d8a5d40865f2/runs/08585446127866592984843882569CU21",
+  "name": "08585446127866592984843882569CU21",
+  "type": "Microsoft.Logic/workflows/runs"
+}
+```
+
+Example with `100` as parameter after processing has finished:
+
+```bash
+> curl -s "https://prod-25.westcentralus.logic.azure.com/workflows/..." | jq
+{
+  "body": "OK: 100 - 100.0255121"
+}
+```
+
+**Note**: 120 seconds of processing time is still the limit. 
+In order to support longer processing times,
+then you need to use alternative way of returning the processed data to the client.
