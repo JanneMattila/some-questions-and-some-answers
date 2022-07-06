@@ -178,9 +178,8 @@ Example with `100` as parameter after processing has finished:
 }
 ```
 
-**Note**: 120 seconds of processing time is still the limit. 
-In order to support longer processing times,
-then you need to use alternative way of returning the processed data to the client.
+**Note**: In above implementation, HTTP Action still has 120 seconds timeout limit. 
+In order to support longer processing times, you'll need to use alternative ways of processing data.
 
 ## Links
 
