@@ -1,6 +1,7 @@
 @function_app_endpoint = {{$dotenv function_app_endpoint}}
 @logic_app_sync_endpoint = {{$dotenv logic_app_sync_endpoint}}
 @logic_app_async_endpoint = {{$dotenv logic_app_async_endpoint}}
+@logic_app_async_alternative_endpoint = {{$dotenv logic_app_async_alternative_endpoint}}
 
 ### Call Function App directly:
 # @name funcAppResponse
@@ -198,3 +199,17 @@ Content-type: application/json
 # - After timeout (which might differ from your
 #   expectation due to "Retry Policy" in HTTP Action)
 #   you should see HTTP status 502 Bad Gateway
+
+### Call Logic App alternative async endpoint
+#   with external communication channel for response:
+POST {{logic_app_async_alternative_endpoint}}
+Content-Type: application/json
+
+{
+  "time": 125
+}
+
+# Response:
+# ---------
+# OK: 125 - 126.2765109
+# (response received via separate channel)

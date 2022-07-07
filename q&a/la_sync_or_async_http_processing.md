@@ -178,8 +178,45 @@ Example with `100` as parameter after processing has finished:
 }
 ```
 
-**Note**: In above implementation, HTTP Action still has 120 seconds timeout limit. 
-In order to support longer processing times, you'll need to use alternative ways of processing data.
+**Note**: In above implementation, HTTP Action still has 
+[120 seconds timeout limit](https://docs.microsoft.com/en-us/azure/logic-apps/logic-apps-limits-and-config?tabs=azure-portal#http-request-limits). 
+In order to support longer processing times, you'll need to use alternative ways of processing data and way of communicating the end result to the caller.
+
+---
+
+You can use below (very much simplified) Azure Functions implementation,
+if you need to test Logic App HTTP Action Async processing:
+
+```csharp
+using Microsoft.AspNetCore.Mvc;
+
+public static IActionResult Run(HttpRequest req, ILogger log)
+{
+  var currentRequest = $"https://{Environment.GetEnvironmentVariable("WEBSITE_HOSTNAME")}{req.Path}{req.QueryString}";
+  var time = Convert.ToInt32(req.Query["time"]);
+  if (req.Query.ContainsKey("end"))
+  {
+    // Check if async job is finished
+    var start = new DateTime(Convert.ToInt64(req.Query["start"]), DateTimeKind.Utc);
+    var end = new DateTime(Convert.ToInt64(req.Query["end"]), DateTimeKind.Utc);
+    if (end < DateTime.UtcNow)
+    {
+      var totalSeconds = (DateTime.UtcNow - start).TotalSeconds;
+      return new OkObjectResult($"OK: {time} - {totalSeconds}");
+    }
+    return new AcceptedResult(currentRequest, null);
+  }
+  else if (req.Query.ContainsKey("time"))
+  {
+    // Start async job
+    return new AcceptedResult($"{currentRequest}&start={DateTime.UtcNow}&end={DateTime.UtcNow.AddSeconds(time).Ticks}", null);
+  }
+  return new BadRequestResult();
+}
+```
+
+Combined with communication to client via separate channel
+e.g., Webhook, then you can handle long running processes.
 
 ## Links
 
