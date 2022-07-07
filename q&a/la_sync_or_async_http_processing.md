@@ -182,10 +182,29 @@ Example with `100` as parameter after processing has finished:
 [120 seconds timeout limit](https://docs.microsoft.com/en-us/azure/logic-apps/logic-apps-limits-and-config?tabs=azure-portal#http-request-limits). 
 In order to support longer processing times, you'll need to use alternative ways of processing data and way of communicating the end result to the caller.
 
----
+## Asynchronous processing with separate backchannel for response
 
-You can use below (very much simplified) Azure Functions implementation,
-if you need to test Logic App HTTP Action Async processing:
+```mermaid
+sequenceDiagram
+    Client->>+Logic App: Invoke
+    Note right of Client: { "time": 125 }
+    Logic App->>+Client: Acknowledge request
+    Logic App->>+Functions App: Invoke
+    Note right of Logic App: GET https://...&time=125
+    Note left of Functions App: 202 Accepted<br/>Headers:<br/>Location: <uri>
+    Functions App->>+Logic App: Return async status
+    Logic App->>+Functions App: Check status
+    Functions App->>+Logic App: Return async status
+    Note left of Functions App: 202 Accepted<br/>Headers:<br/>Location: <uri>
+    Logic App->>+Functions App: Check status
+    Functions App->>+Logic App: Return result
+    Note right of Logic App: OK: 125 - 125.04
+    Logic App->>+Client: Return result via<br/>e.g., Webhook or<br/>other method
+    Note right of Client: 200 OK<br/><br/>{ "body": "125 - 125.04" }
+```
+
+You can use below (*very much simplified*) Azure Functions implementation,
+if you need to test Logic App HTTP Action Async processing with long running process:
 
 ```csharp
 using Microsoft.AspNetCore.Mvc;
