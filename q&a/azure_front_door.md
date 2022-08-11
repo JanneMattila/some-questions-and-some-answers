@@ -4,7 +4,7 @@
 
 If you have gRPC implementation like [WPF goes gRPC](https://github.com/JanneMattila/wpf-goes-grpc)
 which relies on [HTTP/2](https://docs.microsoft.com/en-us/aspnet/core/grpc/comparison?view=aspnetcore-6.0)
-and you planning to use [Azure Front Door](https://docs.microsoft.com/en-us/azure/frontdoor/front-door-overview) 
+and you're planning to use [Azure Front Door](https://docs.microsoft.com/en-us/azure/frontdoor/front-door-overview) 
 between Client and Backend, then please note following limitation about
 [HTTP/2 support in Azure Front Door](https://docs.microsoft.com/en-us/azure/frontdoor/front-door-http2):
 
