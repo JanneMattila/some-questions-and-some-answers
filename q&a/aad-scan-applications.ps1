@@ -1,3 +1,7 @@
+# Note:
+# Documentation contains similar export script. See this link for more details:
+# https://docs.microsoft.com/en-us/azure/active-directory/manage-apps/scripts/powershell-export-apps-with-expriring-secrets
+#
 Param (
     [Parameter(HelpMessage = "Maximum number of invalid apps found before stops the scan.")]
     [ValidateRange("Positive")]
