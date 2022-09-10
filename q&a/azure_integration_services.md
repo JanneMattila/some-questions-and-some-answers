@@ -44,12 +44,12 @@
 
 ## Azure structure
 
-- Do you you management groups?
-- Have you plan the policy usage?
+- Do you plan to use management groups?
+- Have you planned the policy usage?
 - Privileged Identity Management (PIM) vs. Standing access?
-- How much manual development vs. automated deployments?
+- How much manual deployments are allowed vs. automated deployments?
 - What kind of permissions for developers?
-- How do you build your Azure structure
+- How do you build your Azure structure?
 
 E.g.,
 
