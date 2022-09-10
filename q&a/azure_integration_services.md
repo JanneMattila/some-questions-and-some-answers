@@ -3,14 +3,14 @@
 ## Discussion topics
 
 - Centralized vs. De-centralized
-  - Centralized at compoany level or Business Unit or Service Line integrations
+  - Centralized at company level or Business Unit or Service Line level
   - Specialized integration teams vs. cloud developers
 - RACI
-  - Are some integrations, e.g., most critical ones, managed by integration partner or in-house? 
+  - Are some integrations, e.g., most critical ones, outsourced or self-managed? 
 - 24x7 or 8x5 categorization
 - Business critical vs. Standard integrations
 - Cloud only, hybrid vs. On-premises
-  - Do you use same integration solution for integration scenarios?
+  - Do you use same integration solution for all integration scenarios?
   - Even if you have existing on-premises infrastructure?
     - Are you going to migrate these over to new solution?
 - Functional & Non-functional requirements
@@ -57,6 +57,7 @@ E.g.,
 - [Azure API Management landing zone accelerator](https://docs.microsoft.com/en-us/azure/cloud-adoption-framework/scenarios/app-platform/api-management/landing-zone-accelerator)
 - [Azure API Management DevOps Resource Kit](https://github.com/Azure/azure-api-management-devops-resource-kit)
 - [Azure API Management Policy Snippets](https://github.com/Azure/api-management-policy-snippets)
+- [API Design](https://github.com/JanneMattila/api-design)
 
 ### Logic Apps
 
