@@ -98,3 +98,23 @@ sequenceDiagram
     On-premises integration application->>+Service Bus Queue: Send response
     App Service->>+Service Bus Queue: Receive response
 ```
+
+#### Additional links
+
+[Azure API Management & Azure Relay - Hybrid Connections & Web Service demo](https://github.com/JanneMattila/325-apim-sb-demo)
+
+[Key Vault(s) to Event Grid to Logic Apps to Azure Pipelines](https://github.com/JanneMattila/key-vault-to-event-grid-to-logic-apps-to-azure-pipelines)
+
+[Azure API Management with Bicep](https://github.com/JanneMattila/azure-api-management-bicep)
+
+[Azure API Management Developer Portal Import and Export scripts](https://github.com/JanneMattila/azure-api-management-developer-portal-import-and-export-scripts)
+
+[Azure API Management Developer Portal Import and Export Actions](https://github.com/JanneMattila/azure-api-management-developer-portal-action)
+
+[Azure API Management with Logic App](https://github.com/JanneMattila/329-azure-api-management-logic-app)
+
+[API Management and self-hosted gateway](https://github.com/JanneMattila/api-management-and-self-hosted-gateway)
+
+[Azure Functions and SFTP](https://github.com/JanneMattila/azure-functions-sftp)
+
+[Azure API Management with Functions](https://github.com/JanneMattila/329-azure-api-management-functions)
