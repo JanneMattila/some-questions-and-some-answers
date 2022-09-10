@@ -63,6 +63,11 @@ E.g.,
 - [Azure API Management DevOps Resource Kit](https://github.com/Azure/azure-api-management-devops-resource-kit)
 - [Azure API Management Policy Snippets](https://github.com/Azure/api-management-policy-snippets)
 - [API Design](https://github.com/JanneMattila/api-design)
+  - API Entity design
+- Versioning
+  - Do you plan to use versioning?
+  - How do you manage version upgrades?
+  - Versions and revisions
 
 ### Logic Apps
 
@@ -80,3 +85,16 @@ E.g.,
 - How do you group Standard workflows?
 - How do you document integrations?
   - Do you use wiki?
+
+### Service Bus
+
+Async messaging example using Service Bus Queue:
+
+```mermaid
+sequenceDiagram
+    App Service->>+Service Bus Queue: Send message
+    On-premises integration application->>+Service Bus Queue: Receive message
+    On-premises integration application->>Internal system: Execute command
+    On-premises integration application->>+Service Bus Queue: Send response
+    App Service->>+Service Bus Queue: Receive response
+```
