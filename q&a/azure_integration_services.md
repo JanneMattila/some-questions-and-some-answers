@@ -28,9 +28,19 @@
 - Integration catalogue and documentation management
 - Development process & agility
 - Developer skills: 🔨vs. 🪚
+  - E.g., Logic Apps or Data Factory or Functions
 - How to choose correct tool for the job?
 - How many environments?
 - High initial total cost of ownership (TCO) vs. Consumption based pricing
+- [Naming conventions](https://docs.microsoft.com/en-us/azure/cloud-adoption-framework/ready/azure-best-practices/resource-abbreviations)
+- [Integration architecture design](https://docs.microsoft.com/en-us/azure/architecture/integration/integration-start-here)
+- Monitoring
+  - Centralized view or solution area views
+    - For whom are these views built?
+  - Alerts
+    - In case of alert, who does and what?
+  - [Azure Workbooks](https://docs.microsoft.com/en-us/azure/azure-monitor/visualize/workbooks-overview)
+  - [Azure Monitor Workbook Templates](https://github.com/microsoft/Application-Insights-Workbooks)
 
 ## Azure structure
 
