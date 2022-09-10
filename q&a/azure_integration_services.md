@@ -1,5 +1,10 @@
 # Azure Integration Services
 
+## Introduction
+
+- [Gartner Glossary: Integration Platform as a Service (iPaaS)](https://www.gartner.com/en/information-technology/glossary/information-platform-as-a-service-ipaas)
+- [Azure Integration Services](https://azure.microsoft.com/en-us/products/category/integration/)
+
 ## Discussion topics
 
 - Centralized vs. De-centralized
