@@ -41,6 +41,7 @@
     - For whom are these views built?
   - Alerts
     - In case of alert, who does and what?
+  - [Azure Monitor Community](https://github.com/microsoft/AzureMonitorCommunity)
   - [Azure Workbooks](https://docs.microsoft.com/en-us/azure/azure-monitor/visualize/workbooks-overview)
   - [Azure Monitor Workbook Templates](https://github.com/microsoft/Application-Insights-Workbooks)
 
