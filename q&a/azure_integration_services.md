@@ -24,6 +24,8 @@
 - Security requirements
   - Can you use service specific keys?
   - Do you require use of e.g., managed identities?
+  - Data classification
+    - Confidential data & exposing them via integrations 
 - Batch vs. Near real-time integrations
 - Integration catalogue and documentation management
 - Development process & agility
