@@ -14,7 +14,7 @@
   - Are some integrations, e.g., most critical ones, outsourced or self-managed? 
 - 24x7 or 8x5 categorization
 - Business critical vs. Standard integrations
-- Cloud only, hybrid vs. On-premises
+- Cloud, hybrid and on-premises
   - Do you use same integration solution for all integration scenarios?
   - Even if you have existing on-premises infrastructure?
     - Are you going to migrate these over to new solution?
@@ -34,6 +34,8 @@
 - How to choose correct tool for the job?
 - How many environments?
 - High initial total cost of ownership (TCO) vs. Consumption based pricing
+  - Cost of service
+  - Cost of build (implementation, deployment, maintenance)
 - [Naming conventions](https://docs.microsoft.com/en-us/azure/cloud-adoption-framework/ready/azure-best-practices/resource-abbreviations)
 - [Integration architecture design](https://docs.microsoft.com/en-us/azure/architecture/integration/integration-start-here)
 - Monitoring
@@ -73,10 +75,14 @@ E.g.,
 ### API Management
 
 - [Azure API Management landing zone accelerator](https://docs.microsoft.com/en-us/azure/cloud-adoption-framework/scenarios/app-platform/api-management/landing-zone-accelerator)
+- [Use DevOps and CI/CD to publish APIs](https://docs.microsoft.com/en-us/azure/api-management/devops-api-development-templates)
+- [APIOps](https://github.com/Azure/apiops)
+  - [APIOps docs](https://azure.github.io/apiops/)
 - [Azure API Management DevOps Resource Kit](https://github.com/Azure/azure-api-management-devops-resource-kit)
 - [Azure API Management Policy Snippets](https://github.com/Azure/api-management-policy-snippets)
 - [API Design](https://github.com/JanneMattila/api-design)
   - API Entity design
+- [Azure API Style Guide](https://github.com/Azure/azure-api-style-guide)
 - Versioning
   - Do you plan to use versioning?
   - How do you manage version upgrades?
