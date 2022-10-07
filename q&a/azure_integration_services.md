@@ -46,6 +46,10 @@
   - [Azure Monitor Community](https://github.com/microsoft/AzureMonitorCommunity)
   - [Azure Workbooks](https://docs.microsoft.com/en-us/azure/azure-monitor/visualize/workbooks-overview)
   - [Azure Monitor Workbook Templates](https://github.com/microsoft/Application-Insights-Workbooks)
+- Preparing for Infrastructure-as-Code deployments
+  - Enabling quick development of new integrations by having good placeholder templates and CI/CD configurations available
+    - E.g., Logic Apps template with example connector and deployment pipeline as starter template or
+    placeholder API deployment definition for API Management for quickly adding new API
 
 ## Azure structure
 
