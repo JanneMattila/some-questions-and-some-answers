@@ -50,6 +50,7 @@
   - Enabling quick development of new integrations by having good placeholder templates and CI/CD configurations available
     - E.g., Logic Apps template with example connector and deployment pipeline as starter template or
     placeholder API deployment definition for API Management for quickly adding new API
+- Use design considerations and recommendations from landing zone accelerators
 
 ## Azure structure
 
