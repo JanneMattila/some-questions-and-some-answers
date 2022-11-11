@@ -14,6 +14,8 @@
   - Are some integrations, e.g., most critical ones, outsourced or self-managed? 
 - 24x7 or 8x5 categorization
 - Business critical vs. Standard integrations
+- Product vs. Project
+  - Is integration part of Product or Project?
 - Cloud, hybrid and on-premises
   - Do you use same integration solution for all integration scenarios?
   - Even if you have existing on-premises infrastructure?
