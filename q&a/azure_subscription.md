@@ -58,3 +58,25 @@
   "relatedEvents": []
 }
 ```
+
+If you [enable management group activity log collection](https://github.com/JanneMattila/api-examples/blob/master/arm/management-group.http),
+then you can search these subscription created events using following KQL:
+
+```kql
+AzureActivity 
+| where SourceSystem == "Azure" and 
+        CategoryValue == "Administrative" and 
+        OperationNameValue == "Microsoft.Management"
+| where Properties has " is created with parent entity "
+```
+
+Example messages:
+
+`Entity mg-prod is created with parent entity b1f2da6b-27a0-4e83-a3eb-2780abf27098`:
+This is new management group `mg-prod`.
+
+`Entity 70cad012-e5f8-4c99-b6fe-550f7f195479 is created with parent entity b1f2da6b-27a0-4e83-a3eb-2780abf27098`:
+This is new subscription `70cad012-e5f8-4c99-b6fe-550f7f195479`.
+
+Remberber to check and configure your [default management group](https://learn.microsoft.com/en-us/azure/governance/management-groups/how-to/protect-resource-hierarchy#setting---default-management-group)
+for your new subscriptions.
