@@ -51,9 +51,9 @@
   "subscriptionId": "",
   "tenantId": "{tenant_id}",
   "properties": {
-    "entity": "{tenant_id}",
-    "message": "Entity {subscription_id} is created with parent entity {tenant_id}",
-    "hierarchy": "{tenant_id}"
+    "entity": "{management_group_id}",
+    "message": "Entity {subscription_id} is created with parent entity {management_group_id}",
+    "hierarchy": "{management_group_id}"
   },
   "relatedEvents": []
 }
