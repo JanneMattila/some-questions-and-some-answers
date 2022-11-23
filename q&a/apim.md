@@ -337,10 +337,10 @@ az login --service-principal --username $APP_ID --password $PASSWORD --tenant $T
 az login --identity --allow-no-subscriptions
 
 # Target Azure AD App ID URI:
-$APIM_APP_ID_URI = "api://<your-value-here>"
+APIM_APP_ID_URI="api://<your-value-here>"
 
 # Fetch access token
-$ACCESS_TOKEN=$(az account get-access-token --resource $APIM_APP_ID_URI --query accessToken -o tsv)
+ACCESS_TOKEN=$(az account get-access-token --resource $APIM_APP_ID_URI --query accessToken -o tsv)
 ```
 
 Validate `$ACCESS_TOKEN` in [jwt.ms](https://jwt.ms/) it should have `$APIM_APP_ID_URI` in `"aud"`:
