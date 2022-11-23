@@ -180,10 +180,6 @@ Execute the tests:
 artillery run yourfile.yaml
 ```
 
-## Links
-
-[A library of useful resources about Azure API Management](https://aka.ms/apimlove)
-
 ## How do I expose my on-premise Web Service based API via APIM?
 
 This is documented in separate repository. You can find it here:
@@ -252,3 +248,131 @@ This kind of policy you would use in `POST` and `DELETE` operations:
   </on-error>
 </policies>
 ```
+
+## Securing APIs using Azure AD based auth
+
+Relevant background info:
+
+- [Protect an API in Azure API Management using OAuth 2.0 authorization with Azure Active Directory](https://learn.microsoft.com/en-us/azure/api-management/api-management-howto-protect-backend-with-aad)
+- [Validate Azure Active Directory token](https://learn.microsoft.com/en-us/azure/api-management/api-management-access-restriction-policies#ValidateAAD)
+- [Grant Graph API Permission to Managed Identity Object](https://techcommunity.microsoft.com/t5/integrations-on-azure-blog/grant-graph-api-permission-to-managed-identity-object/ba-p/2792127)
+
+Create simple `mock` API with following policy:
+
+```xml
+<policies>
+    <inbound>
+        <base />
+        <mock-response status-code="200" content-type="application/json" />
+    </inbound>
+    <backend>
+        <base />
+    </backend>
+    <outbound>
+        <base />
+    </outbound>
+    <on-error>
+        <base />
+    </on-error>
+</policies>
+```
+
+API does not require `subscription key`, so you can call it directly:
+
+```bash
+curl -s https://<your-api-management-instance>.azure-api.net/api/mock
+```
+
+Here is example response:
+
+```json
+{
+  "data": "OK"
+}
+```
+
+Add [validate-azure-ad-token](https://learn.microsoft.com/en-us/azure/api-management/api-management-access-restriction-policies#ValidateAAD):
+
+```xml
+<policies>
+  <inbound>
+    <validate-azure-ad-token tenant-id="{{aad-tenant-id}}">
+      <client-application-ids>
+        <application-id>{{aad-client-application-id}}</application-id>
+      </client-application-ids>
+      <audiences>
+        <audience>{{aad-api-management-application-id}}</audience>
+      </audiences>
+    </validate-azure-ad-token>
+    <base />
+    <mock-response status-code="200" content-type="application/json" />
+  </inbound>
+  <backend>
+    <base />
+  </backend>
+  <outbound>
+    <base />
+  </outbound>
+  <on-error>
+    <base />
+  </on-error>
+</policies>
+```
+
+Response after adding `validate-azure-ad-token`:
+
+```json
+{ "statusCode": 401, "message": "Azure AD JWT not present" }
+```
+
+**NOTE**: It's **important** to further configure `client-application-ids`,
+`audiences`, `required-claims`, `backend-application-ids` etc. elements to limit the access correctly.
+
+You can now get `$ACCESS_TOKEN` which to use against the published API: 
+
+```bash
+# Service principal login example
+az login --service-principal --username $APP_ID --password $PASSWORD --tenant $TENANT_ID --allow-no-subscriptions
+# Managed identity login example
+az login --identity --allow-no-subscriptions
+
+# Target Azure AD App ID URI:
+$APIM_APP_ID_URI = "api://<your-value-here>"
+
+# Fetch access token
+$ACCESS_TOKEN=$(az account get-access-token --resource $APIM_APP_ID_URI --query accessToken -o tsv)
+```
+
+Validate `$ACCESS_TOKEN` in [jwt.ms](https://jwt.ms/) it should have `$APIM_APP_ID_URI` in `"aud"`:
+
+```json
+{
+  // ...
+  // "aud" should match $APIM_APP_ID_URI
+  "aud": "api://<your-value-here>",
+  // ...
+}
+```
+
+Now you're ready to call the secured API:
+
+```bash
+curl -s -H "Authorization: Bearer $ACCESS_TOKEN" "https://<your-api-management-instance>.azure-api.net/api/mock"
+```
+
+If `$ACCESS_TOKEN` is still invalid, then you might get this error message:
+
+```json
+{ "statusCode": 401, "message": "Invalid Azure AD JWT" }
+```
+
+To further narrow down the access e.g., only allow assigned apps or certain scopes
+then look this [example](./q&a/aad_app_service_and_s2s.md) for more details.
+
+If you use `advanced` setup, then you might need to assign API permissions
+to managed identity object. Here are instructions for that:
+[Grant Graph API Permission to Managed Identity Object](https://techcommunity.microsoft.com/t5/integrations-on-azure-blog/grant-graph-api-permission-to-managed-identity-object/ba-p/2792127)
+
+## Links
+
+[A library of useful resources about Azure API Management](https://aka.ms/apimlove)
