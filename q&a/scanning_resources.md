@@ -147,3 +147,50 @@ foreach($row in $rows){
 Here's example of the collected data:
 
 ![collected data in table storage](https://user-images.githubusercontent.com/2357647/83232491-f290db00-a195-11ea-9bcd-fe61dc1e126f.png)
+
+## List app services
+
+```powershell
+class WebAppData {
+    [string] $SubscriptionName
+    [string] $SubscriptionID
+    [string] $ResourceGroupName
+    [string] $Location
+    [string] $Name
+    [string] $Kind
+    [string] $Type
+    [string] $WorkerRuntime
+    [string] $ExtensionVersion
+    [string] $Tags
+}
+
+$apps = New-Object System.Collections.ArrayList
+$subscriptions = Get-AzSubscription
+
+foreach ($subscription in $subscriptions) {
+    Select-AzSubscription -SubscriptionID $subscription.Id
+    $webApps = Get-AzWebApp
+    foreach ($webApp in $webApps) {
+
+        $webAppDetails = Get-AzWebApp -ResourceGroupName $webApp.ResourceGroup -Name $webApp.Name
+
+        $webAppData = [WebAppData]::new()
+        $webAppData.SubscriptionName = $subscription.Name
+        $webAppData.SubscriptionID = $subscription.Id
+        $webAppData.ResourceGroupName = $webApp.ResourceGroup
+        $webAppData.Name = $webApp.Name
+        $webAppData.Kind = $webApp.Kind
+        $webAppData.Type = $webApp.Type
+        $webAppData.Location = $webApp.Location
+        $webAppData.Tags = $webApp.Tags | ConvertTo-Json -Compress
+        $webAppData.WorkerRuntime = ($webAppDetails.SiteConfig.AppSettings | Where-Object { $_.name -eq "FUNCTIONS_WORKER_RUNTIME" }).Value
+        $webAppData.ExtensionVersion = ($webAppDetails.SiteConfig.AppSettings | Where-Object { $_.name -eq "FUNCTIONS_EXTENSION_VERSION" }).Value
+        
+        $apps.Add($webAppData)
+    }
+}
+
+$apps | Format-Table
+$apps | Export-CSV "apps.csv" -Force
+Write-Warning "Note: This list does not contain Static Web Apps." 
+```
