@@ -169,7 +169,12 @@ $subscriptions = Get-AzSubscription
 
 foreach ($subscription in $subscriptions) {
     Select-AzSubscription -SubscriptionID $subscription.Id
-    $webApps = Get-AzWebApp
+    $allWebApps = Get-AzWebApp
+
+    # You can only filter function based apps
+    $webApps = $allWebApps | Where-Object { $_.Kind -CLike "*functionapp*" }
+    # Or then you can list all apps
+    # $webApps = $allWebApps
     foreach ($webApp in $webApps) {
 
         $webAppDetails = Get-AzWebApp -ResourceGroupName $webApp.ResourceGroup -Name $webApp.Name
