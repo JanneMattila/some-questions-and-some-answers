@@ -62,6 +62,10 @@ Important note about sharing API Connections from [here](https://learn.microsoft
 > so reusing the same connection across multiple logic apps might increase
 > the potential for throttling problems.
 
+[Handle throttling problems (429 - "Too many requests" errors) in Azure Logic Apps](https://learn.microsoft.com/en-us/azure/logic-apps/handle-throttling-problems-429-errors)
+
+---
+
 Here is example walk-through, how you can setup sharing of Key vault API Connection from
 another resource group (or subscription) and share it between Logic App (Standard) applications.
 
