@@ -8,7 +8,6 @@ Background articles:
 
 - [Set up DevOps deployment for Standard logic app workflows in single-tenant Azure Logic Apps](https://learn.microsoft.com/en-us/azure/logic-apps/set-up-devops-deployment-single-tenant-azure-logic-apps)
   - [API connection resources and access policies](https://learn.microsoft.com/en-us/azure/logic-apps/set-up-devops-deployment-single-tenant-azure-logic-apps?tabs=github#api-connection-resources-and-access-policies)
-- [API connection resources and access policies](https://learn.microsoft.com/en-us/azure/logic-apps/set-up-devops-deployment-single-tenant-azure-logic-apps?tabs=github#api-connection-resources-and-access-policies)
 - [Built-in connectors in Consumption versus Standard](https://learn.microsoft.com/en-us/azure/connectors/built-in#built-in-connectors-in-consumption-versus-standard)
 - [Authorize OAuth connections](https://learn.microsoft.com/en-us/azure/logic-apps/logic-apps-deploy-azure-resource-manager-templates#authorize-oauth-connections)
 - [Azure DevOps sample for Logic Apps (Single-tenant)](https://github.com/Azure/logicapps/tree/master/azure-devops-sample)
@@ -25,7 +24,7 @@ If you want to share these configuration, then here's what you can do:
 - Use [Key Vault references](https://learn.microsoft.com/en-us/azure/app-service/app-service-key-vault-references?tabs=azure-cli) to
   pull secrets to Logic App (Standard)
   [App Settings](https://learn.microsoft.com/en-us/azure/logic-apps/edit-app-settings-host-settings?tabs=azure-portal#app-settings-parameters-and-deployment)
-- Use app setting in your `connections.json` file
+- Use app settings in your `connections.json` file
 
 Example `connections.json` file that retrieves table storage endpoint from app settings:
 
@@ -49,7 +48,8 @@ Example `connections.json` file that retrieves table storage endpoint from app s
 ```
 
 Using above method you can share connection related information for
-built-in connectors in same Key Vault.
+built-in connectors in same Key Vault for multiple Logic Apps,
+even if they're hosted in different app service plans.
 
 ### Managed API Connectors
 
@@ -79,7 +79,7 @@ Resource groups in this walk-through:
 - `rg-integration-shared`
   - Key vault resource
     - Has `secret1` named secret created
-  - `keyvault` API Connection resource
+  - `keyvault-shared` API Connection resource
 
 Create Key vault to the `rg-integration-shared` resource group and then create
 Key vault API Connection using example ARM template
@@ -100,28 +100,14 @@ Key vault API Connection using example ARM template
       "kind": "V2",
       "properties": {
         "displayName": "keyvault-shared",
-        "statuses": [
-          {
-              "status": "Ready"
-          }
-        ],
         "customParameterValues": {},
         "alternativeParameterValues": {
           "vaultName": "<INSERT_KEY_VAULT_NAME_HERE>"
         },
         "parameterValueType": "Alternative",
-        "createdTime": "2022-12-12T07:57:12.2824593Z",
-        "changedTime": "2022-12-12T07:57:12.2824593Z",
         "api": {
-          "name": "keyvault",
-          "displayName": "Azure Key Vault",
-          "description": "Azure Key Vault is a service to securely store and access secrets.",
-          "iconUri": "https://connectoricons-prod.azureedge.net/releases/v1.0.1597/1.0.1597.3005/keyvault/icon.png",
-          "brandColor": "#0079d6",
-          "id": "/subscriptions/<INSERT_SUBSCRIPTION_ID_HERE>/providers/Microsoft.Web/locations/westcentralus/managedApis/keyvault",
-          "type": "Microsoft.Web/locations/managedApis"
-        },
-        "testLinks": []
+          "id": "/subscriptions/<INSERT_SUBSCRIPTION_ID_HERE>/providers/Microsoft.Web/locations/<INSERT_LOCATION_HERE>/managedApis/keyvault"
+        }
       }
     }
   ]
