@@ -373,6 +373,119 @@ If you use `advanced` setup, then you might need to assign API permissions
 to managed identity object. Here are instructions for that:
 [Grant Graph API Permission to Managed Identity Object](https://techcommunity.microsoft.com/t5/integrations-on-azure-blog/grant-graph-api-permission-to-managed-identity-object/ba-p/2792127)
 
+## Securing APIs using Azure AD Groups
+
+Scenario: You want to limit Azure API Management API usage based on Azure AD Groups.
+
+E.g., API operation `GET /clusters` is protected with one Azure AD Group
+and `POST /clusters` is protected with another Azure AD Group.
+
+For more details in Rest API usage see this [example](https://github.com/JanneMattila/api-examples/blob/master/azure/azure-ad-and-api-management.http).
+
+You can use `validate-azure-ad-token` policy to protect you APIs.
+
+You can use `required-claims` to validate `groups`, `roles` or both from the token for authorization.
+
+If you want have `groups` claims in your token, you need to
+enable that in `Token configuration -> "Add groups claim"` in set in your Azure AD app registration.
+
+Here is example token when you have enabled `roles` and `groups` in your app registration (see setup details [here](https://github.com/JanneMattila/api-examples/blob/master/azure/azure-ad-and-api-management.http)):
+
+```json
+{
+  "aud": "api://api.jannemattila.com/apps/apim-gateway",
+  // clipped
+  "groups": [
+    "cbad2229-507d-4d04-be80-6e6b66ea8e12"
+  ],
+  // clipped
+  "roles": [
+    "Users"
+  ]
+}
+```
+
+Here is example Azure API Management Policy if you want to validate `roles`
+enabling access for `GET /clusters` (both roles are allowed to call the API):
+
+```xml
+<policies>
+  <inbound>
+    <validate-azure-ad-token tenant-id="{{aad-tenant-id}}">
+      <client-application-ids>
+        <application-id>{{aad-client-application-id}}</application-id>
+      </client-application-ids>
+      <audiences>
+        <audience>{{aad-api-management-application-id}}</audience>
+      </audiences>
+      <required-claims>
+        <claim name="roles" match="any">
+          <value>Users</value>
+          <value>Admins</value>
+        </claim>
+      </required-claims>
+    </validate-azure-ad-token>
+    <base />
+    <mock-response status-code="200" content-type="application/json" />
+  </inbound>
+  <backend>
+    <base />
+  </backend>
+  <outbound>
+    <base />
+  </outbound>
+  <on-error>
+    <base />
+  </on-error>
+</policies>
+```
+
+Here is example Azure API Management Policy if you want to validate `groups`
+enabling access for `GET /clusters` (both groups are allowed to call the API):
+
+```xml
+<policies>
+  <inbound>
+    <validate-azure-ad-token tenant-id="{{aad-tenant-id}}">
+      <client-application-ids>
+        <application-id>{{aad-client-application-id}}</application-id>
+      </client-application-ids>
+      <audiences>
+        <audience>{{aad-api-management-application-id}}</audience>
+      </audiences>
+      <required-claims>
+        <claim name="groups" match="any">
+          <value>{{aad-group-id-users}}</value>
+          <value>{{aad-group-id-admins}}</value>
+        </claim>
+      </required-claims>
+    </validate-azure-ad-token>
+    <base />
+    <mock-response status-code="200" content-type="application/json" />
+  </inbound>
+  <backend>
+    <base />
+  </backend>
+  <outbound>
+    <base />
+  </outbound>
+  <on-error>
+    <base />
+  </on-error>
+</policies>
+```
+
+For matching `POST /clusters` API Operation you would then just remove `users`
+from the allowed values list to enable only `admins` to call the API Operation:
+
+```xml
+<required-claims>
+  <claim name="groups" match="any">
+    <value>{{aad-group-id-admins}}</value>
+  </claim>
+</required-claims>
+```
+
 ## Links
 
 [A library of useful resources about Azure API Management](https://aka.ms/apimlove)
