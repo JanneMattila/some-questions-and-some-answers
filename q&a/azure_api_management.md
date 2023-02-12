@@ -387,7 +387,14 @@ You can use `validate-azure-ad-token` policy to protect you APIs.
 You can use `required-claims` to validate `groups`, `roles` or both from the token for authorization.
 
 If you want have `groups` claims in your token, you need to
-enable that in `Token configuration -> "Add groups claim"` in set in your Azure AD app registration.
+enable that in `Token configuration -> "Add groups claim"` in your Azure AD app registration.
+
+If you want have `roles` claims in your token, you need to
+enable that in `App roles -> "Create app role"` in your Azure AD app registration.
+
+Both above configurations require, that you go to `Enterprise applications` and 
+set `Properties -> Assignment required: Yes` for your app, and then
+add users/groups to the `Users and groups` to enable users to use this app.
 
 Here is example token when you have enabled `roles` and `groups` in your app registration (see setup details [here](https://github.com/JanneMattila/api-examples/blob/master/azure/azure-ad-and-api-management.http)):
 
