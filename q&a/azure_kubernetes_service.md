@@ -28,3 +28,30 @@
 
 > PostgreSQL does nothing special for NFS file systems, meaning it assumes NFS behaves exactly like locally-connected drives. If the client or server NFS implementation does not provide standard file system semantics, this can cause reliability problem.
 > Specifically, delayed (asynchronous) writes to the **NFS server can cause data corruption problems**.
+
+## DNS
+
+To test `/etc/resolv.conf` configuration, you can use [webapp-network-tester](https://github.com/JanneMattila/webapp-network-tester)
+with payload `FILE READ "/etc/resolv.conf"`:
+
+Here is the default configuration:
+
+```
+-> Start: FILE READ "/etc/resolv.conf"
+nameserver 10.96.0.10
+search network-app.svc.cluster.local svc.cluster.local cluster.local
+options ndots:5
+<- End: FILE READ "/etc/resolv.conf" 102.45ms
+```
+
+Notice `ndots` with value `5`.
+
+Related links:
+
+[DNS for Services and Pods](https://kubernetes.io/docs/concepts/services-networking/dns-pod-service/)
+
+[DNS Lookups in Kubernetes](https://mrkaran.dev/posts/ndots-kubernetes/)
+
+[Kubernetes pods /etc/resolv.conf ndots:5 option and why it may negatively affect your application performances](https://pracucci.com/kubernetes-dns-resolution-ndots-options-and-why-it-may-affect-application-performances.html)
+
+[Help Understanding how DNS works and what ndots is used for.](https://www.reddit.com/r/kubernetes/comments/duj86x/help_understanding_how_dns_works_and_what_ndots/)
