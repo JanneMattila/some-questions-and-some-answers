@@ -106,3 +106,5 @@ Export-PfxCertificate -Cert $certThumbprint -FilePath server.pfx -Password $pass
 [Create a self-signed public certificate to authenticate your application](https://learn.microsoft.com/en-us/azure/active-directory/develop/howto-create-self-signed-certificate)
 
 [Private client certificate](https://learn.microsoft.com/en-us/azure/app-service/environment/certificates#private-client-certificate)
+
+[Custom domain suffix for App Service Environments](https://learn.microsoft.com/en-us/azure/app-service/environment/how-to-custom-domain-suffix)
