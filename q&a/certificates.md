@@ -2,7 +2,7 @@
 
 ## How do I test my apps with SSL certificates?
 
-### Option 1: Let's Encrypt
+### Use Let's Encrypt
 
 Use these instructions to [setup certbot WSL](https://gist.github.com/bluearth/aebde23076e8a15981886a616cac81ba).
 You can then generate wildcard certificates using this command:
@@ -34,28 +34,75 @@ sudo openssl pkcs12 -export -out "certificate.pfx" -inkey "/etc/letsencrypt/live
 # Enjoy your "certificate.pfx"!
 ```
 
-### Option 2: SSL For Free
-
-You can use [SSL For Free](https://www.sslforfree.com/) for creating your certificates.
-You can create even wildcard certificates (e.g. `*.yourdomainnamehere.com`) with that.
-Just follow the website instructions and you're good to go.
-
-After the process you can download those generated certificates to your machine.
-That downloaded bundle contains following files:
-
-```bash
-ca_bundle.crt
-certificate.crt
-private.key
-```
-
-In order to use them e.g. with Azure API Management for custom domains
-you need to convert them to `pfx` file. You can use `openssl`
-for the conversion.
+### Use self-signed certificates
 
 *Note:* If you have [Windows Subsystem for Linux (WSL)](https://docs.microsoft.com/en-us/windows/wsl/install-win10)
 installed you might already have `openssl` installed into your machine.
 
 ```bash
-openssl pkcs12 -export -out "certificate.pfx" -inkey "private.key" -in "certificate.crt" -certfile "ca_bundle.crt"
+# Generate Certificate Authority (CA)
+openssl req -x509 -sha256 -days 3650 -nodes -newkey rsa:2048 -subj "/CN=demos" -keyout ca.key -out ca.crt
+
+# Create server Certificate Signing Request (CSR) configuration file
+cat > server.conf <<EOF
+[ req ]
+default_bits = 2048
+prompt = no
+default_md = sha256
+distinguished_name = dn
+
+[ dn ]
+CN = mycustomdomain.internal
+
+[ extensions ]
+# extendedKeyUsage = 1.3.6.1.5.5.7.3.1
+extendedKeyUsage = 1.3.6.1.5.5.7.3.1, serverAuth
+subjectAltName = @alt_names
+
+[alt_names]
+DNS.1 = mycustomdomain.internal
+EOF
+
+# Generate server private key
+openssl genrsa -out server.key 2048
+
+# Generate Certificate Signing Request (CSR) using server private key and configuration file
+-extensions extensions
+
+openssl req -new -key server.key -out server.csr -config server.conf -extensions extensions
+
+-addext "extendedKeyUsage = serverAuth"
+
+# Generate certificate with self signed ca
+openssl x509 -req -in server.csr -CA ca.crt -CAkey ca.key -CAcreateserial -out server.crt -days 3650 -sha256
+
+# Convert to pfx
+openssl pkcs12 -export -out server.pfx -inkey server.key -in server.crt -certfile ca.crt
 ```
+
+PowerShell examples:
+
+```powershell
+$certificate = New-SelfSignedCertificate -certstorelocation cert:\localmachine\my -dnsname "*.mycustomdomain.internal","*.scm.mycustomdomain.internal"
+
+$certThumbprint = "cert:\localMachine\my\" + $certificate.Thumbprint
+$password = ConvertTo-SecureString -String "your password here" -Force -AsPlainText
+
+$fileName = "exportedcert.cer"
+Export-Certificate -Cert $certThumbprint -FilePath server.cer -Type CERT
+```
+
+```powershell
+$certificate = New-SelfSignedCertificate -certstorelocation cert:\localmachine\my -dnsname "mycustomdomain.internal"
+
+$certThumbprint = "cert:\localMachine\my\" + $certificate.Thumbprint
+$password = ConvertTo-SecureString -String "your password here" -Force -AsPlainText
+
+Export-PfxCertificate -Cert $certThumbprint -FilePath server.pfx -Password $password
+```
+
+## Links
+
+[Create a self-signed public certificate to authenticate your application](https://learn.microsoft.com/en-us/azure/active-directory/develop/howto-create-self-signed-certificate)
+
+[Private client certificate](https://learn.microsoft.com/en-us/azure/app-service/environment/certificates#private-client-certificate)
