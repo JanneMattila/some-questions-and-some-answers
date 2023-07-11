@@ -77,6 +77,32 @@ openssl x509 -req -in server.csr -CA ca.crt -CAkey ca.key -CAcreateserial -out s
 
 # Convert to pfx
 openssl pkcs12 -export -out server.pfx -inkey server.key -in server.crt -certfile ca.crt
+
+# ----------------------------
+
+# Create client Certificate Signing Request (CSR) configuration file
+cat > client.conf <<EOF
+[ req ]
+default_bits = 2048
+prompt = no
+default_md = sha256
+distinguished_name = dn
+
+[ dn ]
+CN = 1234567890
+EOF
+
+# Generate client private key
+openssl genrsa -out client.key 2048
+
+# Generate Certificate Signing Request (CSR) using client private key and configuration file
+openssl req -new -key client.key -out client.csr -config client.conf
+
+# Generate certificate with self signed ca
+openssl x509 -req -in client.csr -CA ca.crt -CAkey ca.key -CAcreateserial -out client.crt -days 3650 -sha256
+
+# Convert to pfx
+openssl pkcs12 -export -out client.pfx -inkey client.key -in client.crt -certfile ca.crt
 ```
 
 PowerShell examples:
