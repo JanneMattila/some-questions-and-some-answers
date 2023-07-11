@@ -1,0 +1,52 @@
+{
+    "channels": "Operation",
+    "correlationId": "d82f6dec-2458-4e3c-ad15-0b1493cb0155",
+    "description": "",
+    "eventDataId": "71644c30-3ed7-8fe1-af51-cd97de44b891",
+    "eventName": {
+        "value": "",
+        "localizedValue": ""
+    },
+    "category": {
+        "value": "ResourceHealth",
+        "localizedValue": "Resource Health"
+    },
+    "eventTimestamp": "2023-07-08T16:40:10.535Z",
+    "id": "/SUBSCRIPTIONS/6bbca077-21cc-4a8b-84f1-411d8416f47a/RESOURCEGROUPS/RG-HOME/PROVIDERS/MICROSOFT.KUBERNETES/CONNECTEDCLUSTERS/HOMEAKS/events/71644c30-3ed7-8fe1-af51-cd97de44b891/ticks/638244312105350000",
+    "level": "Informational",
+    "operationId": "",
+    "operationName": {
+        "value": "Microsoft.Resourcehealth/healthevent/Updated/action",
+        "localizedValue": "Health Event Updated"
+    },
+    "resourceGroupName": "RG-HOME",
+    "resourceProviderName": {
+        "value": "MICROSOFT.KUBERNETES",
+        "localizedValue": "MICROSOFT.KUBERNETES"
+    },
+    "resourceType": {
+        "value": "MICROSOFT.KUBERNETES/connectedclusters",
+        "localizedValue": "MICROSOFT.KUBERNETES/connectedclusters"
+    },
+    "resourceId": "/SUBSCRIPTIONS/6bbca077-21cc-4a8b-84f1-411d8416f47a/RESOURCEGROUPS/RG-HOME/PROVIDERS/MICROSOFT.KUBERNETES/CONNECTEDCLUSTERS/HOMEAKS",
+    "status": {
+        "value": "Updated",
+        "localizedValue": "Updated"
+    },
+    "subStatus": {
+        "value": "",
+        "localizedValue": ""
+    },
+    "submissionTimestamp": "2023-07-08T16:40:10.535Z",
+    "subscriptionId": "6bbca077-21cc-4a8b-84f1-411d8416f47a",
+    "tenantId": "",
+    "properties": {
+        "title": "Degraded",
+        "details": "One or more of the Azure Arc agent(s) deployed on your Kubernetes cluster seem to be not functional.",
+        "currentHealthStatus": "Unavailable",
+        "previousHealthStatus": "Unavailable",
+        "type": "Downtime",
+        "cause": "PlatformInitiated"
+    },
+    "relatedEvents": []
+}

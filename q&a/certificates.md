@@ -67,11 +67,10 @@ EOF
 openssl genrsa -out server.key 2048
 
 # Generate Certificate Signing Request (CSR) using server private key and configuration file
--extensions extensions
-
 openssl req -new -key server.key -out server.csr -config server.conf -extensions extensions
-
--addext "extendedKeyUsage = serverAuth"
+# Alternatives:
+# -extensions extensions
+# -addext "extendedKeyUsage = serverAuth"
 
 # Generate certificate with self signed ca
 openssl x509 -req -in server.csr -CA ca.crt -CAkey ca.key -CAcreateserial -out server.crt -days 3650 -sha256
