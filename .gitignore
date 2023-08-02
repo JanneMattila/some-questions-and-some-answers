@@ -4,3 +4,4 @@
 ca.*
 client.*
 server.*
+*.csv
