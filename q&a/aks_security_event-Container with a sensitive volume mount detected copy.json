@@ -1,0 +1,108 @@
+{
+    "id": "/subscriptions/083311a4-2f14-4e10-a5ad-18b45dd1ce5a/resourceGroups/rg-aks-workshop-janne/providers/Microsoft.Security/locations/centralus/alerts/2517114176769526059_076be51b-47ef-44b2-b520-3d7ce289d256",
+    "name": "2517114176769526059_076be51b-47ef-44b2-b520-3d7ce289d256",
+    "type": "Microsoft.Security/Locations/alerts",
+    "properties": {
+        "status": "Active",
+        "timeGeneratedUtc": "2023-08-01T10:24:30.3178945Z",
+        "processingEndTimeUtc": "2023-08-01T10:10:51.3831368Z",
+        "version": "2022-01-01.0",
+        "vendorName": "Microsoft",
+        "productName": "Microsoft Defender for Cloud",
+        "productComponentName": "Containers",
+        "alertType": "K8S_SensitiveMount",
+        "startTimeUtc": "2023-08-01T09:45:23.047394Z",
+        "endTimeUtc": "2023-08-01T09:45:23.047394Z",
+        "severity": "Medium",
+        "isIncident": false,
+        "systemAlertId": "2517114176769526059_076be51b-47ef-44b2-b520-3d7ce289d256",
+        "intent": "PrivilegeEscalation",
+        "resourceIdentifiers": [
+            {
+                "$id": "centralus_1",
+                "azureResourceId": "/subscriptions/083311a4-2f14-4e10-a5ad-18b45dd1ce5a/resourceGroups/rg-aks-workshop-janne/providers/Microsoft.ContainerService/managedClusters/aks-janne",
+                "type": "AzureResource",
+                "azureResourceTenantId": "6e09c57e-868e-4c17-a99b-c45d81488e04"
+            },
+            {
+                "$id": "centralus_2",
+                "aadTenantId": "6e09c57e-868e-4c17-a99b-c45d81488e04",
+                "type": "AAD"
+            }
+        ],
+        "compromisedEntity": "aks-janne",
+        "alertDisplayName": "Container with a sensitive volume mount detected",
+        "description": "Kubernetes audit log analysis detected a new container with a sensitive volume mount. The volume that was detected is a hostPath type which mounts a sensitive file or folder from the node to the container. If the container gets compromised, the attacker can use this mount for gaining access to the node.",
+        "remediationSteps": [
+            "Review the container and the path in the alert details.",
+            "If possible, consider mounting only specific folders or files that are necessary to the container operation.",
+            "If the container is not legitimate, escalate the alert to the information security team."
+        ],
+        "extendedProperties": {
+            "container name": "network-app",
+            "container image": "jannemattila/webapp-network-tester:1.0.60",
+            "object name": "network-app-deployment",
+            "object kind": "Deployment",
+            "namespace": "network-app",
+            "sensitive mount path": "/",
+            "sensitive mount name": "hostpath",
+            "resourceType": "Kubernetes Service",
+            "killChainIntent": "PrivilegeEscalation"
+        },
+        "entities": [
+            {
+                "$id": "centralus_3",
+                "resourceId": "/subscriptions/083311a4-2f14-4e10-a5ad-18b45dd1ce5a/resourceGroups/rg-aks-workshop-janne/providers/Microsoft.ContainerService/managedClusters/aks-janne",
+                "resourceType": "Kubernetes Service",
+                "resourceName": "aks-janne",
+                "metadata": {
+                    "isGraphCenter": true
+                },
+                "asset": true,
+                "type": "azure-resource"
+            },
+            {
+                "$id": "centralus_4",
+                "imageId": "jannemattila/webapp-network-tester:1.0.60",
+                "asset": false,
+                "type": "container-image"
+            },
+            {
+                "$id": "centralus_5",
+                "name": "network-app",
+                "image": {
+                    "$ref": "centralus_4"
+                },
+                "asset": false,
+                "type": "container"
+            },
+            {
+                "$id": "centralus_6",
+                "cloudResource": {
+                    "$ref": "centralus_3"
+                },
+                "asset": false,
+                "type": "K8s-cluster"
+            },
+            {
+                "$id": "centralus_7",
+                "name": "network-app",
+                "cluster": {
+                    "$ref": "centralus_6"
+                },
+                "asset": false,
+                "type": "K8s-namespace"
+            },
+            {
+                "$id": "centralus_8",
+                "name": "network-app-deployment",
+                "namespace": {
+                    "$ref": "centralus_7"
+                },
+                "asset": false,
+                "type": "K8s-deployment"
+            }
+        ],
+        "alertUri": "https://portal.azure.com/#blade/Microsoft_Azure_Security_AzureDefenderForData/AlertBlade/alertId/2517114176769526059_076be51b-47ef-44b2-b520-3d7ce289d256/subscriptionId/083311a4-2f14-4e10-a5ad-18b45dd1ce5a/resourceGroup/rg-aks-workshop-janne/referencedFrom/alertDeepLink/location/centralus"
+    }
+}
