@@ -1,0 +1,53 @@
+{
+    "id": "/subscriptions/422c12ee-7307-493f-9fb6-51abe6e42d38/resourceGroups/rg-webapp-with-fileshare/providers/Microsoft.Security/locations/westeurope/alerts/2517181393328263559_8623e1cc-28e2-471d-9055-96e1e1465e82",
+    "name": "2517181393328263559_8623e1cc-28e2-471d-9055-96e1e1465e82",
+    "type": "Microsoft.Security/Locations/alerts",
+    "properties": {
+        "status": "Active",
+        "timeGeneratedUtc": "2023-05-15T16:36:52.8724046Z",
+        "processingEndTimeUtc": "2023-05-15T16:36:49.7299161Z",
+        "version": "2022-01-01.0",
+        "vendorName": "Microsoft",
+        "productName": "Microsoft Defender for Cloud",
+        "productComponentName": "App Service",
+        "alertType": "AppServices_DanglingDomain",
+        "startTimeUtc": "2023-05-15T14:37:47.173644Z",
+        "endTimeUtc": "2023-05-15T16:36:08.390096Z",
+        "severity": "High",
+        "isIncident": false,
+        "systemAlertId": "2517181393328263559_8623e1cc-28e2-471d-9055-96e1e1465e82",
+        "intent": "Unknown",
+        "resourceIdentifiers": [
+            {
+                "$id": "westeurope_1",
+                "azureResourceId": "/subscriptions/422c12ee-7307-493f-9fb6-51abe6e42d38/resourcegroups/rg-webapp-with-fileshare/providers/microsoft.web/sites/mycontosodemoapp",
+                "type": "AzureResource",
+                "azureResourceTenantId": "6e09c57e-868e-4c17-a99b-c45d81488e04"
+            },
+            {
+                "$id": "westeurope_2",
+                "aadTenantId": "6e09c57e-868e-4c17-a99b-c45d81488e04",
+                "type": "AAD"
+            }
+        ],
+        "compromisedEntity": "mycontosodemoapp",
+        "alertDisplayName": "AppServices_DanglingDomain",
+        "description": "AppServices_DanglingDomain",
+        "extendedProperties": {
+            "domain": "app.contoso.com",
+            "resourceType": "App Service",
+            "end Time UTC": "2023-05-15T16:36:08.3900960Z"
+        },
+        "entities": [
+            {
+                "$id": "westeurope_3",
+                "resourceId": "/subscriptions/422c12ee-7307-493f-9fb6-51abe6e42d38/resourcegroups/rg-webapp-with-fileshare/providers/microsoft.web/sites/mycontosodemoapp",
+                "resourceType": "App Service",
+                "resourceName": "mycontosodemoapp",
+                "asset": true,
+                "type": "azure-resource"
+            }
+        ],
+        "alertUri": "https://portal.azure.com/#blade/Microsoft_Azure_Security_AzureDefenderForData/AlertBlade/alertId/2517181393328263559_8623e1cc-28e2-471d-9055-96e1e1465e82/subscriptionId/422c12ee-7307-493f-9fb6-51abe6e42d38/resourceGroup/rg-webapp-with-fileshare/referencedFrom/alertDeepLink/location/westeurope"
+    }
+}
