@@ -183,3 +183,109 @@ because it will fail for following error:
 > Some of the connections are not authorized yet. 
 > If you just created a workflow from a template,
 > please add the authorized connections to your workflow before saving.
+
+### Combining arrays
+
+Logic Apps has built-in support for combining arrays called [union](https://learn.microsoft.com/en-us/azure/logic-apps/workflow-definition-language-functions-reference#union).
+
+However, if you have duplicate items in your array, then `union` will remove them.
+Let's see this in action with following example:
+
+`json1` variable type `array`:
+
+```json
+[
+  {
+    "id": 1,
+    "name": "Cat"
+  },
+  {
+    "id": 2,
+    "name": "Dog"
+  }
+]
+```
+
+`json2` variable type `array`:
+
+```json
+[
+  {
+    "id": 2,
+    "name": "Dog"
+  },
+  {
+    "id": 3,
+    "name": "Horse"
+  },
+  {
+    "id": 4,
+    "name": "House"
+  }
+]
+```
+
+Notice, that it has duplicate item with `id` 2.
+
+This expression:
+
+```
+union(variables('json1'),variables('json2'))
+```
+
+Will result in following array:
+
+```json
+[
+  {
+    "id": 1,
+    "name": "Cat"
+  },
+  {
+    "id": 2,
+    "name": "Dog"
+  },
+  {
+    "id": 3,
+    "name": "Horse"
+  },
+  {
+    "id": 4,
+    "name": "House"
+  }
+]
+```
+
+But if you want to preserve duplicates, then you can use following expression:
+
+```
+json(concat('[',join(variables('json1'),','),',',join(variables('json2'),','),']'))
+```
+
+It's a bit complicated but it first joins arrays to strings and then concatenates them
+together to form new array. This will result in following array:
+
+```json
+[
+  {
+    "id": 1,
+    "name": "Cat"
+  },
+  {
+    "id": 2,
+    "name": "Dog"
+  },
+  {
+    "id": 2,
+    "name": "Dog"
+  },
+  {
+    "id": 3,
+    "name": "Horse"
+  },
+  {
+    "id": 4,
+    "name": "House"
+  }
+]
+```
