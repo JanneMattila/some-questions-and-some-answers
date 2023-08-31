@@ -18,3 +18,12 @@ resources
 | mv-expand dataDisk = properties.storageProfile.dataDisks
 | where isnotnull(dataDisk.vhd)
 ```
+
+## Classic Storage Account deprecation
+
+[Migrate your classic storage accounts to Azure Resource Manager by August 31, 2024](https://learn.microsoft.com/en-us/azure/storage/common/classic-account-migration-overview)
+
+```kusto
+resources
+| where type == "microsoft.classicstorage/storageaccounts"
+```
