@@ -1,3 +1,4 @@
+# Usage: .\aad-sync-groups.ps1 -SourceGroupID "e70e58dd-e6a6-46c6-a6eb-06ba38182ac6" -TargetGroupID "f6a92b38-7f40-4a6f-9316-4042878bd298"
 Param (
     [Parameter(HelpMessage = "Source Azure AD Group Object ID")]
     [string] $SourceGroupID,
@@ -80,4 +81,20 @@ $usersToRemove.Values | ForEach-Object {
 
     "Removing user $($user.displayName) from target group"
     Invoke-RestMethod -Uri "https://graph.microsoft.com/v1.0/groups/$TargetGroupID/members/$($user.id)/`$ref" -Method DELETE -Body $bodyJson -ContentType "application/json" -Authentication Bearer -Token $bearerToken
+}
+
+"-------------------------------------------"
+"Summary:"
+"-------------------------------------------"
+if ($usersToAdd.Count -eq 0 -and $usersToRemove.Count -eq 0) {
+    "No changes needed"
+}
+else {
+    "Following changes applied:"
+    $usersToAdd.Values | ForEach-Object {
+        "User $($_.displayName) added to target group"
+    }
+    $usersToRemove.Values | ForEach-Object {
+        "User $($_.displayName) removed from target group"
+    }
 }
