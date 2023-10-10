@@ -14,25 +14,30 @@ $bearerToken = ConvertTo-SecureString -String $token -AsPlainText
 
 function Get-AllMembers($Collection, $ObjectID) {
     "Getting members for group $ObjectID"
-    $groupJson = Invoke-RestMethod -Uri "https://graph.microsoft.com/v1.0/groups/$ObjectID/members" -Authentication Bearer -Token $bearerToken
 
-    foreach ($member in $groupJson.value) {
-        "Processing member $($member.displayName), type: $($member.'@odata.type')"
+    $fetchUrl = "https://graph.microsoft.com/v1.0/groups/$ObjectID/members"
+    do {
+        $groupJson = Invoke-RestMethod -Uri $fetchUrl -Authentication Bearer -Token $bearerToken
 
-        if ($member.'@odata.type' -eq "#microsoft.graph.group") {
-            "Group $($member.displayName) found"
-            Get-AllMembers $Collection $member.id
-        }
-        elseif ($member.'@odata.type' -eq "#microsoft.graph.user") {
-            if ($Collection.ContainsKey($member.id) -eq $true) {
-                "User $($member.displayName) already exists in collection"
+        foreach ($member in $groupJson.value) {
+            "Processing member $($member.displayName), type: $($member.'@odata.type')"
+
+            if ($member.'@odata.type' -eq "#microsoft.graph.group") {
+                "Group $($member.displayName) found"
+                Get-AllMembers $Collection $member.id
             }
-            else {
-                "User $($member.displayName) added to collection"
-                $Collection.Add($member.id, $member) | Out-Null
+            elseif ($member.'@odata.type' -eq "#microsoft.graph.user") {
+                if ($Collection.ContainsKey($member.id) -eq $true) {
+                    "User $($member.displayName) already exists in collection"
+                }
+                else {
+                    "User $($member.displayName) added to collection"
+                    $Collection.Add($member.id, $member) | Out-Null
+                }
             }
         }
-    }
+        $fetchUrl = $groupJson.'@odata.nextLink'
+    } while ($null -ne $url)
 }
 
 $sourceUsers = @{}
