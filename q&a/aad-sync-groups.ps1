@@ -37,7 +37,7 @@ function Get-AllMembers($Collection, $ObjectID) {
             }
         }
         $fetchUrl = $groupJson.'@odata.nextLink'
-    } while ($null -ne $url)
+    } while ($null -ne $fetchUrl)
 }
 
 $sourceUsers = @{}
