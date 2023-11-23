@@ -141,7 +141,40 @@ $response = Invoke-RestMethod @parameters
 $response | ConvertTo-Json
 ```
 
-[Use service principals & managed identities](https://learn.microsoft.com/en-us/azure/devops/integrate/get-started/authentication/service-principal-managed-identity?view=azure-devops)
+You can use [service principals & managed identities](https://learn.microsoft.com/en-us/azure/devops/integrate/get-started/authentication/service-principal-managed-identity?view=azure-devops) to queue pipelines.
+
+```powershell
+$APP_ID = "<your app id>"
+$TENANT_ID = "<your tenant id>"
+$PASSWORD = "<your password>"
+
+az login --service-principal --username $APP_ID --password $PASSWORD --tenant $TENANT_ID --allow-no-subscriptions
+$accessToken = $(az account get-access-token --scope 499b84ac-1321-427f-aa17-267ca6975798/.default --query accessToken -o tsv)
+
+$organization = "YourOrganizationNameHere"
+$project = "YourProjectNameHere"
+$pipelineId = 1 # Pipeline id
+
+$headers = @{Authorization = ("Bearer {0}" -f $accessToken) }
+
+$json = ConvertTo-Json  @{
+    "templateParameters" = @{
+        "myparam1" = "Value from PowerShell 1"
+        "myparam2" = "Value from PowerShell 2"
+    }
+}
+$uri = "https://dev.azure.com/$organization/$project/_apis/pipelines/$pipelineId/runs?api-version=7.1-preview.1"
+
+$parameters = @{
+    Headers     = $headers
+    Uri         = $uri
+    Method      = "POST"
+    ContentType = "application/json"
+    Body        = $json
+}
+$response = Invoke-RestMethod @parameters
+$response | ConvertTo-Json
+```
 
 ### Mixing Azure CLI and Azure PowerShell
 
