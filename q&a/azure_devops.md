@@ -103,6 +103,46 @@ $response = Invoke-RestMethod @parameters
 $response | ConvertTo-Json
 ```
 
+### How do I queue pipeline in Azure Pipelines using PowerShell
+
+Here are the steps that you can use to [run pipeline](https://learn.microsoft.com/en-us/rest/api/azure/devops/pipelines/runs/run-pipeline?view=azure-devops-rest-7.1) using PowerShell:
+
+Note: Requires `vso.build_execute` permission.
+
+```powershell
+$organization = "YourOrganizationNameHere"
+$project = "YourProjectNameHere"
+$pipelineId = 1 # Pipeline id
+
+$username = "" # Can be left blank
+$password = "" # Token generated with "Build: Read, write, & execute" scope.
+
+$basicAuth = ("{0}:{1}" -f $username, $password)
+$basicAuth = [System.Text.Encoding]::UTF8.GetBytes($basicAuth)
+$basicAuth = [System.Convert]::ToBase64String($basicAuth)
+$headers = @{Authorization=("Basic {0}" -f $basicAuth)}
+
+$json = ConvertTo-Json  @{
+  "templateParameters"    = @{
+      "myparam1" = "Value from PowerShell 1"
+      "myparam2" = "Value from PowerShell 2"
+  }
+}
+$uri = "https://dev.azure.com/$organization/$project/_apis/pipelines/$pipelineId/runs?api-version=7.1-preview.1"
+
+$parameters = @{
+  Headers = $headers
+  Uri = $uri
+  Method = "POST"
+  ContentType = "application/json"
+  Body = $json
+}
+$response = Invoke-RestMethod @parameters
+$response | ConvertTo-Json
+```
+
+[Use service principals & managed identities](https://learn.microsoft.com/en-us/azure/devops/integrate/get-started/authentication/service-principal-managed-identity?view=azure-devops)
+
 ### Mixing Azure CLI and Azure PowerShell
 
 If you encapsulate your deployments to `deploy.ps1` and
