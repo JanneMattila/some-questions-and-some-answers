@@ -27,3 +27,9 @@ Start by searching these:
 - `WARNING : ` to find warnings (contains quite much noise)
 
 See more details about [configuration options](https://docs.microsoft.com/en-us/cli/azure/azure-cli-configuration) of CLI.
+
+**Note**: For Azure PowerShell debugging you can use this:
+
+```powershell
+$DebugPreference = "Continue"
+```
