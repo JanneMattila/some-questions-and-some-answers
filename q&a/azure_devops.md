@@ -176,6 +176,118 @@ $response = Invoke-RestMethod @parameters
 $response | ConvertTo-Json
 ```
 
+### Remove unnecessary picklists
+
+If you have done `import` & `export` of your Azure DevOps process templates
+using [Process Migrator](https://github.com/microsoft/process-migrator),
+then you might have ended up issue with unnecessary picklists in your environment.
+
+You can use following PowerShell script to export all picklists and then delete the ones that you don't need.
+
+> [!CAUTION]
+> Be **very** careful when automatically deleting any picklists to prevent any data loss.
+
+References:
+- [VS402846: The number of picklists in the collection has reached the limit of 2048](https://github.com/microsoft/process-migrator/issues/47)
+- [Azure DevOps Rest API](https://learn.microsoft.com/en-us/rest/api/azure/devops/processes/lists/list?view=azure-devops-rest-7.2&tabs=HTTP)
+
+Note: `vso.work` scope is required for the PAT.
+
+```powershell
+class PickListData {
+    [string] $URL
+    [string] $ID
+    [string] $Name
+    [string] $Type
+    [string] $Items
+    [string] $ToBeDeleted
+}
+
+$organization = ""
+
+$username = "" # Can be left blank
+$password = "" # Token generated with "Work: Read, write, & execute" scope.
+
+$basicAuth = ("{0}:{1}" -f $username, $password)
+$basicAuth = [System.Text.Encoding]::UTF8.GetBytes($basicAuth)
+$basicAuth = [System.Convert]::ToBase64String($basicAuth)
+$headers = @{Authorization = ("Basic {0}" -f $basicAuth) }
+
+$uri = "https://dev.azure.com/$organization/_apis/work/processes/lists?api-version=7.2-preview.1"
+
+$parameters = @{
+    Headers = $headers
+    Uri     = $uri
+    Method  = "GET"
+}
+$response = Invoke-RestMethod @parameters
+$pickLists = $response
+
+$pickListExport = New-Object System.Collections.ArrayList
+foreach ($pickList in $pickLists.value) {
+    Write-Host "Processing picklist '$($pickList.name)' - '$($pickList.id)'"
+
+    $uri = "https://dev.azure.com/$organization/_apis/work/processes/lists/$($pickListId)?api-version=7.2-preview.1"
+    $parameters = @{
+        Headers = $headers
+        Uri     = $uri
+        Method  = "GET"
+    }
+    $pickListData = Invoke-RestMethod @parameters
+
+    $pld = [PickListData]::new()
+    $pld.URL = $pickList.URL
+    $pld.ID = $pickList.id
+    $pld.Name = $pickList.name
+    $pld.Type = $pickList.type
+    $pld.Items = [string]::Join(', ', $pickListData.items)
+    $pld.ToBeDeleted = "No"
+
+    $pickListExport.Add($pld) | Out-Null
+
+    # Try not to be too aggressive with the API calls
+    Start-Sleep -Milliseconds 100
+}
+
+$exportFile = "picklists.csv"
+$pickListExport | Format-Table
+$pickListExport | Export-CSV $exportFile -Delimiter ';' -Force
+"Picklists exported to $exportFile!"
+"Opening Excel..."
+""
+"Edit the 'ToBeDeleted' column to 'Yes' for the picklists you want to delete."
+"Save the file and close Excel."
+
+Start-Process $exportFile
+
+pause
+
+$pickListImport = Import-Csv -Path $exportFile -Delimiter ';'
+
+$toBeDeletedList = $pickListImport | Where-Object -Property ToBeDeleted -Value "Yes" -IEQ
+
+"Deleting $($toBeDeletedList.Count) picklists:"
+$toBeDeletedList | Format-Table
+
+foreach ($toBeDeleted in $toBeDeletedList) {
+    Write-Host "Deleting picklist '$($toBeDeleted.Name)' - '$($toBeDeleted.ID)'"
+
+    $parameters = @{
+        Headers = $headers
+        Uri     = $toBeDeleted.URL + "?api-version=7.2-preview.1"
+        Method  = "DELETE"
+    }
+
+    # This is commented out to prevent accidental deletion of picklists.
+    # Only uncomment this if you are sure you want to delete the picklists.
+    # $deletedResponse = Invoke-RestMethod @parameters
+    $deletedResponse
+
+    # Try not to be too aggressive with the API calls
+    Start-Sleep -Milliseconds 100
+}
+```
+
 ### Mixing Azure CLI and Azure PowerShell
 
 If you encapsulate your deployments to `deploy.ps1` and
