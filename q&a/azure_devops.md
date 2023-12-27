@@ -285,6 +285,10 @@ foreach ($toBeDeleted in $toBeDeletedList) {
 
     # Try not to be too aggressive with the API calls
     Start-Sleep -Milliseconds 100
+
+    # This is safe exit to prevent deleting of all the picklists.
+    # Comment this line if you really want to proceed deleting all the selected picklists.
+    break
 }
 ```
 
