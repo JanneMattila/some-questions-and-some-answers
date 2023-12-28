@@ -198,8 +198,12 @@ class PickListData {
     [string] $URL
     [string] $ID
     [string] $Name
+    [string] $DisplayName
+    [string] $ReferenceName
+    [string] $Description
     [string] $Type
     [string] $Items
+    [string] $IsInUse
     [string] $ToBeDeleted
 }
 
@@ -213,6 +217,14 @@ $basicAuth = [System.Text.Encoding]::UTF8.GetBytes($basicAuth)
 $basicAuth = [System.Convert]::ToBase64String($basicAuth)
 $headers = @{Authorization = ("Basic {0}" -f $basicAuth) }
 
+$uri = "https://dev.azure.com/$organization/_apis/wit/fields?api-version=7.2-preview.2"
+$parameters = @{
+    Headers = $headers
+    Uri     = $uri
+    Method  = "GET"
+}
+$fieldsData = Invoke-RestMethod @parameters
+
 $uri = "https://dev.azure.com/$organization/_apis/work/processes/lists?api-version=7.2-preview.1"
 
 $parameters = @{
@@ -223,11 +235,14 @@ $parameters = @{
 $response = Invoke-RestMethod @parameters
 $pickLists = $response
 
+$processed = 1
+$totalCount = $pickLists.count
 $pickListExport = New-Object System.Collections.ArrayList
 foreach ($pickList in $pickLists.value) {
-    Write-Host "Processing picklist '$($pickList.name)' - '$($pickList.id)'"
+    Write-Host "$processed / $totalCount - Processing picklist '$($pickList.name)' - '$($pickList.id)'"
+    $processed++
 
-    $uri = "https://dev.azure.com/$organization/_apis/work/processes/lists/$($pickListId)?api-version=7.2-preview.1"
+    $uri = "https://dev.azure.com/$organization/_apis/work/processes/lists/$($pickList.id)?api-version=7.2-preview.1"
     $parameters = @{
         Headers = $headers
         Uri     = $uri
@@ -235,18 +250,28 @@ foreach ($pickList in $pickLists.value) {
     }
     $pickListData = Invoke-RestMethod @parameters
 
+    $fieldInformation = $fieldsData.value | Where-Object -Property picklistId -Value $pickList.id -IEQ
+    $isInUse = "No"
+    if ($fieldInformation) {
+        $isInUse = "Yes"
+    }
+
     $pld = [PickListData]::new()
     $pld.URL = $pickList.URL
     $pld.ID = $pickList.id
     $pld.Name = $pickList.name
+    $pld.DisplayName = $fieldInformation.name
+    $pld.ReferenceName = $fieldInformation.referenceName
+    $pld.Description = $fieldInformation.description
     $pld.Type = $pickList.type
     $pld.Items = [string]::Join(', ', $pickListData.items)
+    $pld.IsInUse = $isInUse
     $pld.ToBeDeleted = "No"
 
     $pickListExport.Add($pld) | Out-Null
 
     # Try not to be too aggressive with the API calls
-    Start-Sleep -Milliseconds 100
+    Start-Sleep -Milliseconds 10
 }
 
 $exportFile = "picklists.csv"
@@ -269,8 +294,17 @@ $toBeDeletedList = $pickListImport | Where-Object -Property ToBeDeleted -Value "
 "Deleting $($toBeDeletedList.Count) picklists:"
 $toBeDeletedList | Format-Table
 
+$userResponse = Read-Host -Prompt "Type 'Yes' to confirm deletion of the picklists."
+if ($userResponse -ne "Yes") {
+    "Aborting deletion of picklists."
+    return
+}
+
+$processed = 1
+$totalCount = $toBeDeletedList.count
 foreach ($toBeDeleted in $toBeDeletedList) {
-    Write-Host "Deleting picklist '$($toBeDeleted.Name)' - '$($toBeDeleted.ID)'"
+    Write-Host "$processed / $totalCount - Deleting picklist '$($toBeDeleted.Name)' - '$($toBeDeleted.ID)'"
+    $processed++
 
     $parameters = @{
         Headers = $headers
@@ -284,12 +318,20 @@ foreach ($toBeDeleted in $toBeDeletedList) {
     $deletedResponse
 
     # Try not to be too aggressive with the API calls
-    Start-Sleep -Milliseconds 100
+    Start-Sleep -Milliseconds 10
 
     # This is safe exit to prevent deleting of all the picklists.
     # Comment this line if you really want to proceed deleting all the selected picklists.
     break
 }
+```
+
+Example output in the CSV file:
+
+```csv
+"URL";"ID";"Name";"DisplayName";"ReferenceName";"Description";"Type";"Items";"IsInUse";"ToBeDeleted"
+"https://dev.azure.com/jannemattilademo/_apis/work/processes/lists/a83cc4bb-5468-49bf-9998-3be0a1b002ff";"a83cc4bb-5468-49bf-9998-3be0a1b002ff";"picklist_444cc9ce-5188-4697-b3ae-c9eb9c86e296";"Picklist3";"Custom.Picklist3";"";"String";"a, b, c";"Yes";"No"
+"https://dev.azure.com/jannemattilademo/_apis/work/processes/lists/cff05e86-80eb-4a82-85fc-5385378aacdf";"cff05e86-80eb-4a82-85fc-5385378aacdf";"picklist_9a8df590-7508-41eb-a5c6-28f1e3f1c49d";"Picklist2";"Custom.Picklist2";"This is description text in the field definition";"Integer";"1, 2, 3";"Yes";"No"
 ```
 
 ### Mixing Azure CLI and Azure PowerShell
