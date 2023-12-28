@@ -334,6 +334,11 @@ Example output in the CSV file:
 "https://dev.azure.com/jannemattilademo/_apis/work/processes/lists/cff05e86-80eb-4a82-85fc-5385378aacdf";"cff05e86-80eb-4a82-85fc-5385378aacdf";"picklist_9a8df590-7508-41eb-a5c6-28f1e3f1c49d";"Picklist2";"Custom.Picklist2";"This is description text in the field definition";"Integer";"1, 2, 3";"Yes";"No"
 ```
 
+| URL                                              | ID                                   | Name                                          | DisplayName | ReferenceName    | Description                                      | Type    | Items   | IsInUse | ToBeDeleted |
+| ------------------------------------------------ | ------------------------------------ | --------------------------------------------- | ----------- | ---------------- | ------------------------------------------------ | ------- | ------- | ------- | ----------- |
+| https://.../a83cc4bb-5468-49bf-9998-3be0a1b002ff | a83cc4bb-5468-49bf-9998-3be0a1b002ff | picklist_444cc9ce-5188-4697-b3ae-c9eb9c86e296 | Picklist3   | Custom.Picklist3 |                                                  | String  | a, b, c | Yes     | Yes         |
+| https://.../cff05e86-80eb-4a82-85fc-5385378aacdf | cff05e86-80eb-4a82-85fc-5385378aacdf | picklist_9a8df590-7508-41eb-a5c6-28f1e3f1c49d | Picklist2   | Custom.Picklist2 | This is description text in the field definition | Integer | 1, 2, 3 | Yes     | Yes         |
+
 ### Mixing Azure CLI and Azure PowerShell
 
 If you encapsulate your deployments to `deploy.ps1` and
