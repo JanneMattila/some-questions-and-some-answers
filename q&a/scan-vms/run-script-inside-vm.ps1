@@ -128,7 +128,15 @@ while ($true) {
     $index = 1
     $jobs = @{}
 
+    $subscriptionId = $toScan[0].SubscriptionId
+    Select-AzSubscription -Subscription $subscriptionId | Out-Null
+
     foreach ($vm in $toScan) {
+        if ($vm.SubscriptionId -ne $subscriptionId) {
+            Select-AzSubscription -Subscription $vm.SubscriptionId | Out-Null
+            $subscriptionId = $vm.SubscriptionId
+        }
+
         "$index / $($toScan.Count): Started scanning '$($vm.Name)' in '$($vm.ResourceGroup)'"
         $index++
         $job = Invoke-AzVMRunCommand `
