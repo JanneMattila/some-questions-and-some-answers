@@ -3,7 +3,7 @@ Param (
     [string] $CSV = "VirtualMachines.csv",
 
     [Parameter(HelpMessage = "Number of VMs to scan at once")]
-    [int] $NumberOfVMsToScan = 5
+    [int] $NumberOfVMsToScan = 1
 )
 
 $ErrorActionPreference = "Stop"
@@ -98,68 +98,101 @@ subscriptionId
     }
 
     $virtualMachines | Export-Csv $CSV -Delimiter ';' -Force
+
+    "Virtual machines exported to $CSV!"
+    "Opening Excel..."
+    ""
+    "Validate the data collected."
+    "Edit the 'ToScan' column to 'Yes' for the virtual machines you want to scan."
+    "Edit the 'ToScan' column to 'No' for preventing scan of that virtual machine."
+    ""
+    "Save the file and close Excel."
+    Start-Process $CSV
+    pause
 }
 
-$virtualMachines = Import-Csv -Path $CSV -Delimiter ';'
-"Found $($virtualMachines.Count) virtual machines in the CSV file."
+while ($true) {
+    $virtualMachines = Import-Csv -Path $CSV -Delimiter ';'
+    "Found $($virtualMachines.Count) virtual machines in the CSV file."
 
-$toScan = $virtualMachines | Where-Object -Property ToScan -Value "Yes" -IEQ | Select-Object -First $NumberOfVMsToScan
+    $toScan = $virtualMachines | Where-Object -Property ToScan -Value "Yes" -IEQ | Select-Object -First $NumberOfVMsToScan
 
-"Scanning $($toScan.Count) virtual machines (batch size: $NumberOfVMsToScan)."
-$toScan | Format-Table
-
-$index = 1
-$jobs = @{}
-
-foreach ($vm in $toScan) {
-    "$index / $($toScan.Count): Started scanning '$($vm.Name)' in '$($vm.ResourceGroup)'"
-    $index++
-    $job = Invoke-AzVMRunCommand `
-        -ResourceId $vm.ResourceId `
-        -CommandId 'RunPowerShellScript' `
-        -ScriptPath 'vm-script.ps1' `
-        -AsJob
-    $jobs.Add($vm.ResourceId, $job)
-}
-
-Write-Host "Waiting for all $($jobs.Count) deployment jobs to complete."
-
-$jobs.Values | Get-Job | Wait-Job
-Write-Host "All $($jobs.Count) deployment jobs have completed."
-
-foreach ($job in $jobs.Keys) {
-    $jobOutput = $jobs[$job] | Receive-Job
-    $jobOutput
-
-    if ($jobOutput.Status -ne "Succeeded") {
-        Write-Host "Resource $job scanned failed: $($jobOutput.Status)"
-        $vm = $virtualMachines | Where-Object -Property ResourceId -Value $job -EQ
-        $vm.ToScan = "No"
-        $vm.IsScanned = $jobOutput.Status
-        $vm.ScanError = $jobOutput.Error.Message
+    if ($toScan.Count -eq 0) {
+        Write-Host "No virtual machines to scan."
+        break
     }
-    else {
-        $outputResult = $jobOutput.Value[0].Message
-        Write-Host "Resource $job scanned successfully: $outputResult"
-        $resultValues = $outputResult.Split(",")
-        if ($resultValues.Count -eq 4) {
+
+    "Scanning $($toScan.Count) virtual machines (batch size: $NumberOfVMsToScan)."
+    $toScan | Format-Table
+
+    $index = 1
+    $jobs = @{}
+
+    foreach ($vm in $toScan) {
+        "$index / $($toScan.Count): Started scanning '$($vm.Name)' in '$($vm.ResourceGroup)'"
+        $index++
+        $job = Invoke-AzVMRunCommand `
+            -ResourceId $vm.ResourceId `
+            -CommandId 'RunPowerShellScript' `
+            -ScriptPath 'vm-script.ps1' `
+            -AsJob
+        $jobs.Add($vm.ResourceId, $job)
+    }
+
+    Write-Host "Waiting for all $($jobs.Count) deployment jobs to complete."
+
+    $jobs.Values | Get-Job | Wait-Job
+    Write-Host "All $($jobs.Count) deployment jobs have completed."
+
+    foreach ($job in $jobs.Keys) {
+        $jobRun = $jobs[$job]
+        try {
+            $jobOutput = $jobRun | Receive-Job -ErrorAction Stop
+            $jobOutput
+
+            if ($jobOutput.Status -ne "Succeeded") {
+                Write-Host "Resource $job scanned failed: $($jobOutput.Status)"
+                $vm = $virtualMachines | Where-Object -Property ResourceId -Value $job -EQ
+                $vm.ToScan = "No"
+                $vm.IsScanned = $jobOutput.Status
+                $vm.ScanError = $jobOutput.Error.Message
+            }
+            else {
+                $outputResult = $jobOutput.Value[0].Message
+                Write-Host "Resource $job scanned successfully: $outputResult"
+                $resultValues = $outputResult.Split(",")
+                if ($resultValues.Count -eq 4) {
+                    $vm = $virtualMachines | Where-Object -Property ResourceId -Value $job -EQ
+                    $vm.ToScan = "No"
+                    $vm.IsScanned = "Yes"
+                    $vm.ScanResult1 = $resultValues[0]
+                    $vm.ScanResult2 = $resultValues[1]
+                    $vm.ScanResult3 = $resultValues[2]
+                    $vm.ScanResult4 = $resultValues[3]
+                    $vm.ScanError = ""
+                }
+                else {
+                    Write-Host "Invalid output from the job: $outputResult"
+                }
+            }
+        }
+        catch {
+            $message = $_.Exception.Message
             $vm = $virtualMachines | Where-Object -Property ResourceId -Value $job -EQ
             $vm.ToScan = "No"
-            $vm.IsScanned = "Yes"
-            $vm.ScanResult1 = $resultValues[0]
-            $vm.ScanResult2 = $resultValues[1]
-            $vm.ScanResult3 = $resultValues[2]
-            $vm.ScanResult4 = $resultValues[3]
-            $vm.ScanError = ""
+            $vm.IsScanned = "No"
+            $vm.ScanError = $message
         }
-        else {
-            Write-Host "Invalid output from the job: $outputResult"
-        }
+
+        $virtualMachines | Export-Csv $CSV -Delimiter ';' -Force
     }
 
-    $virtualMachines | Export-Csv $CSV -Delimiter ';' -Force
+    # Quick exit to prevent accidentally running too many VMs at once
+    break
 }
 
+
 "Scanning completed. Updated CSV file: '$CSV'."
+Start-Process $CSV
 # If you need to clean up jobs, here's example command:
 # Get-Job | Remove-Job -Force
