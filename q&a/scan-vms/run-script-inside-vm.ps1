@@ -36,7 +36,7 @@ $payload = @{
 $virtualMachines = New-Object System.Collections.ArrayList
 
 if (-not (Test-Path $CSV)) {
-    Write-Host "CSV file not found: '$CSV'. Scanning virtual machines using resource graph."
+    "CSV file not found: '$CSV'. Scanning virtual machines using resource graph."
 
     $installedModule = Get-Module -Name "Az.ResourceGraph" -ListAvailable
     if ($null -eq $installedModule) {
@@ -123,7 +123,7 @@ while ($true) {
     $toScan = $virtualMachines | Where-Object -Property ToScan -Value "Yes" -IEQ | Select-Object -First $NumberOfVMsToScan
 
     if ($toScan.Count -eq 0) {
-        Write-Host "No virtual machines to scan."
+        "No more virtual machines to scan."
         break
     }
 
@@ -143,10 +143,10 @@ while ($true) {
         $jobs.Add($vm.ResourceId, $job)
     }
 
-    Write-Host "Waiting for all $($jobs.Count) deployment jobs to complete."
+    "Waiting for all $($jobs.Count) deployment jobs to complete."
 
     $jobs.Values | Get-Job | Wait-Job
-    Write-Host "All $($jobs.Count) deployment jobs have completed."
+    "All $($jobs.Count) deployment jobs have completed."
 
     foreach ($job in $jobs.Keys) {
         $jobRun = $jobs[$job]
@@ -157,7 +157,7 @@ while ($true) {
             $jobOutput = $jobRun | Receive-Job -ErrorAction Stop
 
             if ($jobOutput.StatusCode -ne 202) {
-                Write-Host "Resource $job scanned failed: $($jobOutput.StatusCode)"
+                "Resource $job scanned failed: $($jobOutput.StatusCode)"
                 $errorJson = $jobOutput.Content | ConvertFrom-Json
                 $vm.ScanError = $errorJson.error.message
             }
@@ -165,8 +165,8 @@ while ($true) {
                 while ($true) {
                     $result = Invoke-AzRestMethod -Uri $jobOutput.Headers.Location.AbsoluteUri
                     if ($result.StatusCode -ne 200) {
-                        Write-Host "Waiting for the job to complete..."
-                        Start-Sleep -Seconds 2
+                        "Waiting for the job to complete..."
+                        Start-Sleep -Seconds 5
                     }
                     else {
                         break
@@ -175,7 +175,7 @@ while ($true) {
 
                 $jobOutput = $result.Content | ConvertFrom-Json
                 $outputResult = $jobOutput.value[0].message
-                Write-Host "Resource $job scanned successfully: $outputResult"
+                "Resource $job scanned successfully: $outputResult"
                 $resultValues = $outputResult.Split(",")
                 if ($resultValues.Count -eq 4) {
                     $vm.IsScanned = "Yes"
