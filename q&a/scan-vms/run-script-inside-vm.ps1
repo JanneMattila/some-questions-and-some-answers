@@ -28,6 +28,11 @@ class VirtualMachineData {
     [string] $ScanError
 }
 
+$payload = @{
+    commandId = "RunPowerShellScript"
+    script    = Get-Content "vm-script.ps1"
+} | ConvertTo-Json
+
 $virtualMachines = New-Object System.Collections.ArrayList
 
 if (-not (Test-Path $CSV)) {
@@ -128,21 +133,12 @@ while ($true) {
     $index = 1
     $jobs = @{}
 
-    $subscriptionId = $toScan[0].SubscriptionId
-    Select-AzSubscription -Subscription $subscriptionId | Out-Null
-
     foreach ($vm in $toScan) {
-        if ($vm.SubscriptionId -ne $subscriptionId) {
-            Select-AzSubscription -Subscription $vm.SubscriptionId | Out-Null
-            $subscriptionId = $vm.SubscriptionId
-        }
-
         "$index / $($toScan.Count): Started scanning '$($vm.Name)' in '$($vm.ResourceGroup)'"
         $index++
-        $job = Invoke-AzVMRunCommand `
-            -ResourceId $vm.ResourceId `
-            -CommandId 'RunPowerShellScript' `
-            -ScriptPath 'vm-script.ps1' `
+        $job = Invoke-AzRestMethod -Path "$($vm.ResourceId)/runCommand?api-version=2023-09-01" `
+            -Method POST `
+            -Payload $payload `
             -AsJob
         $jobs.Add($vm.ResourceId, $job)
     }
@@ -154,24 +150,34 @@ while ($true) {
 
     foreach ($job in $jobs.Keys) {
         $jobRun = $jobs[$job]
+        $vm = $virtualMachines | Where-Object -Property ResourceId -Value $job -EQ
+        $vm.ToScan = "No"
+        $vm.IsScanned = "No"
         try {
             $jobOutput = $jobRun | Receive-Job -ErrorAction Stop
-            $jobOutput
 
-            if ($jobOutput.Status -ne "Succeeded") {
-                Write-Host "Resource $job scanned failed: $($jobOutput.Status)"
-                $vm = $virtualMachines | Where-Object -Property ResourceId -Value $job -EQ
-                $vm.ToScan = "No"
-                $vm.IsScanned = $jobOutput.Status
-                $vm.ScanError = $jobOutput.Error.Message
+            if ($jobOutput.StatusCode -ne 202) {
+                Write-Host "Resource $job scanned failed: $($jobOutput.StatusCode)"
+                $errorJson = $jobOutput.Content | ConvertFrom-Json
+                $vm.ScanError = $errorJson.error.message
             }
             else {
-                $outputResult = $jobOutput.Value[0].Message
+                while ($true) {
+                    $result = Invoke-AzRestMethod -Uri $jobOutput.Headers.Location.AbsoluteUri
+                    if ($result.StatusCode -ne 200) {
+                        Write-Host "Waiting for the job to complete..."
+                        Start-Sleep -Seconds 2
+                    }
+                    else {
+                        break
+                    }
+                }
+
+                $jobOutput = $result.Content | ConvertFrom-Json
+                $outputResult = $jobOutput.value[0].message
                 Write-Host "Resource $job scanned successfully: $outputResult"
                 $resultValues = $outputResult.Split(",")
                 if ($resultValues.Count -eq 4) {
-                    $vm = $virtualMachines | Where-Object -Property ResourceId -Value $job -EQ
-                    $vm.ToScan = "No"
                     $vm.IsScanned = "Yes"
                     $vm.ScanResult1 = $resultValues[0]
                     $vm.ScanResult2 = $resultValues[1]
@@ -180,15 +186,12 @@ while ($true) {
                     $vm.ScanError = ""
                 }
                 else {
-                    Write-Host "Invalid output from the job: $outputResult"
+                    $vm.ScanError = "Invalid output from the job: $outputResult"
                 }
             }
         }
         catch {
             $message = $_.Exception.Message
-            $vm = $virtualMachines | Where-Object -Property ResourceId -Value $job -EQ
-            $vm.ToScan = "No"
-            $vm.IsScanned = "No"
             $vm.ScanError = $message
         }
 
