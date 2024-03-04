@@ -122,7 +122,7 @@ subscriptionId
             if ($null -ne $existingRow) {
                 $existingRow.DefenderDeviceId = $row.id
                 $existingRow.LastSeen = $row.lastSeen.ToString("yyyy-MM-dd HH:mm:ss")
-                $vm.MachineTags = $row.machineTags
+                $existingRow.MachineTags = $row.machineTags
 
                 if ($null -ne $row.machineTags) {
                     if ($row.machineTags -like "*$TagToAdd*") {
