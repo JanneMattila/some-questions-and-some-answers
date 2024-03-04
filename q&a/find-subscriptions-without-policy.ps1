@@ -44,10 +44,10 @@ ResourceContainers
     while ($true) {
 
         if ($skipResult -gt 0) {
-            $graphResult = Search-AzGraph -Query $kqlQuery -First $batchSize -SkipToken $graphResult.SkipToken
+            $graphResult = Search-AzGraph -Query $kqlQuery -First $batchSize -SkipToken $graphResult.SkipToken -UseTenantScope
         }
         else {
-            $graphResult = Search-AzGraph -Query $kqlQuery -First $batchSize
+            $graphResult = Search-AzGraph -Query $kqlQuery -First $batchSize -UseTenantScope
         }
 
         $searchResult += $graphResult.data
