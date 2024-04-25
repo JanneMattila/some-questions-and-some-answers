@@ -40,8 +40,8 @@ $sourceResourceGroups | Format-Table
 foreach ($resourceGroupName in $sourceResourceGroups) {
     $resourceGroupName.ResourceGroupName
 
-    # Get all resources
-    $resources = Get-AzResource -ResourceGroupName $resourceGroupName.ResourceGroupName
+    # Get all top level resources only
+    $resources = Get-AzResource -ResourceGroupName $resourceGroupName.ResourceGroupName | Where-Object { $_.Name -cnotmatch "/" }
     $resources | Format-Table
 
     if ($resources.count -eq 0) {
