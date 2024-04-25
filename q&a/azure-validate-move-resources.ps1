@@ -37,6 +37,8 @@ Select-AzSubscription -SubscriptionId $SourceSubscription
 $sourceResourceGroups = Get-AzResourceGroup
 $sourceResourceGroups | Format-Table
 
+$resourceGroupName = $sourceResourceGroups[46]
+
 foreach ($resourceGroupName in $sourceResourceGroups) {
     $resourceGroupName.ResourceGroupName
 
@@ -61,6 +63,18 @@ foreach ($resourceGroupName in $sourceResourceGroups) {
     }
     $validateMoveResources = Invoke-AzRestMethod @parameters
     $validateMoveResources
+
+    if ($validateMoveResources.StatusCode -ne 202) {
+        $validateMoveResponse = $validateMoveResources.Content | ConvertFrom-Json
+
+        $moveSummary = New-Object MoveSummary
+        $moveSummary.ResourceGroup = $resourceGroupName.ResourceGroupName
+        $moveSummary.Code = $validateMoveResponse.error.code
+        $moveSummary.Message = $validateMoveResponse.error.message
+
+        $list.Add($moveSummary)
+        continue
+    }
 
     $validateMoveResponse = $null
     while ($true) {
