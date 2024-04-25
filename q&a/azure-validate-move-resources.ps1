@@ -37,7 +37,6 @@ Select-AzSubscription -SubscriptionId $SourceSubscription
 $sourceResourceGroups = Get-AzResourceGroup
 $sourceResourceGroups | Format-Table
 
-$resourceGroupName = $sourceResourceGroups[2]
 foreach ($resourceGroupName in $sourceResourceGroups) {
     $resourceGroupName.ResourceGroupName
 
@@ -45,8 +44,13 @@ foreach ($resourceGroupName in $sourceResourceGroups) {
     $resources = Get-AzResource -ResourceGroupName $resourceGroupName.ResourceGroupName
     $resources | Format-Table
 
+    if ($resources.count -eq 0) {
+        "No resources found in resource group '$($resourceGroupName.ResourceGroupName)'."
+        continue
+    }
+
     $payload = @{
-        resources           = $resources.ResourceId
+        resources           = [array]$resources.ResourceId
         targetResourceGroup = "/subscriptions/$TargetSubscription/resourceGroups/$TargetResourceGroupName"
     } | ConvertTo-Json
 
@@ -90,7 +94,11 @@ foreach ($resourceGroupName in $sourceResourceGroups) {
         }
     }
     else {
-        # Success
+        $moveSummary = New-Object MoveSummary
+        $moveSummary.ResourceGroup = $resourceGroupName.ResourceGroupName
+        $moveSummary.Code = "OK"
+
+        $list.Add($moveSummary)
     }
 }
 
