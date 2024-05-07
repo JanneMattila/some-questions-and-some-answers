@@ -51,6 +51,9 @@ Connect-AzAccount -ServicePrincipal -ApplicationId $admintoolClientId -Tenant $t
 #    "Sites.FullControl.All"
 # ]
 
+# List sites
+Invoke-AzRestMethod -Uri "https://graph.microsoft.com/v1.0/sites"
+
 $siteResponse = Invoke-AzRestMethod -Uri "https://graph.microsoft.com/v1.0/sites/$site"
 $siteResponse
 $siteId = ($siteResponse.Content | ConvertFrom-Json).id
@@ -109,6 +112,11 @@ Connect-AzAccount -ServicePrincipal -ApplicationId $integrationClientId -Tenant 
 # "roles": [
 #   "Sites.Selected"
 # ],
+
+# List sites (this returns empty list)
+Invoke-AzRestMethod -Uri "https://graph.microsoft.com/v1.0/sites"
+# List site information
+Invoke-AzRestMethod -Uri "https://graph.microsoft.com/v1.0/sites/$siteId"
 
 # Directly jump to the file download
 Remove-Item $file
