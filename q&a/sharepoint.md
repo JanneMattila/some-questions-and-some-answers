@@ -6,6 +6,10 @@
 
 [Graph Explorer](https://developer.microsoft.com/en-us/graph/graph-explorer)
 
+[Working with SharePoint sites in Microsoft Graph](https://learn.microsoft.com/en-us/graph/api/resources/sharepoint?view=graph-rest-1.0)
+
+[Create permission](https://learn.microsoft.com/en-us/graph/api/site-post-permissions?view=graph-rest-1.0&tabs=http)
+
 We're going to create two applications, one for the AdminTool and another for the Integration. 
 
 AdminTool has `Sites.FullControl.All` permissions and will be used to onboard the Integration application.
