@@ -32,8 +32,7 @@ $integrationThumbprint = $certIntegration.thumbprint
 ```
 
 ```powershell
-$site = "<put your site id here>" # E.g., "name.sharepoint.com:/sites/integration"
-$siteId = "<put your site id here>"
+$site = "<put your site here>" # E.g., "name.sharepoint.com:/sites/integration"
 $admintoolClientId = "<put your client id here>"
 $integrationClientId = "<put your client id here>"
 $tenantId = "<put your tenant id here>"
