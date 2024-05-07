@@ -31,6 +31,12 @@ $admintoolThumbprint = $certAdminTool.thumbprint
 $integrationThumbprint = $certIntegration.thumbprint
 ```
 
+Here are the user API permissions:
+
+![admintool](https://github.com/JanneMattila/some-questions-and-some-answers/assets/2357647/6e33ee0e-ce29-49ae-bca1-da95c24a8b0a)
+
+![integration](https://github.com/JanneMattila/some-questions-and-some-answers/assets/2357647/dc3b1de3-e1aa-4ad5-a2a6-7db88c7777e8)
+
 ```powershell
 $site = "<put your site here>" # E.g., "name.sharepoint.com:/sites/integration"
 $admintoolClientId = "<put your client id here>"
