@@ -34,7 +34,7 @@ resources
 
 ```kusto
 resources
-| join kind=leftouter (ResourceContainers | where type=='microsoft.resources/subscriptions' | project subscriptionName=name, subscriptionId) on subscriptionId
-| where type == "microsoft.compute/virtualmachines/extensions" and name has "MicrosoftMonitoringAgent"
-| project name, subscriptionName, subscriptionId, location, resourceGroup
+| join kind=leftouter (ResourceContainers | where type=='microsoft.resources/subscriptions' | project subscriptionName=name, subscriptionId) on subscriptionId
+| where type == "microsoft.compute/virtualmachines/extensions" and name has "MicrosoftMonitoringAgent"
+| project VMName=split(id, "/")[-3], name, subscriptionName, subscriptionId, location, resourceGroup
 ```
