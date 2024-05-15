@@ -27,3 +27,14 @@ resources
 resources
 | where type == "microsoft.classicstorage/storageaccounts"
 ```
+
+## Microsoft Monitoring Agent
+
+[We're retiring the Log Analytics agent in Azure Monitor on 31 August 2024](https://azure.microsoft.com/en-us/updates/were-retiring-the-log-analytics-agent-in-azure-monitor-on-31-august-2024/)
+
+```kusto
+resources
+| join kind=leftouter (ResourceContainers | where type=='microsoft.resources/subscriptions' | project subscriptionName=name, subscriptionId) on subscriptionId
+| where type == "microsoft.compute/virtualmachines/extensions" and name has "MicrosoftMonitoringAgent"
+| project name, subscriptionName, subscriptionId, location, resourceGroup
+```
