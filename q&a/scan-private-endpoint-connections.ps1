@@ -28,6 +28,7 @@ for ($i = 0; $i -lt $subscriptions.length; $i++) {
     Write-Host "Found $($resources.length) resources in subscription $($subscription.name)"
 
     for ($j = 0; $j -lt $resources.length; $j++) {
+        Write-Host "Processing resource $($j + 1) / $($resources.length) - $($resources[$j].Name)"
         $resource = $resources[$j]
 
         $pec = [array](Get-AzPrivateEndpointConnection -PrivateLinkResourceId $resource.Id -ErrorAction SilentlyContinue)
