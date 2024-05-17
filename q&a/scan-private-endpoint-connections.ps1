@@ -28,8 +28,8 @@ for ($i = 0; $i -lt $subscriptions.length; $i++) {
     Write-Host "Found $($resources.length) resources in subscription $($subscription.name)"
 
     for ($j = 0; $j -lt $resources.length; $j++) {
-        Write-Host "Processing resource $($j + 1) / $($resources.length) - $($resources[$j].Name)"
         $resource = $resources[$j]
+        Write-Host "Processing resource $($j + 1) / $($resources.length) - $($resource.Name) - $($resource.Type)"
 
         $pec = [array](Get-AzPrivateEndpointConnection -PrivateLinkResourceId $resource.Id -ErrorAction SilentlyContinue)
         for ($k = 0; $k -lt $pec.Count; $k++) {
