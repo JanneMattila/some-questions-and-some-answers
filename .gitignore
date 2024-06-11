@@ -5,3 +5,6 @@ ca.*
 client.*
 server.*
 *.csv
+**/*.cer
+**/*.pfx
+**/*.docx
