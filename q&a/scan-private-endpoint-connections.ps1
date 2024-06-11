@@ -245,4 +245,8 @@ while ($true) {
 $privateEndpointConnections | Format-Table
 $privateEndpointConnections | Export-CSV "private-endpoint-connections.csv" -Delimiter ';' -Force
 
-Start-Process "private-endpoint-connections.csv"
+"Found $($privateEndpointConnections.Count) private endpoint connections"
+
+if ($privateEndpointConnections.Count -ne 0) {
+    Start-Process "private-endpoint-connections.csv"
+}
