@@ -12,7 +12,7 @@ class TenantInformation {
     [string] $DomainName
 }
 
-class PrivateEndpointConnectionData {
+class PrivateEndpointData {
     [string] $ID
     [string] $Name
     [string] $Type
@@ -167,20 +167,21 @@ function Get-TenantFromSubscription($SubscriptionID) {
 
 $kqlQuery = @"
 resources
-| where isnotnull(properties) and properties contains "privateEndpointConnections"
-| where array_length(properties.privateEndpointConnections) > 0
-| mv-expand properties.privateEndpointConnections
-| extend status = properties_privateEndpointConnections.properties.privateLinkServiceConnectionState.status
-| extend description = coalesce(properties_privateEndpointConnections.properties.privateLinkServiceConnectionState.description, "")
-| extend privateEndpointResourceId = properties_privateEndpointConnections.properties.privateEndpoint.id
-| extend privateEndpointSubscriptionId = tostring(split(privateEndpointResourceId, "/")[2])
-| project id, name, location, type, resourceGroup, subscriptionId, tenantId, privateEndpointResourceId, privateEndpointSubscriptionId, status, description
+| where type == "microsoft.network/privateendpoints"
+| where isnotnull(properties) and properties contains "manualPrivateLinkServiceConnections"
+| where array_length(properties.manualPrivateLinkServiceConnections) > 0
+| mv-expand properties.manualPrivateLinkServiceConnections
+| extend status = properties_manualPrivateLinkServiceConnections.properties.privateLinkServiceConnectionState.status
+| extend description = coalesce(properties_manualPrivateLinkServiceConnections.properties.privateLinkServiceConnectionState.description, "")
+| extend privateLinkServiceId = properties_manualPrivateLinkServiceConnections.properties.privateLinkServiceId
+| extend privateLinkServiceSubscriptionId = tostring(split(privateLinkServiceId, "/")[2])
+| project id, name, location, type, resourceGroup, subscriptionId, tenantId, privateLinkServiceId, privateLinkServiceSubscriptionId, status, description
 "@
 
 $batchSize = 1000
 $skipResult = 0
 
-$privateEndpointConnections = New-Object System.Collections.ArrayList
+$privateEndpoints = New-Object System.Collections.ArrayList
 
 while ($true) {
 
@@ -196,44 +197,44 @@ while ($true) {
         $si1 = Get-SubscriptionInformation -SubscriptionID $row.SubscriptionID
         $ti1 = Get-TenantInformation -TenantID $row.TenantID
 
-        $si2 = Get-SubscriptionInformation -SubscriptionID $row.PrivateEndpointSubscriptionID
+        $si2 = Get-SubscriptionInformation -SubscriptionID $row.PrivateLinkServiceSubscriptionId
         $tenant2 = Get-TenantFromSubscription -SubscriptionID $si2.SubscriptionID
         $ti2 = Get-TenantInformation -TenantID $tenant2
 
-        $pecData = [PrivateEndpointConnectionData]::new()
-        $pecData.ID = $row.ID
-        $pecData.Name = $row.Name
-        $pecData.Type = $row.Type
-        $pecData.Location = $row.Location
-        $pecData.ResourceGroup = $row.ResourceGroup
+        $peData = [PrivateEndpointData]::new()
+        $peData.ID = $row.ID
+        $peData.Name = $row.Name
+        $peData.Type = $row.Type
+        $peData.Location = $row.Location
+        $peData.ResourceGroup = $row.ResourceGroup
         
-        $pecData.SubscriptionName = $si1.Name
-        $pecData.SubscriptionID = $si1.SubscriptionID
-        $pecData.TenantID = $ti1.TenantID
-        $pecData.TenantDisplayName = $ti1.DisplayName
-        $pecData.TenantDomainName = $ti1.DomainName
+        $peData.SubscriptionName = $si1.Name
+        $peData.SubscriptionID = $si1.SubscriptionID
+        $peData.TenantID = $ti1.TenantID
+        $peData.TenantDisplayName = $ti1.DisplayName
+        $peData.TenantDomainName = $ti1.DomainName
 
-        $pecData.TargetResourceId = $row.PrivateEndpointResourceID
-        $pecData.TargetSubscriptionName = $si2.Name
-        $pecData.TargetSubscriptionID = $si2.SubscriptionID
-        $pecData.TargetTenantID = $ti2.TenantID
-        $pecData.TargetTenantDisplayName = $ti2.DisplayName
-        $pecData.TargetTenantDomainName = $ti2.DomainName
+        $peData.TargetResourceId = $row.PrivateLinkServiceId
+        $peData.TargetSubscriptionName = $si2.Name
+        $peData.TargetSubscriptionID = $si2.SubscriptionID
+        $peData.TargetTenantID = $ti2.TenantID
+        $peData.TargetTenantDisplayName = $ti2.DisplayName
+        $peData.TargetTenantDomainName = $ti2.DomainName
         
-        $pecData.Description = $row.Description
-        $pecData.Status = $row.Status
+        $peData.Description = $row.Description
+        $peData.Status = $row.Status
 
         if ($ti2.DomainName -eq "MSAzureCloud.onmicrosoft.com") {
-            $pecData.External = "Managed by Microsoft"
+            $peData.External = "Managed by Microsoft"
         }
         elseif ($si2.TenantID -eq [Guid]::Empty.Guid) {
-            $pecData.External = "Yes"
+            $peData.External = "Yes"
         }
         else {
-            $pecData.External = "No"
+            $peData.External = "No"
         }
 
-        $privateEndpointConnections.Add($pecData) | Out-Null
+        $privateEndpoints.Add($peData) | Out-Null
     }
 
     if ($graphResult.data.Count -lt $batchSize) {
@@ -242,7 +243,7 @@ while ($true) {
     $skipResult += $skipResult + $batchSize
 }
 
-$privateEndpointConnections | Format-Table
-$privateEndpointConnections | Export-CSV "private-endpoint-connections.csv" -Delimiter ';' -Force
+$privateEndpoints | Format-Table
+$privateEndpoints | Export-CSV "private-endpoints.csv" -Delimiter ';' -Force
 
-Start-Process "private-endpoint-connections.csv"
+Start-Process "private-endpoints.csv"
