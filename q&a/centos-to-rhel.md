@@ -1,5 +1,7 @@
 # CentOS to RHEL
 
+[CentOS End-Of-Life guidance](https://learn.microsoft.com/en-us/azure/virtual-machines/workloads/centos/centos-end-of-life)
+
 [How to convert CentOS Linux to Red Hat Enterprise Linux on Azure](https://techcommunity.microsoft.com/t5/linux-and-open-source-blog/how-to-convert-centos-linux-to-red-hat-enterprise-linux-on-azure/ba-p/3960735)
 
 [Convert2RHEL: Move to Red Hat Enterprise Linux from other Linux distros](https://www.redhat.com/en/technologies/linux-platforms/enterprise-linux/migration-process/convert2rhel)
