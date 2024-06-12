@@ -2,6 +2,10 @@
 
 [How to convert CentOS Linux to Red Hat Enterprise Linux on Azure](https://techcommunity.microsoft.com/t5/linux-and-open-source-blog/how-to-convert-centos-linux-to-red-hat-enterprise-linux-on-azure/ba-p/3960735)
 
+[Convert2RHEL: Move to Red Hat Enterprise Linux from other Linux distros](https://www.redhat.com/en/technologies/linux-platforms/enterprise-linux/migration-process/convert2rhel)
+
+[github.com/oamg/convert2rhel](https://github.com/oamg/convert2rhel)
+
 ```bash
 # All the variables for the deployment
 subscription_name="development"
