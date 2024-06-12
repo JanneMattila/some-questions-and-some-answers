@@ -151,3 +151,43 @@ rm .env
 [2024-06-12T10:34:12+0000] TASK - [Prepare: Gather system information] *******************************
 CRITICAL - Couldn't parse the system release content string: CentOS Linux release 7.5.1804 (Core)
 ```
+
+## CentOS
+
+```console
+[azureuser@vm ~]$ uname -a
+Linux vm 3.10.0-862.11.6.el7.x86_64 #1 SMP Tue Aug 14 21:49:04 UTC 2018 x86_64 x86_64 x86_64 GNU/Linux
+[azureuser@vm ~]$ sudo yum install redhat-lsb-core
+...a lot of output...
+Complete!
+[azureuser@vm ~]$ lsb_release -d
+Description:    CentOS Linux release 7.5.1804 (Core) 
+[azureuser@vm ~]$ hostnamectl
+   Static hostname: vm
+         Icon name: computer-vm
+           Chassis: vm
+        Machine ID: 97da09219a2d42489c8b8f748e6d2fb7
+           Boot ID: f7c1d4a1a8f741548cf40662bfbe01ac
+    Virtualization: microsoft
+  Operating System: CentOS Linux 7 (Core)
+       CPE OS Name: cpe:/o:centos:centos:7
+            Kernel: Linux 3.10.0-862.11.6.el7.x86_64
+      Architecture: x86-64
+[azureuser@vm ~]$ cat /etc/os-release
+NAME="CentOS Linux"
+VERSION="7 (Core)"
+ID="centos"
+ID_LIKE="rhel fedora"
+VERSION_ID="7"
+PRETTY_NAME="CentOS Linux 7 (Core)"
+ANSI_COLOR="0;31"
+CPE_NAME="cpe:/o:centos:centos:7"
+HOME_URL="https://www.centos.org/"
+BUG_REPORT_URL="https://bugs.centos.org/"
+
+CENTOS_MANTISBT_PROJECT="CentOS-7"
+CENTOS_MANTISBT_PROJECT_VERSION="7"
+REDHAT_SUPPORT_PRODUCT="centos"
+REDHAT_SUPPORT_PRODUCT_VERSION="7"
+[azureuser@vm ~]$
+```
