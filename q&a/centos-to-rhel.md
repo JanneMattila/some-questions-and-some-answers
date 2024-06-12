@@ -131,8 +131,7 @@ sudo convert2rhel
 # 6) Review and remove third party packages that don't have a RHEL component
 yum list extras --disablerepo="*" --enablerepo=<RHEL_RepoID>
 
-# ...
-exit
+# See other steps from the documentation in the above link.
 ```
 
 ## After VM upgrade
@@ -334,7 +333,7 @@ would need are either activation_key and organization or username and password. 
 
 ## Cleanup
 
-```bash	
+```bash
 # Wipe out the resources
 az group delete --name $resource_group_name -y
 
