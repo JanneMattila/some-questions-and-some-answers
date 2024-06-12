@@ -8,6 +8,8 @@
 
 [github.com/oamg/convert2rhel](https://github.com/oamg/convert2rhel)
 
+## Create CentOS VM to Azure
+
 ```bash
 # All the variables for the deployment
 subscription_name="development"
@@ -97,12 +99,11 @@ ssh $vm_username@$vm_public_ip_address
 # Or using sshpass
 sshpass -p $vm_password ssh $vm_username@$vm_public_ip_address
 ```
+## Inside VM
 
 All below commands have been taken from here:
 
 [How to convert CentOS Linux to Red Hat Enterprise Linux on Azure](https://techcommunity.microsoft.com/t5/linux-and-open-source-blog/how-to-convert-centos-linux-to-red-hat-enterprise-linux-on-azure/ba-p/3960735)
-
-Inside VM:
 
 ```bash
 # 1) Backup the VM
@@ -134,6 +135,8 @@ yum list extras --disablerepo="*" --enablerepo=<RHEL_RepoID>
 exit
 ```
 
+## After VM upgrade
+
 ```bash
 #  7) Tell Azure this is a RHEL system
 az vm extension set \
@@ -147,14 +150,6 @@ az vm update \
   --name $vm_name \
   --license-type RHEL_BYOS \
   --set tags.licensePrivateOfferId=$offer_id
-```
-
-```bash	
-# Wipe out the resources
-az group delete --name $resource_group_name -y
-
-# Remove the password
-rm .env
 ```
 
 ## Test conversion 1
@@ -335,4 +330,14 @@ convert2rhel to register it.
 would need are either activation_key and organization or username and password. You can set these in a config file and then pass the file to convert2rhel with the --config-file option.     
 
 [azureuser@vm ~]$
+```
+
+## Cleanup
+
+```bash	
+# Wipe out the resources
+az group delete --name $resource_group_name -y
+
+# Remove the password
+rm .env
 ```
