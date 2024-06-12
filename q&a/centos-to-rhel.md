@@ -152,6 +152,8 @@ rm .env
 CRITICAL - Couldn't parse the system release content string: CentOS Linux release 7.5.1804 (Core)
 ```
 
+Source [convert2rhel/convert2rhel/systeminfo.py#L208](https://github.com/oamg/convert2rhel/blob/2ed5019254029aaf72333fbf9ef06989061563f3/convert2rhel/systeminfo.py#L208).
+
 ## CentOS
 
 ```console
