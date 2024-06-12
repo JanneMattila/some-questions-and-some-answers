@@ -114,6 +114,8 @@ sudo cat /etc/convert2rhel.ini
 sudo nano /etc/convert2rhel.ini
 
 # 5) Convert the VM
+sudo convert2rhel --help
+sudo convert2rhel --version
 sudo convert2rhel
 
 # 6) Review and remove third party packages that don't have a RHEL component
