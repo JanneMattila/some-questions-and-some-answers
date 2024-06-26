@@ -1,5 +1,7 @@
 # SharePoint
 
+## Application permissions
+
 [Controlling app access on a specific SharePoint site collections is now available in Microsoft Graph](https://devblogs.microsoft.com/microsoft365dev/controlling-app-access-on-specific-sharepoint-site-collections/)
 
 [Granting access via Azure AD App-Only](https://learn.microsoft.com/en-us/sharepoint/dev/solution-guidance/security-apponly-azuread)
@@ -134,4 +136,56 @@ $bearerToken = ConvertTo-SecureString -String (Get-AzAccessToken -ResourceUrl "h
 Invoke-RestMethod -Uri "https://graph.microsoft.com/v1.0/sites/$siteId/lists/$($sharedDocuments.id)/items/$($document.id)/driveItem/content" -Authentication Bearer -Token $bearerToken -OutFile $file
 
 Start-Process $file
+```
+
+## Delegated permissions
+
+[Working with SharePoint sites in Microsoft Graph](https://learn.microsoft.com/en-us/graph/api/resources/sharepoint?view=graph-rest-1.0)
+
+Create a new application with the following permissions:
+- `Sites.Read.All` (for Read only access)
+- `Sites.ReadWrite.All` (for Read and Write access)
+
+![API Permissions](https://github.com/JanneMattila/some-questions-and-some-answers/assets/2357647/c30cf46f-968e-4dd2-8325-3fbd52a5bbaf)
+
+Remember to enable "public client flow":
+
+![Public client](https://github.com/JanneMattila/some-questions-and-some-answers/assets/2357647/e72a2d75-aba1-4ba3-a953-b7e57044bfbe)
+
+During the login process, you will see the following consent screen:
+
+![Consent](https://github.com/JanneMattila/some-questions-and-some-answers/assets/2357647/21fa68a7-b687-491b-adc7-5b35a4e83808)
+
+```powershell
+$site = "<put your site here>" # E.g., "name.sharepoint.com:/sites/integration"
+$clientId = "<put your client id here>"
+$tenantId = "<put your tenant id here>"
+
+$authPayload = "scope=https://graph.microsoft.com/.default&client_id=$clientId"
+
+$authEndpoint = "https://login.microsoftonline.com/$tenantId/oauth2/v2.0/devicecode"
+$tokenEndpoint = "https://login.microsoftonline.com/$tenantId/oauth2/v2.0/token"
+
+$authResponse = Invoke-RestMethod -Uri $authEndpoint -Method Post -Body $authPayload
+$authResponse.message
+
+$tokenPayload = "client_id=$clientId&grant_type=urn:ietf:params:oauth:grant-type:device_code&device_code=$($authResponse.device_code)"
+$tokenEndpointResponse = Invoke-RestMethod -Uri $tokenEndpoint -Method Post -Body $tokenPayload
+$tokenEndpointResponse.access_token
+$tokenEndpointResponse.access_token | clip # To copy to clipboard
+
+# Validate scope in https://jwt.ms
+# -> "scp": "Sites.ReadWrite.All User.Read profile openid email",
+
+# List sites
+Invoke-RestMethod -Uri "https://graph.microsoft.com/v1.0/sites" -Headers @{Authorization= "Bearer $($tokenEndpointResponse.access_token)"}
+
+$siteResponse = Invoke-RestMethod -Uri "https://graph.microsoft.com/v1.0/sites/$site" -Headers @{Authorization= "Bearer $($tokenEndpointResponse.access_token)"}
+$siteId = $siteResponse.id
+
+$listResponse = Invoke-RestMethod -Uri "https://graph.microsoft.com/v1.0/sites/$siteId/lists" -Headers @{Authorization= "Bearer $($tokenEndpointResponse.access_token)"}
+$sharedDocuments = $listResponse.value  | Where-Object { $_.name -eq "Shared Documents" }
+$sharedDocuments
+
+# Continue as in the above example
 ```
