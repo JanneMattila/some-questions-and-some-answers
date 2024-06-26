@@ -63,8 +63,8 @@ Connect-AzAccount -ServicePrincipal -ApplicationId $admintoolClientId -Tenant $t
 #    "Sites.FullControl.All"
 # ]
 
-# List sites
-Invoke-AzRestMethod -Uri "https://graph.microsoft.com/v1.0/sites"
+# List root site information
+Invoke-AzRestMethod -Uri "https://graph.microsoft.com/v1.0/sites/root"
 
 $siteResponse = Invoke-AzRestMethod -Uri "https://graph.microsoft.com/v1.0/sites/$site"
 $siteResponse
@@ -125,8 +125,8 @@ Connect-AzAccount -ServicePrincipal -ApplicationId $integrationClientId -Tenant 
 #   "Sites.Selected"
 # ],
 
-# List sites (this returns empty list)
-Invoke-AzRestMethod -Uri "https://graph.microsoft.com/v1.0/sites"
+# List root site information
+Invoke-AzRestMethod -Uri "https://graph.microsoft.com/v1.0/sites/root"
 # List site information
 Invoke-AzRestMethod -Uri "https://graph.microsoft.com/v1.0/sites/$siteId"
 
@@ -177,8 +177,8 @@ $tokenEndpointResponse.access_token | clip # To copy to clipboard
 # Validate scope in https://jwt.ms
 # -> "scp": "Sites.ReadWrite.All User.Read profile openid email",
 
-# List sites
-Invoke-RestMethod -Uri "https://graph.microsoft.com/v1.0/sites" -Headers @{Authorization= "Bearer $($tokenEndpointResponse.access_token)"}
+# List root site
+Invoke-RestMethod -Uri "https://graph.microsoft.com/v1.0/sites/root" -Headers @{Authorization= "Bearer $($tokenEndpointResponse.access_token)"}
 
 $siteResponse = Invoke-RestMethod -Uri "https://graph.microsoft.com/v1.0/sites/$site" -Headers @{Authorization= "Bearer $($tokenEndpointResponse.access_token)"}
 $siteId = $siteResponse.id
