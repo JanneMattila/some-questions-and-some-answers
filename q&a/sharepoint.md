@@ -142,6 +142,10 @@ Start-Process $file
 
 [Working with SharePoint sites in Microsoft Graph](https://learn.microsoft.com/en-us/graph/api/resources/sharepoint?view=graph-rest-1.0)
 
+[Using Device Code Flow in MSAL.NET](https://learn.microsoft.com/en-us/entra/msal/dotnet/acquiring-tokens/desktop-mobile/device-code-flow)
+
+[Microsoft identity platform and the OAuth 2.0 device authorization grant flow](https://learn.microsoft.com/en-us/entra/identity-platform/v2-oauth2-device-code)
+
 Create a new application with the following permissions:
 - `Sites.Read.All` (for Read only access)
 - `Sites.ReadWrite.All` (for Read and Write access)
