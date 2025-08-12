@@ -56,7 +56,7 @@ $clientDisplayName = "<put your client display name here>"
 
 Connect-AzAccount -ServicePrincipal -ApplicationId $admintoolClientId -Tenant $tenantId -CertificateThumbprint $admintoolThumbprint
 
-(Get-AzAccessToken -ResourceUrl "https://graph.microsoft.com").Token | clip
+(Get-AzAccessToken -ResourceUrl "https://graph.microsoft.com").Token | ConvertFrom-SecureString -AsPlainText | clip
 # jwt.ms
 # This is ***REQUIRED*** ->
 # "roles": [
@@ -79,7 +79,7 @@ $json = @"
   "roles": ["write"],
   "grantedToIdentities": [{
     "application": {
-      "id": "$clientId",
+      "id": "$integrationClientId",
       "displayName": "$clientDisplayName"
     }
   }]
@@ -107,7 +107,7 @@ $file
 $documentDownloadResponse= Invoke-AzRestMethod -Uri $document.webUrl
 $documentsResponse
 
-$bearerToken = ConvertTo-SecureString -String (Get-AzAccessToken -ResourceUrl "https://graph.microsoft.com").Token -AsPlainText
+$bearerToken = Get-AzAccessToken -ResourceUrl "https://graph.microsoft.com").Token
 Invoke-RestMethod -Uri "https://graph.microsoft.com/v1.0/sites/$siteId/lists/$($sharedDocuments.id)/items/$($document.id)/driveItem/content" -Authentication Bearer -Token $bearerToken -OutFile $file
 
 Start-Process $file
@@ -118,7 +118,7 @@ Start-Process $file
 
 Connect-AzAccount -ServicePrincipal -ApplicationId $integrationClientId -Tenant $tenantId -CertificateThumbprint $integrationThumbprint
 
-(Get-AzAccessToken -ResourceUrl "https://graph.microsoft.com").Token | clip
+(Get-AzAccessToken -ResourceUrl "https://graph.microsoft.com").Token | ConvertFrom-SecureString -AsPlainText | clip
 # jwt.ms
 # This is ***REQUIRED*** ->
 # "roles": [
@@ -132,7 +132,7 @@ Invoke-AzRestMethod -Uri "https://graph.microsoft.com/v1.0/sites/$siteId"
 
 # Directly jump to the file download
 Remove-Item $file
-$bearerToken = ConvertTo-SecureString -String (Get-AzAccessToken -ResourceUrl "https://graph.microsoft.com").Token -AsPlainText
+$bearerToken = (Get-AzAccessToken -ResourceUrl "https://graph.microsoft.com").Token
 Invoke-RestMethod -Uri "https://graph.microsoft.com/v1.0/sites/$siteId/lists/$($sharedDocuments.id)/items/$($document.id)/driveItem/content" -Authentication Bearer -Token $bearerToken -OutFile $file
 
 Start-Process $file
