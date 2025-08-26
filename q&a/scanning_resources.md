@@ -238,3 +238,25 @@ Update
 on TimeGenerated, SourceComputerId
 | where UpdateState == 'Needed'
 ```
+
+## Get virtual machine details
+
+You get virtual machine SKU details including possible restrictions for your subscription using
+[scan-vm-sku-details.ps1](./scan-vm-sku-details.ps1) script.
+
+Here is an example of how to use the script:
+
+```powershell
+.\scan-vm-sku-details.ps1 -Locations "west europe","north europe" -VirtualMachineSKUs "Standard_E4a_v4","Standard_E32a_v4"
+```
+
+Here is simplified and abbreviated output of file created by the script:
+
+| Locations     | Name             | RestrictionInfo                                                                         |
+| :------------ | :--------------- | :-------------------------------------------------------------------------------------- |
+| westeurope    | Standard_E4a_v4  | type: Location, locations: westeurope,type: Zone, locations: westeurope, zones: 1, 2, 3 |
+| westeurope    | Standard_E16a_v4 | type: Location, locations: westeurope,type: Zone, locations: westeurope, zones: 1, 2, 3 |
+| westeurope    | Standard_E32a_v4 | type: Location, locations: westeurope,type: Zone, locations: westeurope, zones: 1, 2, 3 |
+| swedencentral | Standard_E4a_v4  |                                                                                         |
+| swedencentral | Standard_E16a_v4 |                                                                                         |
+| swedencentral | Standard_E32a_v4 |                                                                                         |
