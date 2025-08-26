@@ -250,6 +250,9 @@ Here is an example of how to use the script:
 .\scan-vm-sku-details.ps1 -Locations "west europe","north europe" -VirtualMachineSKUs "Standard_E4a_v4","Standard_E32a_v4"
 ```
 
+The script uses `Get-AzComputeResourceSku` to retrieve the SKU details for the specified virtual machine sizes and locations.
+It will generate two output files: JSON and CSV. You can use CSV to easily analyze the data with Excel.
+
 Here is simplified and abbreviated output of file created by the script:
 
 | Locations     | Name             | RestrictionInfo                                                                         | Restrictions                              |
