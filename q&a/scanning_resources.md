@@ -247,7 +247,7 @@ You get virtual machine SKU details including possible restrictions for your sub
 Here is an example of how to use the script:
 
 ```powershell
-.\scan-vm-sku-details.ps1 -Locations "west europe","north europe" -VirtualMachineSKUs "Standard_E4a_v4","Standard_E32a_v4"
+.\scan-vm-sku-details.ps1 -Locations "west europe","sweden central" -VirtualMachineSKUs "Standard_E4a_v4","Standard_E32a_v4"
 ```
 
 The script uses `Get-AzComputeResourceSku` to retrieve the SKU details for the specified virtual machine sizes and locations.
@@ -258,8 +258,6 @@ Here is simplified and abbreviated output of file created by the script:
 | Locations     | Name             | RestrictionInfo                                                                         | Restrictions                              |
 | :------------ | :--------------- | :-------------------------------------------------------------------------------------- | :---------------------------------------- |
 | westeurope    | Standard_E4a_v4  | type: Location, locations: westeurope,type: Zone, locations: westeurope, zones: 1, 2, 3 | ...ReasonCode=NotAvailableForSubscription |
-| westeurope    | Standard_E16a_v4 | type: Location, locations: westeurope,type: Zone, locations: westeurope, zones: 1, 2, 3 | ...ReasonCode=NotAvailableForSubscription |
 | westeurope    | Standard_E32a_v4 | type: Location, locations: westeurope,type: Zone, locations: westeurope, zones: 1, 2, 3 | ...ReasonCode=NotAvailableForSubscription |
 | swedencentral | Standard_E4a_v4  |                                                                                         |                                           |
-| swedencentral | Standard_E16a_v4 |                                                                                         |                                           |
 | swedencentral | Standard_E32a_v4 |                                                                                         |                                           |
