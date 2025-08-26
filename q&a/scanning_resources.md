@@ -252,11 +252,11 @@ Here is an example of how to use the script:
 
 Here is simplified and abbreviated output of file created by the script:
 
-| Locations     | Name             | RestrictionInfo                                                                         |
-| :------------ | :--------------- | :-------------------------------------------------------------------------------------- |
-| westeurope    | Standard_E4a_v4  | type: Location, locations: westeurope,type: Zone, locations: westeurope, zones: 1, 2, 3 |
-| westeurope    | Standard_E16a_v4 | type: Location, locations: westeurope,type: Zone, locations: westeurope, zones: 1, 2, 3 |
-| westeurope    | Standard_E32a_v4 | type: Location, locations: westeurope,type: Zone, locations: westeurope, zones: 1, 2, 3 |
-| swedencentral | Standard_E4a_v4  |                                                                                         |
-| swedencentral | Standard_E16a_v4 |                                                                                         |
-| swedencentral | Standard_E32a_v4 |                                                                                         |
+| Locations     | Name             | RestrictionInfo                                                                         | Restrictions                              |
+| :------------ | :--------------- | :-------------------------------------------------------------------------------------- | :---------------------------------------- |
+| westeurope    | Standard_E4a_v4  | type: Location, locations: westeurope,type: Zone, locations: westeurope, zones: 1, 2, 3 | ...ReasonCode=NotAvailableForSubscription |
+| westeurope    | Standard_E16a_v4 | type: Location, locations: westeurope,type: Zone, locations: westeurope, zones: 1, 2, 3 | ...ReasonCode=NotAvailableForSubscription |
+| westeurope    | Standard_E32a_v4 | type: Location, locations: westeurope,type: Zone, locations: westeurope, zones: 1, 2, 3 | ...ReasonCode=NotAvailableForSubscription |
+| swedencentral | Standard_E4a_v4  |                                                                                         |                                           |
+| swedencentral | Standard_E16a_v4 |                                                                                         |                                           |
+| swedencentral | Standard_E32a_v4 |                                                                                         |                                           |
